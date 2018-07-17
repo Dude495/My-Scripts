@@ -46,6 +46,7 @@
         if (isvisible == true) {
             EPV();
         }
+        setTimeout(checkUR, 5000);
     }
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.isLoggedIn()) {
