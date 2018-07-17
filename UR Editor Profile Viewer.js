@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.07.17.021b
+// @version      2018.07.17.022b
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
