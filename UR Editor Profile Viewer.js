@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.07.17.022b
+// @version      2018.07.18.001
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -46,11 +46,10 @@
         if (isvisible == true) {
             EPV();
         }
-        setTimeout(checkUR, 5000);
     }
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.isLoggedIn()) {
-            checkUR();
+            setInterval(checkUR, 5000);
             console.log(ConsoleSN, 'Initialized');
         } else {
             console.log(ConsoleSN, 'Bootstrap failed.  Trying again...');
