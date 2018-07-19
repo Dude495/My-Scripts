@@ -9,7 +9,7 @@
 // @license      GNU GPLv3
 // @grant        none
 // ==/UserScript==
-// HUGE Thanks to Joyriding for his patience and helping me learn to the basics and walk me through my first script!!!
+// HUGE Thanks to Joyriding & MoM for their patience and helping me learn to the basics and walk me through my first script!!!
 // Update message code based on work from RickZabel
 
 (function() {
