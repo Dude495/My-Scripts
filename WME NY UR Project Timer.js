@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME NY UR Project Timer
 // @namespace    Dude495
-// @version      2018.08.01.001
+// @version      2018.08.02.001
 // @description  Adds count down timer for the NY UR Project (2018).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -14,8 +14,8 @@
 (function() {
     'use strict';
 function startClock() {
- var PHASE = 'Manhattan'
-    var startTime = new Date('jul 31, 2018 23:59:59 EDT').getTime();
+ var PHASE = 'Brooklyn'
+    var startTime = new Date('aug 11, 2018 00:00:00 EDT').getTime();
     var now = new Date().getTime();
     var time = startTime - now;
     var days = Math.floor (time / (1000 * 60 * 60 * 24));
@@ -27,7 +27,7 @@ function startClock() {
         div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'yellow'});
     }
     if (time < 0) {
-        div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'red'}); // lime when starting red when over
+        div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'lime'});
     }
         if ($('#countdown-timer').length <= 0) {
             div;
