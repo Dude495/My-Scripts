@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.04.007
+// @version      2018.08.05.001
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -50,7 +50,7 @@
             document.getElementById('P-IMG').appendChild(pimg);
             $('#PM-IMG').wrap(a);
             pimg.onclick = function() {
-                let copyText = arrBirthdayList.slice(0, 15).join( '\n' );
+                let copyText = arrBirthdayList.slice(0, 20).join( '\n' );
                 let copied = $('<textarea rows="1" cols="1">').val(copyText).appendTo('body').select(); document.execCommand('copy');
                 console.info('Birthdays for PM: \n\n'+copyText);
                 alert('Birthdays Copied for PM');
@@ -63,7 +63,7 @@
             document.getElementById('P-IMG').appendChild(pimg1);
             $('#PM-IMG1').wrap(a);
             pimg1.onclick = function() {
-                let copyText = arrBirthdayList.slice(16, 30).join( '\n' );
+                let copyText = arrBirthdayList.slice(21, 30).join( '\n' );
                 let copied = $('<textarea rows="1" cols="1">').val(copyText).appendTo('body').select(); document.execCommand('copy');
                 console.info('Birthdays for PM: \n\n'+copyText);
                 alert('Birthdays Copied for PM');
