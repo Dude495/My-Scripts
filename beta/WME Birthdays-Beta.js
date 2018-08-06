@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays (Beta)
 // @namespace    Dude495
-// @version      2018.08.06.002
+// @version      2018.08.06.003
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -25,25 +25,24 @@
     const arrBirthdayList = [];
     $( 'div#page-body p').eq( 3 ).find( 'strong a' ).each( function( i ){ arrBirthdayList[ i ] = $( this ).text(); } );
     function BirthdayButton() {
-        if (arrBirthdayList.length <= 20) {
-            var pdiv = document.createElement('div')
-            pdiv.id = 'P-IMG'
-            $('#wrap').after(pdiv);
-            let pimg = document.createElement('img');
-            pimg.id = 'PM-IMG'
+        let pdiv = document.createElement('div');
+        pdiv.id = 'P-IMG';
+        $('#wrap').after(pdiv);
+        let pimg = document.createElement('img');
+        pimg.id = 'PM-IMG';
+        pimg.src = PMIMG;
+        pimg.onmouseout = function() {
             pimg.src = PMIMG
-            pimg.onmouseout = function() {
-                pimg.src = PMIMG
-            }
-            pimg.onmouseover = function () {
-                pimg.src = PMIMGP
-            }
-            pdiv.appendChild(pimg);
-            document.getElementById('P-IMG').appendChild(pimg);
-            $('#PM-IMG').wrap(a);
+        }
+        pimg.onmouseover = function () {
+            pimg.src = PMIMGP
+        }
+        pdiv.appendChild(pimg);
+        document.getElementById('P-IMG').appendChild(pimg);
+        $('#PM-IMG').wrap(a);
+        if (arrBirthdayList.length <= 20) {
             pimg.onclick = function() {
                 let copyText = arrBirthdayList.join( '\n' );
-                let copied = $('<textarea rows="1" cols="1">').val(copyText).appendTo('body').select(); document.execCommand('copy');
                 console.info('Birthdays for PM: \n\n'+copyText);
                 alert('Birthdays Copied for PM');
                 let PM = PMLink + arrBirthdayList.join('%0A%0D');
@@ -51,48 +50,14 @@
             }
         }
         if ((arrBirthdayList.length > 20) && (arrBirthdayList.length <= 40)) {
-            let pdiv = document.createElement('div')
-            pdiv.id = 'P-IMG'
-            $('#wrap').after(pdiv);
-            let pimg = document.createElement('img');
-            pimg.id = 'PM-IMG'
-            pimg.src = PMIMG
-            pimg.onmouseout = function() {
-                pimg.src = PMIMG
-            }
-            pimg.onmouseover = function () {
-                pimg.src = PMIMGP
-            }
-            pdiv.appendChild(pimg);
-            document.getElementById('P-IMG').appendChild(pimg);
-            $('#PM-IMG').wrap(a);
             pimg.onclick = function() {
-                let copyText = arrBirthdayList.slice(0, 20).join( '\n' );
-                let copied = $('<textarea rows="1" cols="1">').val(copyText).appendTo('body').select(); document.execCommand('copy');
+                let copyText = arrBirthdayList.join( '\n' );
                 console.info('Birthdays for PM: \n\n'+copyText);
                 alert('Birthdays Copied for PM');
                 let PMList = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+                let PMList2 = PMLink + arrBirthdayList.slice(21, 40).join('%0A%0D');
                 window.open(PMList);
-            }
-            let pimg1 = document.createElement('img');
-            pimg1.id = 'PM-IMG1'
-            pimg1.src = PMIMG2
-            pimg1.onmouseout = function() {
-                pimg1.src = PMIMG2
-            }
-            pimg1.onmouseover = function () {
-                pimg1.src = PMIMG2P
-            }
-            pdiv.appendChild(pimg1);
-            document.getElementById('P-IMG').appendChild(pimg1);
-            $('#PM-IMG1').wrap(a);
-            pimg1.onclick = function() {
-                let copyText = arrBirthdayList.slice(21, 40).join( '\n' );
-                let copied = $('<textarea rows="1" cols="1">').val(copyText).appendTo('body').select(); document.execCommand('copy');
-                console.info('Birthdays for PM: \n\n'+copyText);
-                alert('Birthdays Copied for PM');
-                let PMList = PMLink + arrBirthdayList.slice(21, 40).join('%0A%0D');
-                window.open(PMList);
+                window.open(PMList2);
             }
         }
         var dimg = document.createElement('img')
