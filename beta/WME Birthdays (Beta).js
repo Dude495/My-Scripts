@@ -2,7 +2,7 @@
 // @name         WME Birthdays (Beta)
 // @namespace    Dude495
 // @version      2018.08.06.004
-// @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information. Also sends pre-filled PM message to those users.
+// @description  Beta version of WME Birthdays for testing purposes only.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
 // @require      https://greasyfork.org/scripts/27254-clipboard-js/code/clipboardjs.js
