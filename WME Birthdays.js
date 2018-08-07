@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.07.002
+// @version      2018.08.07.003
 // @description  Beta version of WME Birthdays for testing purposes only.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -81,7 +81,7 @@
         box.setAttribute("type", "checkbox");
         box.id = 'PDM'
         var cl = document.createElement("LABEL");
-        cl.innerHTML = '  Enable Pre-Defined Message';
+        cl.innerHTML = '  Enable Pre-Defined PM Message';
         pdiv.after(box);
         box.after(cl)
         let pimg = document.createElement('img');
