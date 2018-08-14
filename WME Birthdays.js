@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.14.002
+// @version      2018.08.14.003
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -96,14 +96,21 @@
         const tl = document.createElement("LABEL");
         tl.innerHTML = '  Save Template';
         tdiv.after(tbox);
-        tbox.after(tl)
+        tbox.after(tl);
         tbox.onclick = function() {
-            var template = $('#message')[0].value
-            localStorage.setItem('CSTMSG', template)
-            window.alert('Template successfully saved. You may now close this PM window.')
-            $('#TMSG').prop('checked', false)
-        }
-    }
+            if ($('#message')[0].value == "") {
+                window.alert('Template successfully deleted. You may now close this PM window.');
+                localStorage.setItem('CSTMSG', '');
+                $('#TMSG').prop('checked', false);
+            };
+            if ($('#message')[0].value !== "") {
+                var template = $('#message')[0].value;
+                localStorage.setItem('CSTMSG', template);
+                window.alert('Template successfully saved. You may now close this PM window.');
+                $('#TMSG').prop('checked', false);
+            };
+        };
+    };
     function BirthdayButton() {
         const pdiv = document.createElement('div');
         pdiv.id = 'P-IMG';
