@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.14.003
+// @version      2018.08.14.004
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -98,7 +98,7 @@
         tdiv.after(tbox);
         tbox.after(tl);
         tbox.onclick = function() {
-            if ($('#message')[0].value == "") {
+            if ($('#message')[0].value == '') {
                 window.alert('Template successfully deleted. You may now close this PM window.');
                 localStorage.setItem('CSTMSG', '');
                 $('#TMSG').prop('checked', false);
@@ -141,7 +141,13 @@
                 $('#PDM').prop('checked', false)
                 localStorage.setItem('PDM', 'false')
             }
-            localStorage.setItem('CMSG', box1.checked);
+            if (localStorage.getItem('CSTMSG') == '') {
+                window.alert('No custom message set. Please open a blank PM window and build your custom template first then select this feature after you have saved it.');
+                $('#CMSG').prop('checked', false);
+            }
+            if (localStorage.getItem('CSTMSG') !== '') {
+                localStorage.setItem('CMSG', box1.checked);
+            }
         }
         let pimg = document.createElement('img');
         pimg.id = 'PM-IMG';
@@ -177,6 +183,7 @@
         }
         document.body.appendChild(dimg);
         document.getElementById('P-IMG').appendChild(dimg);
+        var beta = '(Beta)'
         $('#DS-IMG').wrap(a);
         $('#wrap').after(pdiv);
         dimg.onclick = function() {
