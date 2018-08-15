@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.14.004
+// @version      2018.08.15.001
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      https://www.waze.com/forum/*
@@ -65,12 +65,6 @@
             let PMList2 = PMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
             window.open(PMList2);
         }
-    }
-    function init() {
-        var checked = JSON.parse(localStorage.getItem('PDM'));
-        var checked1 = JSON.parse(localStorage.getItem('CMSG'));
-        document.getElementById('PDM').checked = checked;
-        document.getElementById('CMSG').checked = checked1;
     }
     function createBMessage() {
         const BPMBlink = 'https://www.waze.com/forum/ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list=';
@@ -194,10 +188,20 @@
             alert('Birthdays Copied for Discord');
         }
     }
-    function bootstrap(tries = 1) {
-        if (((/forum/.test(location.href)) && $("h3:contains(Birthdays)").length > 0) || (/compose/.test(location.href))) {
-            BirthdayButton();
+    function init() {
+        var checked = JSON.parse(localStorage.getItem('PDM'));
+        var checked1 = JSON.parse(localStorage.getItem('CMSG'));
+        if ($('#message-box').is(':visible')) {
             createTemplate();
+        }
+        if ((/forum/.test(location.href) && $("h3:contains(Birthdays)").length > 0)) {
+            BirthdayButton();
+            document.getElementById('PDM').checked = checked;
+            document.getElementById('CMSG').checked = checked1;
+        }
+    }
+    function bootstrap(tries = 1) {
+        if (((/forum/.test(location.href)) && $("h3:contains(Birthdays)").length > 0) || $('#message-box').is(':visible')) {
             init();
         } else if (tries < 1000) {
             setTimeout(function () {bootstrap(tries++);}, 200);
