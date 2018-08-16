@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.15.002
+// @version      2018.08.16.001
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/forum\/.*
@@ -37,8 +37,8 @@
         const MYNAME = $('#phpbb > div.waze-header > div > div > div.login_tab > span')[0].textContent.replace('hello ','').replace('  ','');
         const PDMESSAGE = encodeURIComponent([
             'Good day all,',' ',
-            'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform',' ', '- '+MYNAME,' ',' ',
-            '[size=85]In case you are not aware, editors can not use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
+            'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
+            '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
             '[b]Global (ROW) & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
             '[b]Waze USA[/b] - [url]https://discord.gg/Q3YPQC6[/url]',
             '[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
