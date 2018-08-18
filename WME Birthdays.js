@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.16.005
+// @version      2018.08.17.001
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -82,6 +82,7 @@
     const link = document.createElement('a');
     link.href = "#";
     const a = link;
+
     function createTemplate() {
         const tdiv = document.createElement('div');
         tdiv.id = 'TBOX';
@@ -94,14 +95,22 @@
         tdiv.after(tbox);
         tbox.after(tl);
         tbox.onclick = function() {
+            const sigbox = $('#attach_sig')[0].checked;
             if ($('#message')[0].value == '') {
                 window.alert('Template successfully deleted. You may now close this PM window.');
                 localStorage.setItem('CSTMSG', '');
+                if (sigbox == true) {
+                localStorage.setItem('SIG', 'true');
+                }
+                if (sigbox == false) {
+                localStorage.setItem('SIG', 'false');
+                }
                 $('#TMSG').prop('checked', false);
             };
             if ($('#message')[0].value !== "") {
                 var template = encodeURIComponent($('#message')[0].value);
                 localStorage.setItem('CSTMSG', template);
+                localStorage.setItem('SIG', sigbox);
                 window.alert('Template successfully saved. You may now close this PM window.');
                 $('#TMSG').prop('checked', false);
             };
@@ -193,8 +202,10 @@
     function init() {
         var checked = JSON.parse(localStorage.getItem('PDM'));
         var checked1 = JSON.parse(localStorage.getItem('CMSG'));
+        var sigcheck = JSON.parse(localStorage.getItem('SIG'));
         if ($('#message-box').is(':visible')) {
             createTemplate();
+            document.getElementById('attach_sig').checked = sigcheck;
         }
         if (/forum/.test(location.href) && $("h3:contains(Birthdays)").length > 0) {
             BirthdayButton();
