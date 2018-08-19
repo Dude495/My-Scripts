@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.08.19.001
+// @version      2018.08.19.002
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -16,12 +16,12 @@
 
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = true;
+    var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Public Release',
-        '* Huge Thanks to Joyriding and MoM for their patience and help learning this process!'
+        '* ',
+        '* !'
     ].join('\n');
 
     if (UPDATE_ALERT) {
