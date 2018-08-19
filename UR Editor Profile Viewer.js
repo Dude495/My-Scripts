@@ -53,7 +53,7 @@
         mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true})
     }
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.isLoggedIn() && $('#panel-container').length) {
+        if (W && W.loginManager && W.loginManager.user && $('#panel-container').length) {
             init();
             console.log(GM_info.script.name, 'Initialized');
         } else {
