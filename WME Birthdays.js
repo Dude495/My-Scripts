@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.23.002
+// @version      2018.08.23.003
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -194,9 +194,9 @@
         $('#wrap').after(pdiv);
         dimg.onclick = function() {
             var copyText = 'Birthdays for ' + ( new Date() ).toLocaleDateString( 'en-us', { month: 'long', day: 'numeric', year: 'numeric' } ) + ':\n\n@' + arrBirthdayList.join( '\n@' ) + '\n\nHappy Birthday everyone!';
-            var copied = $('<textarea rows="1" cols="1">').val(copyText.replace(/\_\n/g, '\n')).appendTo('body').select();
+            var copied = $('<textarea rows="1" cols="1">').val(copyText.replace(/\_*\n/g, '\n')).appendTo('body').select();
             document.execCommand('copy');
-            console.log(copyText.replace(/\_\n/g, '\n'));
+            console.log(copyText.replace(/\_*\n/g, '\n'));
             alert('Birthdays Copied for Discord');
         }
     }
