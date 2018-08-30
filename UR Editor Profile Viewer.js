@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.08.19.002
+// @version      2018.08.29.001
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -16,12 +16,11 @@
 
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = false;
+    var UPDATE_ALERT = true;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* ',
-        '* !'
+        '* Included functionality for Map Comments',
     ].join('\n');
 
     if (UPDATE_ALERT) {
@@ -43,15 +42,15 @@
             }
         }
     }
-
     function init() {
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
-                if ($(node).hasClass('conversation-view')) EPV();
+                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor')) EPV();
             }));
         });
-        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true})
-    }
+        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true});
+        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true})
+    };
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.user && $('#panel-container').length) {
             init();
