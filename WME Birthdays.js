@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.09.02.001
+// @version      2018.09.02.002
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
