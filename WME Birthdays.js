@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.09.02.002
+// @version      2018.09.02.003
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -42,7 +42,7 @@
             }
         }
         if (DBG == true) {
-            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (CST)');
+            console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (CST)');
             if (arrBirthdayList.length > 20) {
                 console.log('PMList2 (CST)');
                 if (arrBirthdayList.length > 40) {
@@ -93,7 +93,7 @@
             }
         }
         if (DBG == true) {
-            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (PDM)');
+            console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (PDM)');
             if (arrBirthdayList.length > 20) {
                 console.log('PMList2 (PDM)');
                 if (arrBirthdayList.length > 40) {
@@ -122,7 +122,7 @@
             }
         }
         if (DBG == true) {
-            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (BPM)');
+            console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (BPM)');
             if (arrBirthdayList.length > 20) {
                 console.log('PMList2 (BPM)');
                 if (arrBirthdayList.length > 40) {
@@ -165,22 +165,33 @@
         if (DBG == true) {
             tbox.onclick = function() {
                 if ($('#message')[0].value == '') {
-                    console.log('Template successfully deleted. (Debug)');
+                    console.log('Save Template Box CHECKED\n\nTemplate successfully deleted. (Debug Only)');
                     $('#TMSG').prop('checked', false);
                 };
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
-                    console.log('Template success (Debug): \n\n' + template);
+                    console.log('Save Template Box CHECKED\n\nTemplate successfully saved. (Debug Only): \n\n' + 'Plain Text:\n' + $('#message')[0].value +'\n\nEncoded Text:\n' + template);
                     $('#TMSG').prop('checked', false);
                 };
             };
         };
-        sigbox.onclick = function() {
-            if (sigbox.checked) {
-                localStorage.setItem('SIG', 'true');
+        if (DBG == true) {
+            sigbox.onclick = function() {
+                if (sigbox.checked) {
+                    console.log('Attach Signature Box CHECKED');
+                };
+                if (!sigbox.checked) {
+                    console.log('Attach Signature Box UNCHECKED');
+                };
             };
-            if (!sigbox.checked) {
-                localStorage.setItem('SIG', 'false');
+        } else {
+            sigbox.onclick = function() {
+                if (sigbox.checked) {
+                    localStorage.setItem('SIG', 'true');
+                };
+                if (!sigbox.checked) {
+                    localStorage.setItem('SIG', 'false');
+                };
             };
         };
     };
@@ -197,22 +208,27 @@
         } else {
             cl.innerHTML = '  Use Pre-Defined PM Message';
         }
-        cl.onclick = function() {
-            if (localStorage.getItem('CMSG') == 'true') {
-                $('#CMSG').prop('checked', false)
-                localStorage.setItem('CMSG', 'false')
-            }
-            localStorage.setItem('PDM', box.checked);
-        }
         pdiv.after(box);
-        box.after(cl)
-        box.onclick = function() {
-            if (localStorage.getItem('CMSG') == 'true') {
-                $('#CMSG').prop('checked', false)
-                localStorage.setItem('CMSG', 'false')
-            }
-            localStorage.setItem('PDM', box.checked);
-        }
+        box.after(cl);
+        if (DBG == true) {
+            box.onclick = function() {
+                if ($('#PDM').prop('checked') == true) {
+                    $('#CMSG').prop('checked', false)
+                    console.log('Pre-Defined Message Box CHECEKD');
+                };
+                if ($('#PDM').prop('checked') == false) {
+                    console.log('Pre-Defined Message Box UNCHECEKD');
+                };
+            };
+        } else {
+            box.onclick = function() {
+                if (localStorage.getItem('CMSG') == 'true') {
+                    $('#CMSG').prop('checked', false);
+                    localStorage.setItem('CMSG', 'false');
+                };
+                localStorage.setItem('PDM', box.checked);
+            };
+        };
         const box1 = document.createElement("INPUT");
         box1.setAttribute("type", "checkbox");
         box1.id = 'CMSG'
@@ -220,19 +236,31 @@
         cl1.innerHTML = '  Use Custom PM Message  |  ';
         pdiv.after(box1);
         box1.after(cl1)
-        box1.onclick = function() {
-            if (localStorage.getItem('PDM') == 'true') {
-                $('#PDM').prop('checked', false)
-                localStorage.setItem('PDM', 'false')
-            }
-            if (localStorage.getItem('CSTMSG') == '') {
-                window.alert('No custom message set. Please open a blank PM window and build your custom template first then select this feature after you have saved it.');
-                $('#CMSG').prop('checked', false);
-            }
-            if (localStorage.getItem('CSTMSG') !== '') {
-                localStorage.setItem('CMSG', box1.checked);
-            }
-        }
+        if (DBG == true) {
+            box1.onclick = function() {
+                if ($('#CMSG').prop('checked') == true) {
+                    $('#PDM').prop('checked', false);
+                    console.log('Custom Message Box CHECEKD');
+                };
+                if ($('#CMSG').prop('checked') == false) {
+                    console.log('Custom Message Box UNCHECEKD');
+                };
+            };
+        } else {
+            box1.onclick = function() {
+                if (localStorage.getItem('PDM') == 'true') {
+                    $('#PDM').prop('checked', false);
+                    localStorage.setItem('PDM', 'false');
+                };
+                if (localStorage.getItem('CSTMSG') == '') {
+                    window.alert('No custom message set. Please open a blank PM window and build your custom template first then select this feature after you have saved it.');
+                    $('#CMSG').prop('checked', false);
+                };
+                if (localStorage.getItem('CSTMSG') !== '') {
+                    localStorage.setItem('CMSG', box1.checked);
+                };
+            };
+        };
         let pimg = document.createElement('img');
         pimg.id = 'PM-IMG';
         pimg.src = PMIMG;
@@ -270,16 +298,22 @@
         var beta = '(Beta)'
         $('#DS-IMG').wrap(a);
         $('#wrap').after(pdiv);
-        dimg.onclick = function() {
-            var copyText = 'Birthdays for ' + ( new Date() ).toLocaleDateString( 'en-us', { month: 'long', day: 'numeric', year: 'numeric' } ) + ':\n\n@' + arrBirthdayList.join( '\n@' ) + '\n\nHappy Birthday everyone!';
-            var copied = $('<textarea id="bdcopy" rows="1" cols="1">').val(copyText.replace(/\_*\n/g, '\n')).appendTo('body').select();
-            document.execCommand('copy');
-            console.log(copyText.replace(/\_*\n/g, '\n'));
-            alert('Birthdays Copied for Discord');
-            var rembox = document.getElementById('bdcopy')
-            document.body.removeChild(rembox)
-        }
-    }
+        if (DBG == true) {
+            dimg.onclick = function() {
+                console.log('Birthday Button for Discord Clicked.\n\nBirthday List Contains: ' + arrBirthdayList.length + ' usernames')
+            };
+        } else {
+            dimg.onclick = function() {
+                var copyText = 'Birthdays for ' + ( new Date() ).toLocaleDateString( 'en-us', { month: 'long', day: 'numeric', year: 'numeric' } ) + ':\n\n@' + arrBirthdayList.join( '\n@' ) + '\n\nHappy Birthday everyone!';
+                var copied = $('<textarea id="bdcopy" rows="1" cols="1">').val(copyText.replace(/\_*\n/g, '\n')).appendTo('body').select();
+                document.execCommand('copy');
+                console.log(copyText.replace(/\_*\n/g, '\n'));
+                alert('Birthdays Copied for Discord');
+                var rembox = document.getElementById('bdcopy');
+                document.body.removeChild(rembox);
+            };
+        };
+    };
     function init() {
         var checked = JSON.parse(localStorage.getItem('PDM'));
         var checked1 = JSON.parse(localStorage.getItem('CMSG'));
@@ -287,12 +321,17 @@
         if ($('#message-box').is(':visible')) {
             createTemplate();
             document.getElementById('attach_sig').checked = sigcheck;
+            if (DBG == true) { window.alert('You are in DEBUG Mode for Birthday Script\n\nIf this is in error please contact Script Dev.');
+                              console.log("%cWME Birthdays (DEBUG MODE)", "color: red; font-size:15px;");
+                             };
         }
         if (/forum/.test(location.href) && $("h3:contains(Birthdays)").length > 0) {
             BirthdayButton();
             document.getElementById('PDM').checked = checked;
             document.getElementById('CMSG').checked = checked1;
-            if (DBG == true) { window.alert('You are in DEBUG Mode for Birthday Script'); }
+            if (DBG == true) { window.alert('You are in DEBUG Mode for Birthday Script\n\nIf this is in error please contact Script Dev.');
+                              console.log("%cWME Birthdays (DEBUG MODE)", "color: red; font-size:15px;");
+                             };
         }
     }
     function bootstrap(tries = 1) {
