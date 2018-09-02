@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.09.02.003
+// @version      2018.09.02.004
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -147,21 +147,6 @@
         tl.innerHTML = '  Save Template';
         tdiv.after(tbox);
         tbox.after(tl);
-        if (DBG == false) {
-            tbox.onclick = function() {
-                if ($('#message')[0].value == '') {
-                    window.alert('Template successfully deleted. You may now close this PM window.');
-                    localStorage.setItem('CSTMSG', '');
-                    $('#TMSG').prop('checked', false);
-                };
-                if ($('#message')[0].value !== "") {
-                    var template = encodeURIComponent($('#message')[0].value);
-                    localStorage.setItem('CSTMSG', template);
-                    window.alert('Template successfully saved. You may now close this PM window.');
-                    $('#TMSG').prop('checked', false);
-                };
-            };
-        };
         if (DBG == true) {
             tbox.onclick = function() {
                 if ($('#message')[0].value == '') {
@@ -171,6 +156,21 @@
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
                     console.log('Save Template Box CHECKED\n\nTemplate successfully saved. (Debug Only): \n\n' + 'Plain Text:\n' + $('#message')[0].value +'\n\nEncoded Text:\n' + template);
+                    $('#TMSG').prop('checked', false);
+                };
+            };
+        } else {
+            tbox.onclick = function() {
+                if ($('#message')[0].value == '') {
+                    window.alert('Template successfully deleted. You may now close this PM window.');
+                    localStorage.setItem('CSTMSG', '');
+                    $('#TMSG').prop('checked', false);
+                    localStorage.setItem('CMSG', false);
+                };
+                if ($('#message')[0].value !== "") {
+                    var template = encodeURIComponent($('#message')[0].value);
+                    localStorage.setItem('CSTMSG', template);
+                    window.alert('Template successfully saved. You may now close this PM window.');
                     $('#TMSG').prop('checked', false);
                 };
             };
