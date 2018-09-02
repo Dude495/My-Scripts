@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.08.24.001
+// @version      2018.09.02.001
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -28,11 +28,18 @@
         const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + CUSTMSG + '&username_list=';
         let copyText = arrBirthdayList.join( '\n' );
         console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList);
+        let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+        window.open(PMList1);
+        console.log('PMList1 Triggered (CST)');
         if(arrBirthdayList.length > 20){
             let PMList2 = CUSTPMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
             window.open(PMList2);
+            console.log('PMList2 Triggered (CST)');
+            if (arrBirthdayList.length > 40){
+                let PMList3 = CUSTPMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                window.open(PMList3);
+                console.log('PMList3 Triggered (CST)');
+            }
         }
     }
     function createMessage() {
@@ -61,22 +68,36 @@
         const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
         let copyText = arrBirthdayList.join( '\n' );
         console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList);
+        let PMList1 = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+        window.open(PMList1);
+        console.log('PMList1 Triggered (PDM)');
         if(arrBirthdayList.length > 20){
             let PMList2 = PMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
             window.open(PMList2);
+            console.log('PMList2 Triggered (PDM)');
+            if (arrBirthdayList.length > 40){
+                let PMList3 = PMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                window.open(PMList3);
+                console.log('PMList3 Triggered (PDM)');
+            }
         }
     }
     function createBMessage() {
         const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list=';
         let copyText = arrBirthdayList.join( '\n' );
         console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList);
+        let PMList1 = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+        window.open(PMList1);
+        console.log('PMList1 Triggered (BPM)');
         if(arrBirthdayList.length > 20){
             let PMList2 = BPMBlink + arrBirthdayList.slice(20, 40).join('%0A%0D');
             window.open(PMList2);
+            console.log('PMList2 Triggered (BPM)');
+            if (arrBirthdayList.length > 40){
+                let PMList3 = BPMBlink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                window.open(PMList3);
+                console.log('PMList3 Triggered (BPM)');
+            }
         }
     }
     const link = document.createElement('a');
@@ -126,6 +147,13 @@
         box.id = 'PDM'
         const cl = document.createElement("LABEL");
         cl.innerHTML = '  Use Pre-Defined PM Message';
+        cl.onclick = function() {
+            if (localStorage.getItem('CMSG') == 'true') {
+                $('#CMSG').prop('checked', false)
+                localStorage.setItem('CMSG', 'false')
+            }
+            localStorage.setItem('PDM', box.checked);
+        }
         pdiv.after(box);
         box.after(cl)
         box.onclick = function() {
