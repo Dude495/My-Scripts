@@ -12,6 +12,7 @@
 
 (function() {
     'use strict';
+    const DBG = false;
     const PAGE = window.location.pathname
     const RegEx = /(index.php)/g
     const URL = PAGE.replace(RegEx,'')
@@ -24,79 +25,109 @@
     const PMIMGP = 'data:image/png;base64,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'
     const today = new Date().toLocaleDateString('en-us', { month: 'long', day: 'numeric', year: 'numeric' });
     function custMessage() {
-        const CUSTMSG = localStorage.getItem('CSTMSG');
-        const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + CUSTMSG + '&username_list=';
-        let copyText = arrBirthdayList.join( '\n' );
-        console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList1);
-        console.log('PMList1 Triggered (CST)');
-        if(arrBirthdayList.length > 20){
-            let PMList2 = CUSTPMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
-            window.open(PMList2);
-            console.log('PMList2 Triggered (CST)');
-            if (arrBirthdayList.length > 40){
-                let PMList3 = CUSTPMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
-                window.open(PMList3);
-                console.log('PMList3 Triggered (CST)');
+        if (DBG == false) {
+            const CUSTMSG = localStorage.getItem('CSTMSG');
+            const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + CUSTMSG + '&username_list=';
+            let copyText = arrBirthdayList.join( '\n' );
+            console.info('Birthdays for PM: \n\n'+copyText);
+            let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+            window.open(PMList1);
+            if(arrBirthdayList.length > 20){
+                let PMList2 = CUSTPMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
+                window.open(PMList2);
+                if (arrBirthdayList.length > 40){
+                    let PMList3 = CUSTPMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    window.open(PMList3);
+                }
+            }
+        }
+        if (DBG == true) {
+            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (CST)');
+            if (arrBirthdayList.length > 20) {
+                console.log('PMList2 (CST)');
+                if (arrBirthdayList.length > 40) {
+                    console.log('PMList3 (CST)');
+                }
             }
         }
     }
     function createMessage() {
-        const MYNAME = $('#phpbb > div.waze-header > div > div > div.login_tab > span')[0].textContent.replace('hello ','').replace('  ','');
-        const PDMESSAGE = encodeURIComponent([
-            'Good day all,',' ',
-            'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
-            '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
-            '[b]Global (ROW) & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
-            '[b]Waze USA[/b] - [url]https://discord.gg/Q3YPQC6[/url]',
-            '[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
-            '[b]Mid Atlantic Region (MAR)[/b] - [url]https://goo.gl/E5CKDk[/url]',
-            '[b]New England Region (NER)[/b] - [url]https://goo.gl/forms/X24ENSZ6ANw2sQpV2[/url]',
-            '[b]Northeast Region (NOR)[/b] - [url]https://discord.me/NorthEast_Region[/url]',
-            '[b]Northwest Region (NWR)[/b] - [url]https://discord.me/wazenwr[/url]',
-            '[b]Plains Region (PLN)[/b] - [url]http://www.discord.me/wazepln[/url]',
-            '[b]South Atlantic Region (SAT)[/b] - [url]https://goo.gl/yjKKgv[/url]',
-            '[b]South Central Region (SCR)[/b] - [url]https://discord.me/waze_scr[/url]',
-            '[b]Southeast Region (SER)[/b] - [url]https://discord.me/southeast[/url]',
-            '[b]Southwest Region (SWR)[/b] - [url]https://discord.gg/twxnqnU[/url]',
-            '[b]Territories (ATR)[/b] - [url]https://discord.gg/Vup2VEA[/url]',
-            '[b]Australia[/b] - [url]https://discord.me/wazeaustralia[/url]',
-            '[b]Scripts[/b] - [url]https://discord.me/WazeScripts[/url]',
-            '[b]VEOC[/b] - [url]https://discord.me/waze_veoc[/url][/size]',
-        ].join('\n'));
-        const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
-        let copyText = arrBirthdayList.join( '\n' );
-        console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList1 = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList1);
-        console.log('PMList1 Triggered (PDM)');
-        if(arrBirthdayList.length > 20){
-            let PMList2 = PMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
-            window.open(PMList2);
-            console.log('PMList2 Triggered (PDM)');
-            if (arrBirthdayList.length > 40){
-                let PMList3 = PMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
-                window.open(PMList3);
-                console.log('PMList3 Triggered (PDM)');
+        if (DBG == false) {
+            const MYNAME = $('#phpbb > div.waze-header > div > div > div.login_tab > span')[0].textContent.replace('hello ','').replace('  ','');
+            const PDMESSAGE = encodeURIComponent([
+                'Good day all,',' ',
+                'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
+                '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
+                '[b]Global (ROW) & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
+                '[b]Waze USA[/b] - [url]https://discord.gg/Q3YPQC6[/url]',
+                '[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
+                '[b]Mid Atlantic Region (MAR)[/b] - [url]https://goo.gl/E5CKDk[/url]',
+                '[b]New England Region (NER)[/b] - [url]https://goo.gl/forms/X24ENSZ6ANw2sQpV2[/url]',
+                '[b]Northeast Region (NOR)[/b] - [url]https://discord.me/NorthEast_Region[/url]',
+                '[b]Northwest Region (NWR)[/b] - [url]https://discord.me/wazenwr[/url]',
+                '[b]Plains Region (PLN)[/b] - [url]http://www.discord.me/wazepln[/url]',
+                '[b]South Atlantic Region (SAT)[/b] - [url]https://goo.gl/yjKKgv[/url]',
+                '[b]South Central Region (SCR)[/b] - [url]https://discord.me/waze_scr[/url]',
+                '[b]Southeast Region (SER)[/b] - [url]https://discord.me/southeast[/url]',
+                '[b]Southwest Region (SWR)[/b] - [url]https://discord.gg/twxnqnU[/url]',
+                '[b]Territories (ATR)[/b] - [url]https://discord.gg/Vup2VEA[/url]',
+                '[b]Australia[/b] - [url]https://discord.me/wazeaustralia[/url]',
+                '[b]Scripts[/b] - [url]https://discord.me/WazeScripts[/url]',
+                '[b]VEOC[/b] - [url]https://discord.me/waze_veoc[/url][/size]',
+            ].join('\n'));
+            const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
+            let copyText = arrBirthdayList.join( '\n' );
+            console.info('Birthdays for PM: \n\n'+copyText);
+            let PMList1 = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+            window.open(PMList1);
+            console.log('PMList1 Triggered (PDM)');
+            if(arrBirthdayList.length > 20){
+                let PMList2 = PMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
+                window.open(PMList2);
+                console.log('PMList2 Triggered (PDM)');
+                if (arrBirthdayList.length > 40){
+                    let PMList3 = PMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    window.open(PMList3);
+                    console.log('PMList3 Triggered (PDM)');
+                }
+            }
+        }
+        if (DBG == true) {
+            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (PDM)');
+            if (arrBirthdayList.length > 20) {
+                console.log('PMList2 (PDM)');
+                if (arrBirthdayList.length > 40) {
+                    console.log('PMList3 (PDM)');
+                }
             }
         }
     }
     function createBMessage() {
-        const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list=';
-        let copyText = arrBirthdayList.join( '\n' );
-        console.info('Birthdays for PM: \n\n'+copyText);
-        let PMList1 = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
-        window.open(PMList1);
-        console.log('PMList1 Triggered (BPM)');
-        if(arrBirthdayList.length > 20){
-            let PMList2 = BPMBlink + arrBirthdayList.slice(20, 40).join('%0A%0D');
-            window.open(PMList2);
-            console.log('PMList2 Triggered (BPM)');
-            if (arrBirthdayList.length > 40){
-                let PMList3 = BPMBlink + arrBirthdayList.slice(40, 60).join('%0A%0D');
-                window.open(PMList3);
-                console.log('PMList3 Triggered (BPM)');
+        if (DBG == false) {
+            const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list=';
+            let copyText = arrBirthdayList.join( '\n' );
+            console.info('Birthdays for PM: \n\n'+copyText);
+            let PMList1 = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+            window.open(PMList1);
+            console.log('PMList1 Triggered (BPM)');
+            if(arrBirthdayList.length > 20){
+                let PMList2 = BPMBlink + arrBirthdayList.slice(20, 40).join('%0A%0D');
+                window.open(PMList2);
+                console.log('PMList2 Triggered (BPM)');
+                if (arrBirthdayList.length > 40){
+                    let PMList3 = BPMBlink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    window.open(PMList3);
+                    console.log('PMList3 Triggered (BPM)');
+                }
+            }
+        }
+        if (DBG == true) {
+            console.log('List Length: ' + arrBirthdayList.length + '. The following lists have been triggered' + '\n\n' + 'PMList1 (BPM)');
+            if (arrBirthdayList.length > 20) {
+                console.log('PMList2 (BPM)');
+                if (arrBirthdayList.length > 40) {
+                    console.log('PMList3 (BPM)');
+                }
             }
         }
     }
@@ -116,17 +147,32 @@
         tl.innerHTML = '  Save Template';
         tdiv.after(tbox);
         tbox.after(tl);
-        tbox.onclick = function() {
-            if ($('#message')[0].value == '') {
-                window.alert('Template successfully deleted. You may now close this PM window.');
-                localStorage.setItem('CSTMSG', '');
-                $('#TMSG').prop('checked', false);
+        if (DBG == false) {
+            tbox.onclick = function() {
+                if ($('#message')[0].value == '') {
+                    window.alert('Template successfully deleted. You may now close this PM window.');
+                    localStorage.setItem('CSTMSG', '');
+                    $('#TMSG').prop('checked', false);
+                };
+                if ($('#message')[0].value !== "") {
+                    var template = encodeURIComponent($('#message')[0].value);
+                    localStorage.setItem('CSTMSG', template);
+                    window.alert('Template successfully saved. You may now close this PM window.');
+                    $('#TMSG').prop('checked', false);
+                };
             };
-            if ($('#message')[0].value !== "") {
-                var template = encodeURIComponent($('#message')[0].value);
-                localStorage.setItem('CSTMSG', template);
-                window.alert('Template successfully saved. You may now close this PM window.');
-                $('#TMSG').prop('checked', false);
+        };
+        if (DBG == true) {
+            tbox.onclick = function() {
+                if ($('#message')[0].value == '') {
+                    console.log('Template successfully deleted. (Debug)');
+                    $('#TMSG').prop('checked', false);
+                };
+                if ($('#message')[0].value !== "") {
+                    var template = encodeURIComponent($('#message')[0].value);
+                    console.log('Template success (Debug): \n\n' + template);
+                    $('#TMSG').prop('checked', false);
+                };
             };
         };
         sigbox.onclick = function() {
@@ -146,7 +192,11 @@
         box.setAttribute("type", "checkbox");
         box.id = 'PDM'
         const cl = document.createElement("LABEL");
-        cl.innerHTML = '  Use Pre-Defined PM Message';
+        if (DBG == true) {
+            cl.innerHTML = ' Use Pre-Defined PM Message (Debug)';
+        } else {
+            cl.innerHTML = '  Use Pre-Defined PM Message';
+        }
         cl.onclick = function() {
             if (localStorage.getItem('CMSG') == 'true') {
                 $('#CMSG').prop('checked', false)
@@ -242,6 +292,7 @@
             BirthdayButton();
             document.getElementById('PDM').checked = checked;
             document.getElementById('CMSG').checked = checked1;
+            if (DBG == true) { window.alert('You are in DEBUG Mode for Birthday Script'); }
         }
     }
     function bootstrap(tries = 1) {
