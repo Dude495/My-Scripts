@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME NY UR Project Timer
 // @namespace    Dude495
-// @version      2018.09.23.001
+// @version      2018.10.07.001
 // @description  Adds count down timer for the NY UR Project (2018).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -58,7 +58,6 @@
             };
             if (time < 0) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' phase has ended! <br> Thank you for all your efforts!';
-                Celebrate();
             };
         };
     };
