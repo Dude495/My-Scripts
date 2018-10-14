@@ -16,7 +16,7 @@
     function startClock() {
         const ProjStatus = 'false'
         var PHASE = 'Texas PUR Raid'
-        var phaseTime = new Date('oct 16, 2018 07:00:00 CST').getTime();
+        var phaseTime = new Date('oct 16, 2018 07:00:00 CDT').getTime();
         var now = new Date().getTime();
         var time = phaseTime - now;
         var weeks = Math.floor(time / 604800000);
