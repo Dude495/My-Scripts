@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.09.14.01
+// @version      2018.10.16.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -340,7 +340,7 @@
         }
     }
     function bootstrap(tries = 1) {
-        if (((/forum/.test(location.href)) && $("h3:contains(Birthdays)").length > 0) || $('#message-box').is(':visible')) {
+        if (((/forum/.test(location.href)) && $("h3:contains(Birthdays)").length > 0) || $('#message').is(':visible')) {
             init();
         } else if (tries < 1000) {
             setTimeout(function () {bootstrap(tries++);}, 200);
