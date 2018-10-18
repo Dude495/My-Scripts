@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME TX PUR Raid Timer
 // @namespace    Dude495
-// @version      2018.10.14.02
+// @version      2018.10.18.01
 // @description  Adds count down timer for the TX PUR Raid (2018).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -14,9 +14,9 @@
 (function() {
     'use strict';
     function startClock() {
-        const ProjStatus = 'false'
+        const ProjStatus = 'true'
         var PHASE = 'Texas PUR Raid'
-        var phaseTime = new Date('oct 16, 2018 07:00:00 CDT').getTime();
+        var phaseTime = new Date('oct 31, 2018 23:59:59 CDT').getTime();
         var now = new Date().getTime();
         var time = phaseTime - now;
         var weeks = Math.floor(time / 604800000);
