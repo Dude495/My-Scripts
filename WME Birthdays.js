@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.10.16.01
+// @version      2018.11.28.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -59,7 +59,7 @@
                 'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
                 '[color=#FF0000][size=75]Note: If today is [b]NOT[/b] your birthday, please check your forum settings by [url=https://www.waze.com/forum/ucp.php?i=164]clicking here[/url] to verify it is entered correctly.[/size][/color]','','',
                 '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
-                '[b]Global (ROW) & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
+                '[b]Global (ROW)* & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
                 '[b]Waze USA[/b] - [url]https://discord.gg/Q3YPQC6[/url]',
                 '[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
                 '[b]Mid Atlantic Region (MAR)[/b] - [url]https://goo.gl/E5CKDk[/url]',
@@ -75,6 +75,8 @@
                 '[b]Australia[/b] - [url]https://discord.me/wazeaustralia[/url]',
                 '[b]Scripts[/b] - [url]https://discord.me/WazeScripts[/url]',
                 '[b]VEOC[/b] - [url]https://discord.me/waze_veoc[/url][/size]',
+                '',
+                '[size=85]* Note your country may not utilize Discord, please check with your local community.[/size]',
             ].join('\n'));
             const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
             let copyText = arrBirthdayList.join( '\n' );
