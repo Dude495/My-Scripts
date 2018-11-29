@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.11.28.01
+// @version      2018.11.28.02
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Dude495
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -61,7 +61,7 @@
                 '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
                 '[b]Global (ROW)* & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
                 '[b]Waze USA[/b] - [url]https://discord.gg/Q3YPQC6[/url]',
-                '[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
+                /*'[b]Great Lakes Region (GLR)[/b] - [url]https://discord.me/wazeglr[/url]',
                 '[b]Mid Atlantic Region (MAR)[/b] - [url]https://goo.gl/E5CKDk[/url]',
                 '[b]New England Region (NER)[/b] - [url]https://goo.gl/forms/X24ENSZ6ANw2sQpV2[/url]',
                 '[b]Northeast Region (NOR)[/b] - [url]https://discord.me/NorthEast_Region[/url]',
@@ -71,12 +71,12 @@
                 '[b]South Central Region (SCR)[/b] - [url]https://discord.me/waze_scr[/url]',
                 '[b]Southeast Region (SER)[/b] - [url]https://discord.me/southeast[/url]',
                 '[b]Southwest Region (SWR)[/b] - [url]https://discord.gg/twxnqnU[/url]',
-                '[b]Territories (ATR)[/b] - [url]https://discord.gg/Vup2VEA[/url]',
+                '[b]Territories (ATR)[/b] - [url]https://discord.gg/Vup2VEA[/url]',*/
                 '[b]Australia[/b] - [url]https://discord.me/wazeaustralia[/url]',
                 '[b]Scripts[/b] - [url]https://discord.me/WazeScripts[/url]',
-                '[b]VEOC[/b] - [url]https://discord.me/waze_veoc[/url][/size]',
+                //'[b]VEOC[/b] - [url]https://discord.me/waze_veoc[/url][/size]',
                 '',
-                '[size=85]* Note your country may not utilize Discord, please check with your local community.[/size]',
+                '* Note your country may not utilize Discord, please check with your local community.[/size]',
             ].join('\n'));
             const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
             let copyText = arrBirthdayList.join( '\n' );
