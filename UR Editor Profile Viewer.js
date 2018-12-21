@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.08.29.001
+// @version      2018.12.20.01
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -20,7 +20,7 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Included functionality for Map Comments',
+        '* Added a (PM) link to PURs',
     ].join('\n');
 
     if (UPDATE_ALERT) {
@@ -42,14 +42,25 @@
             }
         }
     }
+    function PURPM() {
+        if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].childNodes[1].textContent.includes('(')) {
+            //var VenueID = $('#landmark-edit-general > ul > li:nth-child(2)')[0].textContent.match(/([0-9].*)/)[1];
+            var epvusername = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].childNodes[1].textContent.match(/(.*)\(\d\)/);
+            var username = epvusername[1];
+            var PermaLink = encodeURIComponent($('#panel-container')[0].baseURI);
+            var profilelink = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=About This Place Update Request&message=[PermaLink: ' + PermaLink + '] " target="_blank">(PM)</a>';
+            $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].innerHTML += profilelink;
+        };
+    };
     function init() {
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
                 if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor')) EPV();
+                else if ($(node).hasClass('place-update-edit')) PURPM();
             }));
         });
         mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true});
-        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true})
+        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true});
     };
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.user && $('#panel-container').length) {
