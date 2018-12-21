@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2018.12.20.01
+// @version      2018.12.20.02
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -44,11 +44,21 @@
     }
     function PURPM() {
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].childNodes[1].textContent.includes('(')) {
-            //var VenueID = $('#landmark-edit-general > ul > li:nth-child(2)')[0].textContent.match(/([0-9].*)/)[1];
+            var center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
+            var LON = center.lon;
+            var LAT = center.lat;
+            var ZOOM = W.map.zoom;
+            var ENVL = $('#sidepanel-prefs > div > div > form > div:nth-child(4) > select')[0].value;
+            var ENV = $('#env-select > div > select')[0].value;
+            if ($('#landmark-edit-general > ul > li:nth-child(2)')[0] !== undefined) {
+                let VenueID = $('#landmark-edit-general > ul > li:nth-child(2)')[0].textContent.match(/([0-9].*)/)[1];
+                var PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&venues=' + VenueID);
+            } else {
+                PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM);
+            }
             var epvusername = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].childNodes[1].textContent.match(/(.*)\(\d\)/);
             var username = epvusername[1];
-            var PermaLink = encodeURIComponent($('#panel-container')[0].baseURI);
-            var profilelink = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=About This Place Update Request&message=[PermaLink: ' + PermaLink + '] " target="_blank">(PM)</a>';
+            var profilelink = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=About This Place Update Request&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank">(PM)</a>';
             $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].innerHTML += profilelink;
         };
     };
