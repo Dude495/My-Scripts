@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2018.12.11.01
+// @version      2019.01.01.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -11,7 +11,7 @@
 
 (async function() {
     'use strict';
-    const DBG = false;
+    const DBG = true;
     const PAGE = window.location.pathname
     const RegEx = /(index.php)/g
     const URL = PAGE.replace(RegEx,'')
@@ -44,6 +44,10 @@
                 if (arrBirthdayList.length > 40){
                     let PMList3 = CUSTPMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
                     window.open(PMList3);
+                    if (arrBirthdayList.length > 60){
+                        let PMList4 = CUSTPMLink + arrBirthdayList.slice(60, 80).join('%0A%0D');
+                        window.open(PMList4);
+                    };
                 };
             };
         };
@@ -53,6 +57,9 @@
                 console.log('PMList2 (CST)');
                 if (arrBirthdayList.length > 40) {
                     console.log('PMList3 (CST)');
+                    if (arrBirthdayList.length > 60) {
+                        console.log('PMList4 (CST)')
+                    };
                 };
             };
         };
@@ -95,6 +102,9 @@
                 if (arrBirthdayList.length > 40){
                     let PMList3 = PMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
                     window.open(PMList3);
+                    if (arrBirthdayList.length > 60) {
+                        let PMList4 = PMLink + arrBirthdayList.slice(60,80).join('%0A%0D');
+                    };
                 };
             };
         };
@@ -104,6 +114,9 @@
                 console.log('PMList2 (PDM)');
                 if (arrBirthdayList.length > 40) {
                     console.log('PMList3 (PDM)');
+                    if (arrBirthdayList.length > 60) {
+                        console.log('PMList4 (PDM)');
+                    };
                 };
             };
         };
@@ -121,6 +134,10 @@
                 if (arrBirthdayList.length > 40){
                     let PMList3 = BPMBlink + arrBirthdayList.slice(40, 60).join('%0A%0D');
                     window.open(PMList3);
+                    if (arrBirthdayList.length > 60){
+                        let PMList4 = BPMBlink + arrBirthdayList.slice(60, 80).join('%0A%0D');
+                        window.open(PMList4);
+                    };
                 };
             };
         };
@@ -130,6 +147,9 @@
                 console.log('PMList2 (BPM)');
                 if (arrBirthdayList.length > 40) {
                     console.log('PMList3 (BPM)');
+                    if (arrBirthdayList.length > 60) {
+                        console.log('PMList4 (BPM)');
+                    };
                 };
             };
         };
@@ -328,7 +348,7 @@
         if ($('#message-box').is(':visible')) {
             createTemplate();
             document.getElementById('attach_sig').checked = sigcheck;
-            if (DBG == true) { window.alert('You are in DEBUG Mode for ' + SCRIPTNAME + ' Script\n\nIf this is in error please contact Script Dev.');
+            if (DBG == true) { window.alert('You are in DEBUG Mode for ' + SCRIPTNAME + ' Script\n\nIf this is in error please contact Dude495.');
                               console.log("%cWME Birthdays (DEBUG MODE)", "color: red; font-size:15px;");
                              };
         }
@@ -336,7 +356,7 @@
             BirthdayButton();
             document.getElementById('PDM').checked = checked;
             document.getElementById('CMSG').checked = checked1;
-            if (DBG == true) { window.alert('You are in DEBUG Mode for ' + SCRIPTNAME + ' Script\n\nIf this is in error please contact Script Dev.');
+            if (DBG == true) { window.alert('You are in DEBUG Mode for ' + SCRIPTNAME + ' Script\n\nIf this is in error please contact Dude495.');
                               console.log('%c' + SCRIPTNAME +' (DEBUG MODE)', 'color: red; font-size:15px;');
                              };
         }
