@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2019.01.07.01
+// @version      2019.01.08.01
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -13,8 +13,8 @@
 
 (async function() {
     'use strict';
-    const NY = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
-    const STATE = NY
+    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
+    const STATE = NEOR
     const NYdata = await fetch(STATE).then(response => response.json());
     const ENRegEx = /([A-Za-z ])*: /g
     var VERSION = GM_info.script.version;
@@ -23,10 +23,10 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added Color Highlights [NY Only]',
-        '* Green means the user has been sent a Welcome Letter by another editor already',
+        '* Added Color Highlights to MC and URs [NOR/NER Only]',
+        '* Yellow means the user has been sent a Welcome Letter already, but does not indicate a response.',
         '* If the user is not highlighted and the name is not familiar please check if a welcome letter is needed.',
-        '* Additional support for the rest of NOR & NER soon.',
+        '* Your username will not be highlighted even if you are listed in the tracker.',
     ].join('\n');
 
     if (UPDATE_ALERT) {
@@ -36,7 +36,7 @@
             localStorage.setItem(SCRIPT_NAME, VERSION);
         }
     }
-    function NYEPV() {
+    function NEOREPV() {
         var i;
         for (i = 0; i < $('span.username').length; i++) {
             if ($('span.username')[i].textContent.includes('(')) {
@@ -47,8 +47,12 @@
                 NYdata.feed.entry.forEach(function(entry) {
                     let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
                     let testName = username1.replace(ENRegEx,'');
+                    let EPVME = W.loginManager.user.userName;
+                    if (username.toLowerCase() == EPVME.toLowerCase()) {
+                        $('span.username')[i].style.backgroundColor = '';
+                    }
                     if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('span.username')[i].style.backgroundColor = "#5cd65c";
+                        $('span.username')[i].style.backgroundColor = '#F7E000';
                     };
                 });
             };
@@ -89,10 +93,9 @@
         var RegEx = /([A-Za-z ])*, /g
         var StateDiv = $('#topbar-container > div > div > div.location-info-region > div > span')[0].textContent
         var State = StateDiv.replace(RegEx, '');
-        if (State == 'New York') {
-            NYEPV();
-        };
-        if (State !== 'New York') {
+        if (State == 'New York' || State == 'New Jersey' || State == 'Delaware' || State == 'Pennsylvania' || State == 'Massachusetts' || State == 'Vermont' || State == 'New Hampshire' || State == 'Rhode Island' || State == 'Maine' || State == 'Connecticut') {
+            NEOREPV();
+        } else {
             EPV();
         };
     };
