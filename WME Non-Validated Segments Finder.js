@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Non-Validated Segments Finder
 // @namespace    Dude495
-// @version      2019.01.09.01
+// @version      2019.01.09.02
 // @description  Identify Non-Verified Segment IDs.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -33,7 +33,6 @@
                 let i;
                 for (i = 0; i < SegList.length; i++) {
                     if (SegList[i].attributes.validated == false) {
-                        var SegNotVal = SegList[i].length;
                         console.warn('Segment ID ' + SegList[i].attributes.id + ' not verified! PermaLink Below:');
                         console.log('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&segments=' + SegList[i].attributes.id);
                         sessionStorage.setItem('Alert', 'Yes')
