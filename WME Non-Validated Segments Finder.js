@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Non-Validated Segments Finder
 // @namespace    Dude495
-// @version      2019.01.09.02
+// @version      2019.01.09.03
 // @description  Identify Non-Verified Segment IDs.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -14,6 +14,7 @@
     'use strict';
     function findSegments() {
         if (W.map.zoom <= 3) {
+            alert('Minimum Zoom Lvl 4 Required. Please Zoom In.');
             console.error('Minimum Zoom Lvl 4 Required. Please Zoom In.');
         }
         if (W.map.zoom >= 4) {
