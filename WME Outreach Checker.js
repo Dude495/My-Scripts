@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.14.01
+// @version      2019.01.14.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -16,7 +16,7 @@
     var TAB = '4'
     var STATE = NEOR;
     const SS = 'https://spreadsheets.google.com/feeds/list/'+STATE+'/'+TAB+'/public/values?alt=json';
-    const NYdata = await fetch(SS).then(response => response.json());
+    const SSFEED = await fetch(SS).then(response => response.json());
     const ENRegEx = /([A-Za-z ])*: /g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
@@ -37,30 +37,33 @@
     function runORC() {
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
-        }
+        };
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
         var i;
         for (i = 0; i < $('span.username').length; i++) {
             if ($('span.username')[i].textContent.includes('(')) {
                 var ORCusername = $('span.username')[i].textContent.match(/(.*)\(\d\)/);
                 var username = ORCusername[1];
-                NYdata.feed.entry.forEach(function(entry) {
+                SSFEED.feed.entry.some(function(entry) {
                     let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
                     let testName = username1.replace(ENRegEx,'');
                     let ORCME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == ORCME.toLowerCase() || ORWL.includes(username.toLowerCase())) {
-                        $('span.username')[i].style.backgroundColor = '';
-                        if (username.toLowerCase() == ORCME.toLowerCase()) {
-                            $('span.username')[i].title = 'This is you';
-                        };
-                        if (ORWL.includes(username.toLowerCase())) {
-                            $('span.username')[i].title = username + ' is listed in the WhiteList';
-                        };
-                    }
-                    else if (username.toLowerCase() == testName.toLowerCase() && !ORWL.includes(username.toLowerCase())) {
+                    if (username.toLowerCase() == testName.toLowerCase()) {
                         $('span.username')[i].style.backgroundColor = '#F7E000';
                         $('span.username')[i].title = username + ' located in the outreach spreadsheet.';
-                    } else {
+                        return true;
+                    }
+                    else if (username.toLowerCase() == ORCME.toLowerCase()) {
+                        $('span.username')[i].style.backgroundColor = '#ffffff';
+                        $('span.username')[i].title = 'This is you';
+                        return true;
+                    }
+                    else if (ORWL.includes(username.toLowerCase())) {
+                        $('span.username')[i].style.backgroundColor = '#ffffff';
+                        $('span.username')[i].title = username + ' is listed in the WhiteList';
+                        return true;
+                    }
+                    else {
                         $('span.username')[i].style.backgroundColor = '#ff0000';
                         $('span.username')[i].title = username + ' not located in the outreach spreadsheet.';
                     };
