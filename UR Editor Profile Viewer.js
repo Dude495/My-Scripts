@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2019.01.08.01
+// @version      2019.01.14.01
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -13,20 +13,13 @@
 
 (async function() {
     'use strict';
-    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
-    const STATE = NEOR
-    const NYdata = await fetch(STATE).then(response => response.json());
-    const ENRegEx = /([A-Za-z ])*: /g
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = true;
+    var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added Color Highlights to MC and URs [NOR/NER Only]',
-        '* Yellow means the user has been sent a Welcome Letter already, but does not indicate a response.',
-        '* If the user is not highlighted and the name is not familiar please check if a welcome letter is needed.',
-        '* Your username will not be highlighted even if you are listed in the tracker.',
+        '* Moved Outreach highlights to its own script.'
     ].join('\n');
 
     if (UPDATE_ALERT) {
@@ -36,28 +29,6 @@
             localStorage.setItem(SCRIPT_NAME, VERSION);
         }
     }
-    function NEOREPV() {
-        var i;
-        for (i = 0; i < $('span.username').length; i++) {
-            if ($('span.username')[i].textContent.includes('(')) {
-                var epvusername = $('span.username')[i].textContent.match(/(.*)\(\d\)/);
-                var username = epvusername[1];
-                var profilelink = '<a href="https://www.waze.com/user/editor/' + username + '" target="_blank">' + epvusername[0] + '</a>';
-                $('span.username')[i].innerHTML = profilelink;
-                NYdata.feed.entry.forEach(function(entry) {
-                    let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
-                    let testName = username1.replace(ENRegEx,'');
-                    let EPVME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == EPVME.toLowerCase()) {
-                        $('span.username')[i].style.backgroundColor = '';
-                    }
-                    if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('span.username')[i].style.backgroundColor = '#F7E000';
-                    };
-                });
-            };
-        };
-    };
     function EPV() {
         var i;
         for (i = 0; i < $('span.username').length; i++) {
@@ -89,20 +60,10 @@
             $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0].innerHTML += profilelink;
         };
     };
-    function StateCheck() {
-        var RegEx = /([A-Za-z ])*, /g
-        var StateDiv = $('#topbar-container > div > div > div.location-info-region > div > span')[0].textContent
-        var State = StateDiv.replace(RegEx, '');
-        if (State == 'New York' || State == 'New Jersey' || State == 'Delaware' || State == 'Pennsylvania' || State == 'Massachusetts' || State == 'Vermont' || State == 'New Hampshire' || State == 'Rhode Island' || State == 'Maine' || State == 'Connecticut') {
-            NEOREPV();
-        } else {
-            EPV();
-        };
-    };
     function init() {
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
-                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor')) StateCheck();
+                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor')) EPV();
                 else if ($(node).hasClass('place-update-edit')) PURPM();
             }));
         });
@@ -110,7 +71,7 @@
         mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true});
     };
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.user && $('#panel-container').length) {
+        if (W && W.loginManager && W.loginManager.user && ($('#panel-container').length || $('span.username').length >= 1)) {
             init();
             console.log(GM_info.script.name, 'Initialized');
         } else {
