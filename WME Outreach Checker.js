@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.03
+// @version      2019.01.16.04
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -25,7 +25,7 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added Segment and Place Venue support.'
+        '* Added Segment and Place support.'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -53,9 +53,14 @@
                         let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
-                        if (username.toLowerCase() == testName.toLowerCase()) {
+                        /*if (username.toLowerCase() == testName.toLowerCase() && (responses.includes('Yes'))) {
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#99ff99';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            return true;
+                        }
+                        else */if (username.toLowerCase() == testName.toLowerCase()) {
                             $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#F7E000';
-                                $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -83,11 +88,19 @@
                     let username = ORCusername[1];
                     SSFEED.feed.entry.some(function(entry) {
                         let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let responses = entry['gsx$changescantakeupto'].$t;
+                        let reporter = entry['gsx$minutesdelaytoappear'].$t;
+                        let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
-                        if (username.toLowerCase() == testName.toLowerCase()) {
+                        /*if (username.toLowerCase() == testName.toLowerCase() && (responses.includes('Yes'))) {
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#99ff99';
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            return true;
+                        }
+                        else */if (username.toLowerCase() == testName.toLowerCase()) {
                             $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
-                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -117,11 +130,19 @@
                     let username = ORCusername[1];
                     SSFEED.feed.entry.some(function(entry) {
                         let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let responses = entry['gsx$changescantakeupto'].$t;
+                        let reporter = entry['gsx$minutesdelaytoappear'].$t;
+                        let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
-                        if (username.toLowerCase() == testName.toLowerCase()) {
+                        /*if (username.toLowerCase() == testName.toLowerCase() && (responses.includes('Yes'))) {
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#99ff99';
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            return true;
+                        }
+                        else */if (username.toLowerCase() == testName.toLowerCase()) {
                             $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
-                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -149,11 +170,19 @@
                     let username = ORCusername[1];
                     SSFEED.feed.entry.some(function(entry) {
                         let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let responses = entry['gsx$changescantakeupto'].$t;
+                        let reporter = entry['gsx$minutesdelaytoappear'].$t;
+                        let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
-                        if (username.toLowerCase() == testName.toLowerCase()) {
+                        /*if (username.toLowerCase() == testName.toLowerCase() && (responses.includes('Yes'))) {
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#99ff99';
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            return true;
+                        }
+                        else */if (username.toLowerCase() == testName.toLowerCase()) {
                             $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#F7E000';
-                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -181,11 +210,19 @@
                     let username = ORCusername[1];
                     SSFEED.feed.entry.some(function(entry) {
                         let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let responses = entry['gsx$changescantakeupto'].$t;
+                        let reporter = entry['gsx$minutesdelaytoappear'].$t;
+                        let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
-                        if (username.toLowerCase() == testName.toLowerCase()) {
+                        /*if ((username.toLowerCase() == testName.toLowerCase()) && (responses.includes('Yes'))) {
+                            $('span.username')[i].style.backgroundColor = '#809fff';
+                            $('span.username')[i].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
+                            return true;
+                        }
+                        else */if (username.toLowerCase() == testName.toLowerCase()) {
                             $('span.username')[i].style.backgroundColor = '#F7E000';
-                            $('span.username')[i].title = username + ' located in the outreach spreadsheet.';
+                            $('span.username')[i].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -225,6 +262,7 @@
             '<br><br><div id="ORC-info">',
             '<p style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</p>',
             '<p style="color: black; background-color: #F7E000">Yellow: User has been contacted.</p>',
+            //'<p style="color: black; background-color: #99ff99">Green: User has been contacted and responded.</p>',
             '<p style="color: black; background-color: white">White: Yourself/Whitelisted user.</p>',
             '</div></div>',
         ].join(' '));
