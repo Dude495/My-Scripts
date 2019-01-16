@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.02
+// @version      2019.01.16.03
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -48,11 +48,14 @@
                     let username = ORCusername[1];
                     SSFEED.feed.entry.some(function(entry) {
                         let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let responses = entry['gsx$changescantakeupto'].$t;
+                        let reporter = entry['gsx$minutesdelaytoappear'].$t;
+                        let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
                         if (username.toLowerCase() == testName.toLowerCase()) {
                             $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#F7E000';
-                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                                $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
                             return true;
                         }
                         else if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -67,7 +70,7 @@
                         }
                         else {
                             $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ff0000'
-                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' not located in the outreach spreadsheet.';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is not located in the outreach spreadsheet.';
                         };
                     });
                 };
