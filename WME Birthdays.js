@@ -329,10 +329,12 @@
         $('#wrap').after(pdiv);
         if (DBG == true) {
             dimg.onclick = function() {
+                let today = localStorage.getItem('WMEBtoday');
                 console.log('Birthday Button for Discord Clicked.\n\nBirthday List Contains: ' + arrBirthdayListDiscord.length + ' usernames')
             };
         } else {
             dimg.onclick = function() {
+                let today = localStorage.getItem('WMEBtoday');
                 var copyText = 'Birthdays for ' + today + ':\n\n@' + arrBirthdayListDiscord.join( '\n@' ) + '\n\nHappy Birthday everyone!';
                 var copied = $('<textarea id="bdcopy" rows="1" cols="1">').val(copyText.replace(/\_*\n/g, '\n')).appendTo('body').select();
                 document.execCommand('copy');
