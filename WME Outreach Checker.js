@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.01
+// @version      2019.01.16.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -19,7 +19,6 @@
     const SSFEED = await fetch(SS).then(response => response.json());
     const ENRegEx = /([A-Za-z ])*: /g;
     const INCRegEx = /(.*)\(\d\)/
-    //const STAFF = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('staff')
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
     var UPDATE_ALERT = true;
@@ -42,119 +41,134 @@
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
         if (WazeWrap.hasPlaceSelected()) {
             if ($('#landmark-edit-general > ul > li:nth-child(1) > a')[0].textContent.includes('(')) {
-                let ORCusername = $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].textContent.match(INCRegEx);
-                let username = ORCusername[1];
-                SSFEED.feed.entry.some(function(entry) {
-                    let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
-                    let testName = username1.replace(ENRegEx,'');
-                    let ORCME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#F7E000';
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' located in the outreach spreadsheet.';
-                        return true;
-                    }
-                    else if (username.toLowerCase() == ORCME.toLowerCase()) {
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = 'This is you';
-                        return true;
-                    }
-                    else if (ORWL.includes(username.toLowerCase())) {
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is listed in the WhiteList';
-                        return true;
-                    }
-                    else {
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ff0000'
-                        $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' not located in the outreach spreadsheet.';
-                    };
-                });
+                if ($('#landmark-edit-general > ul > li:nth-child(1) > a')[0].textContent.includes('staff')) {
+                    return;
+                } else {
+                    let ORCusername = $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    SSFEED.feed.entry.some(function(entry) {
+                        let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let testName = username1.replace(ENRegEx,'');
+                        let ORCME = W.loginManager.user.userName;
+                        if (username.toLowerCase() == testName.toLowerCase()) {
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#F7E000';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            return true;
+                        }
+                        else if (username.toLowerCase() == ORCME.toLowerCase()) {
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = 'This is you';
+                            return true;
+                        }
+                        else if (ORWL.includes(username.toLowerCase())) {
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' is listed in the WhiteList';
+                            return true;
+                        }
+                        else {
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].style.backgroundColor = '#ff0000'
+                            $('#landmark-edit-general > ul > li:nth-child(1) > a')[0].title = username + ' not located in the outreach spreadsheet.';
+                        };
+                    });
+                };
             };
             if ($('#landmark-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('(')) {
-                let ORCusername = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].textContent.match(INCRegEx);
-                let username = ORCusername[1];
-                SSFEED.feed.entry.some(function(entry) {
-                    let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
-                    let testName = username1.replace(ENRegEx,'');
-                    let ORCME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
-                        return true;
-                    }
-                    else if (username.toLowerCase() == ORCME.toLowerCase()) {
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = 'This is you';
-                        return true;
-                    }
-                    else if (ORWL.includes(username.toLowerCase())) {
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is listed in the WhiteList';
-                        return true;
-                    }
-                    else {
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ff0000'
-                        $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' not located in the outreach spreadsheet.';
-                    };
-                });
+                if ($('#landmark-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('staff')) {
+                    return;
+                } else {
+                    let ORCusername = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    SSFEED.feed.entry.some(function(entry) {
+                        let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let testName = username1.replace(ENRegEx,'');
+                        let ORCME = W.loginManager.user.userName;
+                        if (username.toLowerCase() == testName.toLowerCase()) {
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            return true;
+                        }
+                        else if (username.toLowerCase() == ORCME.toLowerCase()) {
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = 'This is you';
+                            return true;
+                        }
+                        else if (ORWL.includes(username.toLowerCase())) {
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is listed in the WhiteList';
+                            return true;
+                        }
+                        else {
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ff0000'
+                            $('#landmark-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' not located in the outreach spreadsheet.';
+                        };
+                    });
+                };
             };
-        }
+        };
         if (WazeWrap.hasSegmentSelected()) {
-            console.log('ORC-Segments Activated');
             if ($('#segment-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('(')) {
-                let ORCusername = $('#segment-edit-general > ul > li:nth-child(2) > a')[0].textContent.match(INCRegEx);
-                let username = ORCusername[1];
-                SSFEED.feed.entry.some(function(entry) {
-                    let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
-                    let testName = username1.replace(ENRegEx,'');
-                    let ORCME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
-                        return true;
-                    }
-                    else if (username.toLowerCase() == ORCME.toLowerCase()) {
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = 'This is you';
-                        return true;
-                    }
-                    else if (ORWL.includes(username.toLowerCase())) {
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is listed in the WhiteList';
-                        return true;
-                    }
-                    else {
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ff0000'
-                        $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' not located in the outreach spreadsheet.';
-                    };
-                });
+                if ($('#segment-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('staff')) {
+                    return;
+                } else {
+                    let ORCusername = $('#segment-edit-general > ul > li:nth-child(2) > a')[0].textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    SSFEED.feed.entry.some(function(entry) {
+                        let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let testName = username1.replace(ENRegEx,'');
+                        let ORCME = W.loginManager.user.userName;
+                        if (username.toLowerCase() == testName.toLowerCase()) {
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#F7E000';
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            return true;
+                        }
+                        else if (username.toLowerCase() == ORCME.toLowerCase()) {
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = 'This is you';
+                            return true;
+                        }
+                        else if (ORWL.includes(username.toLowerCase())) {
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' is listed in the WhiteList';
+                            return true;
+                        }
+                        else {
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].style.backgroundColor = '#ff0000'
+                            $('#segment-edit-general > ul > li:nth-child(2) > a')[0].title = username + ' not located in the outreach spreadsheet.';
+                        };
+                    });
+                };
             };
             if ($('#segment-edit-general > ul > li:nth-child(3) > a')[0].textContent.includes('(')) {
-                let ORCusername = $('#segment-edit-general > ul > li:nth-child(3) > a')[0].textContent.match(INCRegEx);
-                let username = ORCusername[1];
-                SSFEED.feed.entry.some(function(entry) {
-                    let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
-                    let testName = username1.replace(ENRegEx,'');
-                    let ORCME = W.loginManager.user.userName;
-                    if (username.toLowerCase() == testName.toLowerCase()) {
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#F7E000';
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' located in the outreach spreadsheet.';
-                        return true;
-                    }
-                    else if (username.toLowerCase() == ORCME.toLowerCase()) {
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = 'This is you';
-                        return true;
-                    }
-                    else if (ORWL.includes(username.toLowerCase())) {
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ffffff';
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' is listed in the WhiteList';
-                        return true;
-                    }
-                    else {
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ff0000'
-                        $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' not located in the outreach spreadsheet.';
-                    };
-                });
+                if ($('#segment-edit-general > ul > li:nth-child(2) > a')[0].textContent.includes('staff')) {
+                    return;
+                } else {
+                    let ORCusername = $('#segment-edit-general > ul > li:nth-child(3) > a')[0].textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    SSFEED.feed.entry.some(function(entry) {
+                        let username1 = entry['gsx$usehttpj.mpneweditorsorttosortlist'].$t;
+                        let testName = username1.replace(ENRegEx,'');
+                        let ORCME = W.loginManager.user.userName;
+                        if (username.toLowerCase() == testName.toLowerCase()) {
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#F7E000';
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' located in the outreach spreadsheet.';
+                            return true;
+                        }
+                        else if (username.toLowerCase() == ORCME.toLowerCase()) {
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = 'This is you';
+                            return true;
+                        }
+                        else if (ORWL.includes(username.toLowerCase())) {
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ffffff';
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' is listed in the WhiteList';
+                            return true;
+                        }
+                        else {
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].style.backgroundColor = '#ff0000'
+                            $('#segment-edit-general > ul > li:nth-child(3) > a')[0].title = username + ' not located in the outreach spreadsheet.';
+                        };
+                    });
+                };
             };
         } else {
             var i;
