@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.04
+// @version      2019.01.16.05
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -19,13 +19,15 @@
     const SSFEED = await fetch(SS).then(response => response.json());
     const ENRegEx = /([A-Za-z ])*: /g;
     const INCRegEx = /(.*)\(\d\)/
+    const RRE = /\(\d\)/
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
     var UPDATE_ALERT = true;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added Segment and Place support.'
+        '* Added Segment and Place support.',
+        '* Rank 5+ Editors auto whitelisted.'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -215,6 +217,8 @@
                         let dateC = entry['gsx$httpj.mpneweditorformtoreport'].$t;
                         let testName = username1.replace(ENRegEx,'');
                         let ORCME = W.loginManager.user.userName;
+                        let RUN = $('span.username')[i].textContent.match(RRE)
+                        let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'')
                         /*if ((username.toLowerCase() == testName.toLowerCase()) && (responses.includes('Yes'))) {
                             $('span.username')[i].style.backgroundColor = '#809fff';
                             $('span.username')[i].title = username + ' is located in the outreach spreadsheet. \n\n' + reporter + '\nDate(s) ' + dateC + '\n' + responses + '.';
@@ -230,7 +234,7 @@
                             $('span.username')[i].title = 'This is you';
                             return true;
                         }
-                        else if (ORWL.includes(username.toLowerCase())) {
+                        else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             $('span.username')[i].style.backgroundColor = '#ffffff';
                             $('span.username')[i].title = username + ' is listed in the WhiteList';
                             return true;
