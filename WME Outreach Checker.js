@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.05
+// @version      2019.01.16.06
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -27,7 +27,7 @@
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
         '* Added Segment and Place support.',
-        '* Rank 5+ Editors auto whitelisted.'
+        '* Rank 4+ Editors auto whitelisted.'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
