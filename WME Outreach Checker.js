@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.16.09
+// @version      2019.01.16.10
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -285,12 +285,16 @@
         };
     };
     function StateCheck() {
-        var State = W.model.states.top.name
+        var State = W.model.states.additionalInfo[0].name
         if (State == 'New York' || State == 'New Jersey' || State == 'Delaware' || State == 'Pennsylvania' || State == 'Massachusetts' || State == 'Vermont' || State == 'New Hampshire' || State == 'Rhode Island' || State == 'Maine' || State == 'Connecticut') {
             runORC();
-            console.log('ORC: State set to ' + State)
+            //console.log('ORC: State set to ' + State)
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
+            $('#ORC-State')[0].style.backgroundColor = ''
         } else {
-            console.log('ORC: This script only supports the N(EO)R Regions at this time.');
+            //console.log('ORC: This script only supports the N(EO)R Regions at this time.');
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
+            $('#ORC-State')[0].style.backgroundColor = 'red'
         };
     };
     function createTab() {
@@ -299,6 +303,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently restricted to N(EO)R Regions Only.<h4></div>',
+            '<br><h5><div id="ORC-State">Current State: </div></h5>',
             '<br><br><div id="ORC-info">',
             '<p style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</p>',
             '<p style="color: black; background-color: #F7E000">Yellow: User has been contacted.</p>',
@@ -353,7 +358,8 @@
         if (W && W.loginManager && W.loginManager.user && ($('#panel-container').length || $('span.username').length >= 1)) {
             createTab();
             init();
-            W.selectionManager.events.register("selectionchanged", null, runORC);
+            W.selectionManager.events.register("selectionchanged", null, StateCheck);
+            W.map.events.register("moveend", W.map, StateCheck);
             console.log(GM_info.script.name, 'Initialized');
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
