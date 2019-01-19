@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.17.02
+// @version      2019.01.19.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -41,7 +41,7 @@
     });
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = true;
+    var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
@@ -366,15 +366,17 @@
             '<p style="color: black; background-color: #99bbff">Light Blue: N(EO)R Management.</p>',
             //'<p style="color: black; background-color: #99ff99">Green: User has been contacted and responded.</p>',
             '<p style="color: black; background-color: white">White: Yourself/Whitelisted user.</p>',
-            '</div></div>',
+            '</div>',
+            '<div id="ORC-resources"><p><b>Resources:</b><br><a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>',
+            '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
         var btn = document.createElement("BUTTON");
         btn.id = 'ORCBtn';
         var Button = document.getElementById('ORCBtn');
         btn.textContent = 'Save';
-        var WLLabel = document.createElement('LABEL')
-        WLLabel.innerHTML = '<br><b><h6>Username(s) to be whitelisted (separated by comma):</h6>'
+        var WLLabel = document.createElement('LABEL');
+        WLLabel.innerHTML = '<br><b><h6>Username(s) to be whitelisted (separated by comma):</h6>';
         var ORCTOP = document.getElementById('ORC-Top');
         var tb = document.createElement('INPUT');
         tb.id = 'ORWLVal';
