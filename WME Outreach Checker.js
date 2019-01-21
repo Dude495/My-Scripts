@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.19.01
+// @version      2019.01.21.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -358,16 +358,16 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
-            '<br><h4>This script is currently restricted to N(EO)R Regions Only.<h4></div>',
+            '<br><h4>This script is currently restricted to the N(EO)R Regions Only.<h4></div>',
             '<br><h5><div id="ORC-State">Current State: </div></h5>',
-            '<br><br><div id="ORC-info">',
-            '<p style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</p>',
-            '<p style="color: black; background-color: #F7E000">Yellow: User has been contacted.</p>',
-            '<p style="color: black; background-color: #99bbff">Light Blue: N(EO)R Management.</p>',
-            //'<p style="color: black; background-color: #99ff99">Green: User has been contacted and responded.</p>',
-            '<p style="color: black; background-color: white">White: Yourself/Whitelisted user.</p>',
+            '<br><div id="ORC-info">',
+            '<br><span style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</span>',
+            '<br><span style="color: black; background-color: #F7E000" title="User has been contacted but does not mean they have replied or joined Discord">Yellow: User has been contacted.</span>',
+            '<br><span style="color: black; background-color: #99bbff" title="N(EO)R Leadership">Light Blue: N(EO)R Management.</span>',
+            //'<br><span style="color: black; background-color: #99ff99">Green: User has been contacted and responded.</span>',
+            '<br><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">White: Yourself/Whitelisted users (R4+).</span>',
             '</div>',
-            '<div id="ORC-resources"><p><b>Resources:</b><br><a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>',
+            '<p><div id="ORC-resources"><p><b>Resources:</b><br><a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>',
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
@@ -397,6 +397,7 @@
                 runORC();
             };
         };
+        setTimeout(StateCheck, 1000);
     };
     function init() {
         var mo = new MutationObserver(mutations => {
