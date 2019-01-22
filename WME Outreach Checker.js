@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.22.01
+// @version      2019.01.22.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet (N[EO]R Only).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -15,29 +15,23 @@
 
 (async function() {
     'use strict';
+    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
+    const MAR = 'https://spreadsheets.google.com/feeds/list/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/1/public/values?alt=json';
+    const SS = NEOR; //Set to either NEOR or MAR depending on the region you're editing in.
     const ENRegEx = /([A-Za-z ])*: /g;
     const INCRegEx = /(.*)\(\d\)/;
     const RRE = /\(\d\)/g;
-    const SS = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
-    var ORCFeedList = [];
     const whitelistColor = '#ffffff';
     const inSheetColor = '#F7E000';
     const notInSheetColor = '#ff0000';
     const managementColor = '#99bbff';
     const youColor = '#ffffff';
-    await $.getJSON(SS, function(data){
-        ORCFeedList = data;
-    });
-    let mapped = ORCFeedList.feed.entry.map(obj =>{
-        return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
-               };
-    });
     var RegMgt = [];
     await $.getJSON('https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/od6/public/values?alt=json', function(data){
         RegMgt = data;
     });
     const MgtList = RegMgt.feed.entry.map(obj =>{
-        return obj.gsx$neormanagement.$t
+        return obj.gsx$regionmanagement.$t
     });
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
@@ -45,7 +39,7 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Initial Public Release',
+        '* Added support for MAR, You must change NEOR to MAR on line 20 in the script.',
         '* Please notify Dude495 of any issues you encounter.'
     ].join('\n');
     if (UPDATE_ALERT) {
@@ -85,7 +79,7 @@
                         }
                         else if (MgtList.includes(username.toLowerCase())) {
                             LandMark1.style.backgroundColor = managementColor;
-                            LandMark1.title = username + ' is N(EO)R Management';
+                            LandMark1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             LandMark1.style.backgroundColor = whitelistColor;
@@ -119,7 +113,7 @@
                             }
                             else if (MgtList.includes(username.toLowerCase())) {
                                 LandMark2.style.backgroundColor = managementColor;
-                                LandMark2.title = username + ' is N(EO)R Management';
+                                LandMark2.title = username + ' is Regional Management';
                             }
                             else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                                 LandMark2.style.backgroundColor = whitelistColor;
@@ -155,7 +149,7 @@
                         }
                         else if (MgtList.includes(username.toLowerCase())) {
                             Seg1.style.backgroundColor = managementColor;
-                            Seg1.title = username + ' is N(EO)R Management';
+                            Seg1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             Seg1.style.backgroundColor = whitelistColor;
@@ -189,7 +183,7 @@
                             }
                             else if (MgtList.includes(username.toLowerCase())) {
                                 Seg2.style.backgroundColor = managementColor;
-                                Seg2.title = username + ' is N(EO)R Management';
+                                Seg2.title = username + ' is Regional Management';
                             }
                             else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
                                 Seg2.style.backgroundColor = whitelistColor;
@@ -225,7 +219,7 @@
                         }
                         else if (MgtList.includes(username.toLowerCase())) {
                             MapComment1.style.backgroundColor = managementColor;
-                            MapComment1.title = username + ' is N(EO)R Management';
+                            MapComment1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             MapComment1.style.backgroundColor = whitelistColor;
@@ -258,7 +252,7 @@
                         }
                         else if (MgtList.includes(username.toLowerCase())) {
                             MapComment2.style.backgroundColor = managementColor;
-                            MapComment2.title = username + ' is N(EO)R Management';
+                            MapComment2.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
                             MapComment2.style.backgroundColor = whitelistColor;
@@ -291,7 +285,7 @@
                     }
                     else if (MgtList.includes(username.toLowerCase())) {
                         URName[i].style.backgroundColor = managementColor;
-                        URName[i].title = username + ' is N(EO)R Management';
+                        URName[i].title = username + ' is Regional Management';
                     }
                     else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                         URName[i].style.backgroundColor = whitelistColor;
@@ -311,40 +305,68 @@
             };
         };
     };
+    function StateCheck() {
+        var State = W.model.states.additionalInfo[0].name
+        var SState = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut,Maryland,District of Columbia,West Virginia,Virginia'
+        var RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
+        var RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
+        if (RegNEOR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R'
+        }
+        else if (RegMAR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR'
+        } else {
+            $('#ORC-Region')[0].innerHTML = '<b><span style="color: white; background-color: #ff0000">Current Region Not Supported.</span></b>'
+            //$('#ORC-Region')[0].style.backgroundColor = notInSheetColor
+        };
+        if (SState.includes(State)) {
+            runORC();
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
+            $('#ORC-State')[0].style.backgroundColor = ''
+        } else {
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
+            $('#ORC-State')[0].style.backgroundColor = 'red'
+        };
+    };
+    var ORCFeedList = [];
+    async function loadMasterList() {
+        await $.getJSON(SS, function(data){
+            ORCFeedList = data;
+        });
+    };
     function getFromSheetList(editorName){
+        let mapped = ORCFeedList.feed.entry.map(obj =>{
+            if (SS == NEOR) {
+                return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
+                       };
+            };
+            if (SS == MAR) {
+                return {username: obj.gsx$editorusername.$t.trim(), responses: obj.gsx$didtheyjoindiscord.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                       };
+            };
+        });
         for(let i=0; i<mapped.length; i++){
             if(mapped[i].username.toLowerCase() === editorName.toLowerCase())
                 return mapped[i];
         };
         return null;
     };
-    function StateCheck() {
-        var State = W.model.states.additionalInfo[0].name
-        if (State == 'New York' || State == 'New Jersey' || State == 'Delaware' || State == 'Pennsylvania' || State == 'Massachusetts' || State == 'Vermont' || State == 'New Hampshire' || State == 'Rhode Island' || State == 'Maine' || State == 'Connecticut') {
-            runORC();
-            //console.log('ORC: State set to ' + State)
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
-            $('#ORC-State')[0].style.backgroundColor = ''
-        } else {
-            //console.log('ORC: This script only supports the N(EO)R Regions at this time.');
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State
-            $('#ORC-State')[0].style.backgroundColor = 'red'
-        };
-    };
     function createTab() {
         var $section = $('<div>');
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
-            '<br><h4>This script is currently restricted to the N(EO)R Regions Only.<h4></div>',
-            '<br><h5><div id="ORC-State">Current State: </div></h5>',
+            '<br><h4>This script is currently restricted to the N(EO)R & MAR Regions Only.<h4></div>',
+            //'<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option></select>',
+            '<br><div id="ORC-Region">Current Region: </div>',
+            '<div id="ORC-State">Current State: </div>',
             '<br><div id="ORC-info">',
             '<br><span style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</span>',
             '<br><span style="color: black; background-color: #F7E000" title="User has been contacted but does not mean they have replied or joined Discord">Yellow: User has been contacted.</span>',
-            '<br><span style="color: black; background-color: #99bbff" title="N(EO)R Leadership">Light Blue: N(EO)R Management.</span>',
+            '<br><span style="color: black; background-color: #99bbff" title="N(EO)R Leadership">Light Blue: Regional Management (SM+).</span>',
             '<br><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">White: Yourself/Whitelisted users (R4+).</span>',
             '</div>',
-            '<p><div id="ORC-resources"><p><b>Resources:</b><br><a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>',
+            '<p><div id="ORC-resources"><p><b>Resources:</b><br>',
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
@@ -361,6 +383,15 @@
         ORCTOP.after(tb);
         tb.after(btn);
         tb.before(WLLabel);
+        var ORCRes = document.getElementById('ORC-resources');
+        var ORCResList = document.createElement('LABEL');
+        if (SS == NEOR) {
+            ORCResList.innerHTML = '<a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>'
+        };
+        if (SS == MAR) {
+            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdfiaBesso7HTlAFxYdIW6oLdEOb0UQ9K9R4zys0gMTiyXpmQ/viewform" target="_blank">MAR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/pubhtml" target="_blank">Published Contacts Sheet</a>'
+        };
+        ORCRes.after(ORCResList);
         btn.onclick = function() {
             console.log('ORC ORWL: ' + tb.value + ' has been added.');
             if (localStorage.getItem('ORWL') == null) {
@@ -374,7 +405,8 @@
                 runORC();
             };
         };
-        setTimeout(StateCheck, 1000);
+        loadMasterList();
+        setTimeout(StateCheck, 3000);
     };
     function init() {
         var mo = new MutationObserver(mutations => {
@@ -391,7 +423,7 @@
         };
     };
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.user && ($('#panel-container').length || $('span.username').length >= 1)) {
+        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && ($('#panel-container').length || $('span.username').length >= 1)) {
             createTab();
             init();
             W.selectionManager.events.register("selectionchanged", null, StateCheck);
