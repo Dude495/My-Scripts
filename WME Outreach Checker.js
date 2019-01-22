@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.22.02
-// @description  Checks if a user has been contacted and listed in the outreach sheet (N[EO]R Only).
+// @version      2019.01.22.03
+// @description  Checks if a user has been contacted and listed in the region outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
