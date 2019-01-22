@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.21.02
-// @description  Checks if a user has been contacted and listed in the outreach sheet.
+// @version      2019.01.22.01
+// @description  Checks if a user has been contacted and listed in the outreach sheet (N[EO]R Only).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -41,14 +41,12 @@
     });
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = false;
+    var UPDATE_ALERT = true;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added Segment and Place support.',
-        '* Added highlighting to identify N(EO)R SM+.',
-        '* Rank 4+ Editors auto whitelisted.',
-        '* Modified code to improve WME lag (Thanks Justin!)'
+        '* Initial Public Release',
+        '* Please notify Dude495 of any issues you encounter.'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -104,35 +102,37 @@
                     };
                 };
             };
-            if (LandMark2.textContent.includes('(')) {
-                if (LandMark2.textContent.includes('staff')) {
-                    return;
-                } else {
-                    if (LandMark2.textContent.includes('(')) {
-                        let ORCusername = LandMark2.textContent.match(INCRegEx);
-                        let username = ORCusername[1];
-                        let RUN = LandMark2.textContent.match(RRE);
-                        let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
-                        let entry = getFromSheetList(username);
-                        if (username.toLowerCase() == ORCME.toLowerCase()) {
-                            LandMark2.style.backgroundColor = youColor;
-                            LandMark2.title = 'This is you';
-                        }
-                        else if (MgtList.includes(username.toLowerCase())) {
-                            LandMark2.style.backgroundColor = managementColor;
-                            LandMark2.title = username + ' is N(EO)R Management';
-                        }
-                        else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
-                            LandMark2.style.backgroundColor = whitelistColor;
-                            LandMark2.title = username + ' is listed in the WhiteList';
-                        }
-                        else if (entry != null) {
-                            LandMark2.style.backgroundColor = inSheetColor;
-                            LandMark2.title = username + ' is located in the outreach spreadsheet. \n\n' + entry.reporter + '\nDate(s) ' + entry.dateC + '\n' + entry.responses + '.';
-                        }
-                        else {
-                            LandMark2.style.backgroundColor = notInSheetColor
-                            LandMark2.title = username + ' not located in the outreach spreadsheet.';
+            if (LandMark2 !== undefined) {
+                if (LandMark2.textContent.includes('(')) {
+                    if (LandMark2.textContent.includes('staff')) {
+                        return;
+                    } else {
+                        if (LandMark2.textContent.includes('(')) {
+                            let ORCusername = LandMark2.textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = LandMark2.textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                LandMark2.style.backgroundColor = youColor;
+                                LandMark2.title = 'This is you';
+                            }
+                            else if (MgtList.includes(username.toLowerCase())) {
+                                LandMark2.style.backgroundColor = managementColor;
+                                LandMark2.title = username + ' is N(EO)R Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                                LandMark2.style.backgroundColor = whitelistColor;
+                                LandMark2.title = username + ' is listed in the WhiteList';
+                            }
+                            else if (entry != null) {
+                                LandMark2.style.backgroundColor = inSheetColor;
+                                LandMark2.title = username + ' is located in the outreach spreadsheet. \n\n' + entry.reporter + '\nDate(s) ' + entry.dateC + '\n' + entry.responses + '.';
+                            }
+                            else {
+                                LandMark2.style.backgroundColor = notInSheetColor
+                                LandMark2.title = username + ' not located in the outreach spreadsheet.';
+                            };
                         };
                     };
                 };
@@ -172,35 +172,37 @@
                     };
                 };
             };
-            if (Seg2.textContent.includes('(')) {
-                if (Seg2.textContent.includes('staff')) {
-                    return;
-                } else {
-                    if (Seg2.textContent.includes('(')) {
-                        let ORCusername = Seg2.textContent.match(INCRegEx);
-                        let username = ORCusername[1];
-                        let RUN = Seg2.textContent.match(RRE);
-                        let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
-                        let entry = getFromSheetList(username);
-                        if (username.toLowerCase() == ORCME.toLowerCase()) {
-                            Seg2.style.backgroundColor = youColor;
-                            Seg2.title = 'This is you';
-                        }
-                        else if (MgtList.includes(username.toLowerCase())) {
-                            Seg2.style.backgroundColor = managementColor;
-                            Seg2.title = username + ' is N(EO)R Management';
-                        }
-                        else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
-                            Seg2.style.backgroundColor = whitelistColor;
-                            Seg2.title = username + ' is listed in the WhiteList';
-                        }
-                        else if (entry != null) {
-                            Seg2.style.backgroundColor = inSheetColor;
-                            Seg2.title = username + ' is located in the outreach spreadsheet. \n\n' + entry.reporter + '\nDate(s) ' + entry.dateC + '\n' + entry.responses + '.';
-                        }
-                        else {
-                            Seg2.style.backgroundColor = notInSheetColor
-                            Seg2.title = username + ' not located in the outreach spreadsheet.';
+            if (Seg2 !== undefined) {
+                if (Seg2.textContent.includes('(')) {
+                    if (Seg2.textContent.includes('staff')) {
+                        return;
+                    } else {
+                        if (Seg2.textContent.includes('(')) {
+                            let ORCusername = Seg2.textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = Seg2.textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                Seg2.style.backgroundColor = youColor;
+                                Seg2.title = 'This is you';
+                            }
+                            else if (MgtList.includes(username.toLowerCase())) {
+                                Seg2.style.backgroundColor = managementColor;
+                                Seg2.title = username + ' is N(EO)R Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
+                                Seg2.style.backgroundColor = whitelistColor;
+                                Seg2.title = username + ' is listed in the WhiteList';
+                            }
+                            else if (entry != null) {
+                                Seg2.style.backgroundColor = inSheetColor;
+                                Seg2.title = username + ' is located in the outreach spreadsheet. \n\n' + entry.reporter + '\nDate(s) ' + entry.dateC + '\n' + entry.responses + '.';
+                            }
+                            else {
+                                Seg2.style.backgroundColor = notInSheetColor
+                                Seg2.title = username + ' not located in the outreach spreadsheet.';
+                            };
                         };
                     };
                 };
@@ -340,7 +342,6 @@
             '<br><span style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</span>',
             '<br><span style="color: black; background-color: #F7E000" title="User has been contacted but does not mean they have replied or joined Discord">Yellow: User has been contacted.</span>',
             '<br><span style="color: black; background-color: #99bbff" title="N(EO)R Leadership">Light Blue: N(EO)R Management.</span>',
-            //'<br><span style="color: black; background-color: #99ff99">Green: User has been contacted and responded.</span>',
             '<br><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">White: Yourself/Whitelisted users (R4+).</span>',
             '</div>',
             '<p><div id="ORC-resources"><p><b>Resources:</b><br><a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>',
@@ -379,7 +380,7 @@
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
                 if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit')) StateCheck();
-                else if ($(node).hasClass('address-edit-view')) { console.log ('Selected. Selected'); }
+                //else if ($(node).hasClass('address-edit-view')) { console.log ('Selected. Selected'); }
             }));
         });
         mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true});
