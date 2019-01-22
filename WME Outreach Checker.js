@@ -2,7 +2,7 @@
 // @name         WME Outreach Checker
 // @namespace    Dude495
 // @version      2019.01.22.03
-// @description  Checks if a user has been contacted and listed in the region outreach sheet.
+// @description  Checks if a user has been contacted and listed in the outreach sheet (N[EO]R Only).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -15,9 +15,6 @@
 
 (async function() {
     'use strict';
-    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
-    const MAR = 'https://spreadsheets.google.com/feeds/list/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/1/public/values?alt=json';
-    const SS = NEOR; //Set to either NEOR or MAR depending on the region you're editing in.
     const ENRegEx = /([A-Za-z ])*: /g;
     const INCRegEx = /(.*)\(\d\)/;
     const RRE = /\(\d\)/g;
@@ -40,6 +37,7 @@
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
         '* Added support for MAR, You must change NEOR to MAR on line 20 in the script.',
+        '* Added Dropdown menu for region selection.',
         '* Please notify Dude495 of any issues you encounter.'
     ].join('\n');
     if (UPDATE_ALERT) {
@@ -329,18 +327,30 @@
         };
     };
     var ORCFeedList = [];
+    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
+    const MAR = 'https://spreadsheets.google.com/feeds/list/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/1/public/values?alt=json';
     async function loadMasterList() {
+        if (!localStorage.getItem('SS')) {
+            localStorage.setItem('SS', NEOR)
+            console.log('ORC: Loading Default List (NEOR)....');
+            var SS = localStorage.getItem('SS')
+            }
+        else {
+            var SS = localStorage.getItem('SS')
+            console.log('ORC: Loading ' + localStorage.getItem('SS') + ' Master List....')
+        }
         await $.getJSON(SS, function(data){
             ORCFeedList = data;
+            console.log('ORC: Master List Loaded....')
         });
     };
     function getFromSheetList(editorName){
         let mapped = ORCFeedList.feed.entry.map(obj =>{
-            if (SS == NEOR) {
+            if (localStorage.getItem('SS') == NEOR) {
                 return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
                        };
             };
-            if (SS == MAR) {
+            if (localStorage.getItem('SS') == MAR) {
                 return {username: obj.gsx$editorusername.$t.trim(), responses: obj.gsx$didtheyjoindiscord.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                        };
             };
@@ -351,13 +361,23 @@
         };
         return null;
     };
+    function updateMasterList() {
+        if ($('#ORCRegList')[0].value == NEOR) {
+            localStorage.setItem('SS', NEOR);
+        }
+        else if ($('#ORCRegList')[0].value == MAR) {
+            localStorage.setItem('SS', MAR);
+            console.log('Switching to ' + MAR)
+        };
+        setTimeout(loadMasterList, 500);
+    }
     function createTab() {
         var $section = $('<div>');
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently restricted to the N(EO)R & MAR Regions Only.<h4></div>',
-            //'<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option></select>',
+            '<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option></select>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<br><div id="ORC-info">',
@@ -383,12 +403,29 @@
         ORCTOP.after(tb);
         tb.after(btn);
         tb.before(WLLabel);
+        let SelectedRegion = $('#ORCRegList')[0];
+        if (localStorage.getItem('SS') == MAR) {
+            SelectedRegion.value = 'MAR';
+        }
+        else if (localStorage.getItem('SS') == NEOR) {
+            SelectedRegion.value = 'NEOR';
+        };
+        SelectedRegion.onchange = function() {
+            if (SelectedRegion.value == 'NEOR') {
+                localStorage.setItem('SS', NEOR);
+                setTimeout(updateMasterList, 500);
+            }
+            else if (SelectedRegion.value == 'MAR') {
+                localStorage.setItem('SS', MAR);
+                setTimeout(updateMasterList, 500);
+            };
+        };
         var ORCRes = document.getElementById('ORC-resources');
         var ORCResList = document.createElement('LABEL');
-        if (SS == NEOR) {
+        if (localStorage.getItem('SS') == NEOR) {
             ORCResList.innerHTML = '<a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>'
         };
-        if (SS == MAR) {
+        if (localStorage.getItem('SS') == MAR) {
             ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdfiaBesso7HTlAFxYdIW6oLdEOb0UQ9K9R4zys0gMTiyXpmQ/viewform" target="_blank">MAR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/pubhtml" target="_blank">Published Contacts Sheet</a>'
         };
         ORCRes.after(ORCResList);
@@ -426,6 +463,9 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && ($('#panel-container').length || $('span.username').length >= 1)) {
             createTab();
             init();
+            if (!localStorage.getItem('SS')) {
+                localStorage.setItem('SS', NEOR);
+            }
             W.selectionManager.events.register("selectionchanged", null, StateCheck);
             W.map.events.register("moveend", W.map, StateCheck);
             console.log(GM_info.script.name, 'Initialized');
