@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.22.03
+// @version      2019.01.22.04
 // @description  Checks if a user has been contacted and listed in the outreach sheet (N[EO]R Only).
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -36,7 +36,7 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added support for MAR, You must change NEOR to MAR on line 20 in the script.',
+        '* Added support for MAR.',
         '* Added Dropdown menu for region selection.',
         '* Please notify Dude495 of any issues you encounter.'
     ].join('\n');
