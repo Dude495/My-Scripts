@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.02
+// @version      2019.01.23.03
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -270,7 +270,7 @@
                 };
             };
         };
-        if (WazeWrap.hasSelectedFeatures('camera')) {
+        if (WazeWrap.hasSelectedFeatures('camera') && !WazeWrap.hasSegmentSelected()) {
             if (Camera1.textContent.includes('(')) {
                 if (Camera1.textContent.includes('staff')) {
                     return;
