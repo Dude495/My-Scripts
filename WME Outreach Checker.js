@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.06
+// @version      2019.01.23.07
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -21,6 +21,7 @@
     const whitelistColor = '#ffffff';
     const inSheetColor = '#F7E000';
     const notInSheetColor = '#ff0000';
+    const notInSheetFColor = '#ffffff'
     const managementColor = '#99bbff';
     const youColor = '#ffffff';
     var VERSION = GM_info.script.version;
@@ -87,7 +88,8 @@
                             LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            LandMark1.style.backgroundColor = notInSheetColor
+                            LandMark1.style.backgroundColor = notInSheetColor;
+                            LandMark1.style.color = notInSheetFColor;
                             LandMark1.title = username + ' is not located in the outreach spreadsheet.';
                         };
                     };
@@ -122,7 +124,8 @@
                                 LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                             }
                             else {
-                                LandMark2.style.backgroundColor = notInSheetColor
+                                LandMark2.style.backgroundColor = notInSheetColor;
+                                LandMark2.style.color = notInSheetFColor;
                                 LandMark2.title = username + ' not located in the outreach spreadsheet.';
                             };
                         };
@@ -159,7 +162,8 @@
                             Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            Seg1.style.backgroundColor = notInSheetColor
+                            Seg1.style.backgroundColor = notInSheetColor;
+                            Seg1.style.color = notInSheetFColor;
                             Seg1.title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -194,7 +198,8 @@
                                 Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                             }
                             else {
-                                Seg2.style.backgroundColor = notInSheetColor
+                                Seg2.style.backgroundColor = notInSheetColor;
+                                Seg2.style.color = notInSheetFColor;
                                 Seg2.title = username + ' not located in the outreach spreadsheet.';
                             };
                         };
@@ -231,7 +236,8 @@
                             MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            MapComment1.style.backgroundColor = notInSheetColor
+                            MapComment1.style.backgroundColor = notInSheetColor;
+                            MapComment1.style.color = notInSheetFColor;
                             MapComment1.title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -265,7 +271,8 @@
                             MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            MapComment2.style.backgroundColor = notInSheetColor
+                            MapComment2.style.backgroundColor = notInSheetColor;
+                            MapComment2.style.color = notInSheetFColor;
                             MapComment2.title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -301,7 +308,8 @@
                             Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            Camera1.style.backgroundColor = notInSheetColor
+                            Camera1.style.backgroundColor = notInSheetColor;
+                            Camera1.style.color = notInSheetFColor;
                             Camera1.title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -335,7 +343,8 @@
                             Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            Camera2.style.backgroundColor = notInSheetColor
+                            Camera2.style.backgroundColor = notInSheetColor;
+                            Camera2.style.color = notInSheetFColor;
                             Camera2.title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -371,7 +380,8 @@
                             PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
-                            PUR.childNodes[1].style.backgroundColor = notInSheetColor
+                            PUR.childNodes[1].style.backgroundColor = notInSheetColor;
+                            PUR.childNodes[1].style.color = notInSheetFColor;
                             PUR.childNodes[1].title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
@@ -408,6 +418,7 @@
                     }
                     else {
                         URName[i].style.backgroundColor = notInSheetColor;
+                        URName[i].style.color = notInSheetFColor;
                         URName[i].title = username + ' not located in the outreach spreadsheet.';
                     };
                 };
