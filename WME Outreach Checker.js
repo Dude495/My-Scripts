@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.01
+// @version      2019.01.23.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -511,6 +511,9 @@
         }
         else if (localStorage.getItem('SS') == SWR) {
             SelectedRegion.value = 'SWR';
+        }
+        else if (localStorage.getItem('SS') == OH) {
+            SelectedRegion.value = 'OH';
         };
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR') {
@@ -540,19 +543,22 @@
         };
         if (localStorage.getItem('SS') == SWR) {
             ORCResList.innerHTML = '<a href="https://docs.google.com/spreadsheets/d/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/edit#gid=0" target="_blank">Published Contacts Sheet</a>'
-            ORCRes.after(ORCResList);
-            btn.onclick = function() {
-                console.log('ORC ORWL: ' + tb.value + ' has been added.');
-                if (localStorage.getItem('ORWL') == null) {
-                    localStorage.setItem('ORWL', 'ORWList: ')
-                    let ORWLOld = localStorage.getItem('ORWL');
-                    localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
-                    runORC();
-                } else {
-                    let ORWLOld = localStorage.getItem('ORWL');
-                    localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
-                    runORC();
-                };
+        };
+        if (localStorage.getItem('SS') == OH) {
+            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSccibGYNPyCDU-oR9MTR5T3q8ZgpoYrdw6sSvXVS4SSSCA6xQ/viewform="_blank">Ohio New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/pubhtml" target="_blank">Published Contacts Sheet</a>'
+        };
+        ORCRes.after(ORCResList);
+        btn.onclick = function() {
+            console.log('ORC ORWL: ' + tb.value + ' has been added.');
+            if (localStorage.getItem('ORWL') == null) {
+                localStorage.setItem('ORWL', 'ORWList: ')
+                let ORWLOld = localStorage.getItem('ORWL');
+                localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
+                runORC();
+            } else {
+                let ORWLOld = localStorage.getItem('ORWL');
+                localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
+                runORC();
             };
         };
         loadMasterList();
