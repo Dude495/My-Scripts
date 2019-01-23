@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.03
+// @version      2019.01.23.04
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -23,13 +23,6 @@
     const notInSheetColor = '#ff0000';
     const managementColor = '#99bbff';
     const youColor = '#ffffff';
-    var RegMgt = [];
-    await $.getJSON('https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/od6/public/values?alt=json', function(data){
-        RegMgt = data;
-    });
-    const MgtList = RegMgt.feed.entry.map(obj =>{
-        return obj.gsx$regionmanagement.$t
-    });
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
     var UPDATE_ALERT = true;
@@ -72,12 +65,13 @@
                         let username = ORCusername[1];
                         let RUN = LandMark1.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                        let leadership = getMgtFromSheetList(username);
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             LandMark1.style.backgroundColor = youColor;
                             LandMark1.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             LandMark1.style.backgroundColor = managementColor;
                             LandMark1.title = username + ' is Regional Management';
                         }
@@ -107,11 +101,12 @@
                             let RUN = LandMark2.textContent.match(RRE);
                             let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                             let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
                             if (username.toLowerCase() == ORCME.toLowerCase()) {
                                 LandMark2.style.backgroundColor = youColor;
                                 LandMark2.title = 'This is you';
                             }
-                            else if (MgtList.includes(username.toLowerCase())) {
+                            else if (leadership != null) {
                                 LandMark2.style.backgroundColor = managementColor;
                                 LandMark2.title = username + ' is Regional Management';
                             }
@@ -142,12 +137,13 @@
                         let username = ORCusername[1];
                         let RUN = Seg1.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                        let leadership = getMgtFromSheetList(username);
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Seg1.style.backgroundColor = youColor;
                             Seg1.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             Seg1.style.backgroundColor = managementColor;
                             Seg1.title = username + ' is Regional Management';
                         }
@@ -177,11 +173,12 @@
                             let RUN = Seg2.textContent.match(RRE);
                             let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                             let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
                             if (username.toLowerCase() == ORCME.toLowerCase()) {
                                 Seg2.style.backgroundColor = youColor;
                                 Seg2.title = 'This is you';
                             }
-                            else if (MgtList.includes(username.toLowerCase())) {
+                            else if (leadership != null) {
                                 Seg2.style.backgroundColor = managementColor;
                                 Seg2.title = username + ' is Regional Management';
                             }
@@ -212,12 +209,13 @@
                         let username = ORCusername[1];
                         let RUN = MapComment1.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                        let leadership = getMgtFromSheetList(username);
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             MapComment1.style.backgroundColor = youColor;
                             MapComment1.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             MapComment1.style.backgroundColor = managementColor;
                             MapComment1.title = username + ' is Regional Management';
                         }
@@ -246,11 +244,12 @@
                         let RUN = MapComment2.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                         let entry = getFromSheetList(username);
+                        let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             MapComment2.style.backgroundColor = youColor;
                             MapComment2.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             MapComment2.style.backgroundColor = managementColor;
                             MapComment2.title = username + ' is Regional Management';
                         }
@@ -270,7 +269,7 @@
                 };
             };
         };
-        if (WazeWrap.hasSelectedFeatures('camera') && !WazeWrap.hasSegmentSelected()) {
+        if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera') {
             if (Camera1.textContent.includes('(')) {
                 if (Camera1.textContent.includes('staff')) {
                     return;
@@ -281,11 +280,12 @@
                         let RUN = Camera1.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                         let entry = getFromSheetList(username);
+                        let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Camera1.style.backgroundColor = youColor;
                             Camera1.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             Camera1.style.backgroundColor = managementColor;
                             Camera1.title = username + ' is Regional Management';
                         }
@@ -314,11 +314,12 @@
                         let RUN = Camera2.textContent.match(RRE);
                         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                         let entry = getFromSheetList(username);
+                        let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Camera2.style.backgroundColor = youColor;
                             Camera2.title = 'This is you';
                         }
-                        else if (MgtList.includes(username.toLowerCase())) {
+                        else if (leadership != null) {
                             Camera2.style.backgroundColor = managementColor;
                             Camera2.title = username + ' is Regional Management';
                         }
@@ -346,12 +347,13 @@
                     let RUN = URName[i].textContent.match(RRE);
                     let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
                     let entry = getFromSheetList(username);
+                    let leadership = getMgtFromSheetList(username);
                     if (username.toLowerCase() == ORCME.toLowerCase()) {
                         URName[i].style.backgroundColor = youColor;
                         URName[i].title = 'This is you';
                         continue;
                     }
-                    else if (MgtList.includes(username.toLowerCase())) {
+                    else if (leadership != null) {
                         URName[i].style.backgroundColor = managementColor;
                         URName[i].title = username + ' is Regional Management';
                     }
@@ -373,13 +375,13 @@
             };
         };
     };
+    const SState = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut,Maryland,District of Columbia,West Virginia,Virginia,Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah,Ohio'
+    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
+    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
+    const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah'
+    const RegGLR = 'Ohio'
     function StateCheck() {
         var State = W.model.states.additionalInfo[0].name
-        var SState = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut,Maryland,District of Columbia,West Virginia,Virginia,Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah,Ohio'
-        var RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
-        var RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
-        var RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah'
-        var RegGLR = 'Ohio'
         if (RegNEOR.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R';
         }
@@ -425,6 +427,49 @@
             console.log('ORC: Master List Loaded....');
         });
     };
+    var RegMgt = [];
+    async function loadLeadershipList() {
+        if (!localStorage.getItem('SS')) {
+            localStorage.setItem('SS', NEOR)
+            console.log('ORC: Loading Default List (NEOR)....');
+            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            var MgtReg = 'NEOR'
+            }
+        else if (localStorage.getItem('SS') == NEOR) {
+            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            console.log('ORC: Loading NEOR Leadership Master List....');
+            var MgtReg = 'NEOR'
+            }
+        else if (localStorage.getItem('SS') == MAR) {
+            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json'
+            console.log('ORC: Loading MAR Leadership Master List....');
+            var MgtReg = 'MAR'
+            }
+        else if (localStorage.getItem('SS') == SWR) {
+            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/5/public/values?alt=json'
+            console.log('ORC: Loading SWR Leadership Master List....');
+            var MgtReg = 'SWR'
+            }
+        else if (localStorage.getItem('SS') == OH) {
+            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json'
+            console.log('ORC: Loading Ohio Leadership Master List....');
+            var MgtReg = 'Ohio'
+            };
+        await $.getJSON(MgtSheet, function(ldata){
+            RegMgt = ldata;
+            console.log('ORC: '+MgtReg+' Leadership Masterlist Loaded....');
+        });
+    };
+    function getMgtFromSheetList(editorName) {
+        let MgtList = RegMgt.feed.entry.map(obj =>{
+            return {username: obj.gsx$regionleadership.$t};
+        });
+        for(let i=0; i<MgtList.length; i++){
+            if(MgtList[i].username.toLowerCase() === editorName.toLowerCase())
+                return MgtList[i];
+        };
+        return null;
+    };
     function getFromSheetList(editorName){
         let mapped = ORCFeedList.feed.entry.map(obj =>{
             if (localStorage.getItem('SS') == NEOR) {
@@ -469,6 +514,7 @@
             localStorage.setItem('SS', OH);
         };
         setTimeout(loadMasterList, 500);
+        setTimeout(loadLeadershipList, 500);
     };
     function createTab() {
         var $section = $('<div>');
@@ -479,6 +525,7 @@
             '<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option><option value="SWR">SWR</option><option value="OH">Ohio</option></select>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
+            '<div id="ORC-Warning"></div>',
             '<br><div id="ORC-info">',
             '<br><span style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</span>',
             '<br><span style="color: black; background-color: #F7E000" title="User has been contacted but does not mean they have replied or joined Discord">Yellow: User has been contacted.</span>',
@@ -516,21 +563,29 @@
             SelectedRegion.value = 'OH';
         };
         SelectedRegion.onchange = function() {
-            if (SelectedRegion.value == 'NEOR') {
+            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', NEOR);
                 setTimeout(updateMasterList, 500);
             }
-            else if (SelectedRegion.value == 'MAR') {
+            else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', MAR);
                 setTimeout(updateMasterList, 500);
             }
-            else if (SelectedRegion.value == 'SWR') {
+            else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', SWR);
                 setTimeout(updateMasterList, 500);
             }
-            else if (SelectedRegion.value == 'OH') {
+            else if (SelectedRegion.value == 'OH' && RegGLR.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', OH);
                 setTimeout(updateMasterList, 500);
+            }
+            else {
+                $('#ORC-Warning')[0].innerHTML = '<br><span style="color: white; background-color: #ff0000">ERROR: Your selected region list does not match your current WME location.</span>'
+                console.log('ORC: Master Lists not updated.');
             };
         };
         var ORCRes = document.getElementById('ORC-resources');
@@ -562,6 +617,7 @@
             };
         };
         loadMasterList();
+        loadLeadershipList();
         setTimeout(StateCheck, 3000);
     };
     function init() {
