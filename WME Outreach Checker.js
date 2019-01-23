@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.05
+// @version      2019.01.23.06
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,6 +31,7 @@
         '',
         '* Added support for MAR/SWR/Ohio sheets (Request)',
         '* Added support for Cameras (Request)',
+        '* Added support for PURs',
         '* Added Dropdown menu for region selection. (Request)'
     ].join('\n');
     if (UPDATE_ALERT) {
@@ -49,13 +50,15 @@
         const MapComment2 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0]
         const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0]
         const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0]
+        const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0]
+        const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0]
         const URName = $('span.username')
         const ORCME = W.loginManager.user.userName;
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
         };
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
-        if (WazeWrap.hasPlaceSelected()) {
+        if (WazeWrap.hasPlaceSelected() && PUR == undefined) {
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff')) {
                     return;
@@ -334,6 +337,42 @@
                         else {
                             Camera2.style.backgroundColor = notInSheetColor
                             Camera2.title = username + ' not located in the outreach spreadsheet.';
+                        };
+                    };
+                };
+            };
+        };
+        if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user').is(':visible')) {
+            if (PUR.childNodes[1].textContent.includes('(')) {
+                if (PUR.childNodes[1].textContent.includes('staff')) {
+                    return;
+                } else {
+                    if (PUR.childNodes[1].textContent.includes('(')) {
+                        let ORCusername = PUR.childNodes[1].textContent.match(INCRegEx);
+                        let username = ORCusername[1];
+                        let RUN = PUR.childNodes[1].textContent.match(RRE);
+                        let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                        let entry = getFromSheetList(username);
+                        let leadership = getMgtFromSheetList(username);
+                        if (username.toLowerCase() == ORCME.toLowerCase()) {
+                            PUR.childNodes[1].style.backgroundColor = youColor;
+                            PUR.childNodes[1].title = 'This is you';
+                        }
+                        else if (leadership != null) {
+                            PUR.childNodes[1].style.backgroundColor = managementColor;
+                            PUR.childNodes[1].title = username + ' is Regional Management';
+                        }
+                        else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                            PUR.childNodes[1].style.backgroundColor = whitelistColor;
+                            PUR.childNodes[1].title = username + ' is listed in the WhiteList';
+                        }
+                        else if (entry != null) {
+                            PUR.childNodes[1].style.backgroundColor = inSheetColor;
+                            PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                        }
+                        else {
+                            PUR.childNodes[1].style.backgroundColor = notInSheetColor
+                            PUR.childNodes[1].title = username + ' not located in the outreach spreadsheet.';
                         };
                     };
                 };
@@ -624,7 +663,6 @@
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
                 if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit')) StateCheck();
-                //else if ($(node).hasClass('address-edit-view')) { console.log ('Selected. Selected'); }
             }));
         });
         mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true});
