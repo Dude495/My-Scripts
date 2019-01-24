@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.04
+// @version      2019.01.24.05
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -100,6 +100,30 @@
         ORCSettings = loadedSettings ? loadedSettings : defaultSettings;
         currColor = ORCSettings.CP1;
         currFColor = ORCSettings.FP1;
+    };
+    function resetDefault() {
+        var loadedSettings;
+        try{
+            loadedSettings = $.parseJSON(localStorage.getItem("ORC_Settings"));
+        }
+        catch(err){
+            loadedSettings = null;
+        };
+        var defaultSettings = {
+            CP1: "#ff0000",
+            CP2: "#F7E000",
+            CP3: "#99bbff",
+            CP4: "#ffffff",
+            FP1: "#ffffff",
+            FP2: "#000000",
+            FP3: "#000000",
+            FP4: "#000000",
+        };
+        ORCSettings = loadedSettings ? loadedSettings : defaultSettings;
+        currColor = ORCSettings.CP1;
+        currFColor = ORCSettings.FP1;
+        updatePanel();
+        LoadSettings();
     };
     function jscolorChanged(){
         ORCSettings.CP1 = "#" + $('#colorPicker1')[0].jscolor.toString();
@@ -730,7 +754,7 @@
             '<div id="ORC-Warning"></div>',
             '<br><div id="ORC-info">',
             '<div id="ORCColorOpts">',
-            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Txt</span></font>',
+            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Txt</span>   </font><button id="ORCResetColors">Reset</button>',
             '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="colorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" title="Region Leadership">Regional Management (SM+).</span></div>',
@@ -742,6 +766,16 @@
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
+        var RSClrBtn = document.getElementById('ORCResetColors');
+        RSClrBtn.style.width = '25px';
+        RSClrBtn.style.height = '5px';
+        RSClrBtn.style.fontSize = '8px';
+        RSClrBtn.style.paddingLeft = '1px';
+        RSClrBtn.title = 'Reset to default color settings';
+        RSClrBtn.onclick = function() {
+            localStorage.removeItem("ORC_Settings");
+            resetDefault();
+        }
         var P = document.createElement('P');
         var btn = document.createElement("BUTTON");
         btn.id = 'ORCBtn';
