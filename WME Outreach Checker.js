@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.07
+// @version      2019.01.24.08
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -638,7 +638,7 @@
                             MapComment2.style.color = managementFColor;
                             MapComment2.title = username + ' is Regional Management';
                         }
-                        else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
+                        else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             MapComment2.style.backgroundColor = whitelistColor;
                             MapComment2.style.color = whitelistFColor;
                             MapComment2.title = username + ' is listed in the WhiteList';
@@ -961,7 +961,6 @@
         setTimeout(loadLeadershipList, 500);
     };
     function RemoveWLSLabel() {
-        //document.getElementById('ORC-WLSaveMsg').remove();
         $('#ORC-WLSaveMsg')[0].innerHTML = ''
         $('#ORWLVal')[0].value = ''
     }
@@ -989,11 +988,6 @@
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
-        var ReloadListBtn = document.getElementById('ORCReloadList');
-        ReloadListBtn.onclick = function() {
-            loadMasterList();
-            loadLeadershipList();
-        };
         var RSClrBtn = document.getElementById('ORCResetColors');
         RSClrBtn.style.width = '25px';
         RSClrBtn.style.height = '5px';
@@ -1049,6 +1043,14 @@
             P1.after(WLSLabel);
             WLSLabel.innerHTML = '<p>ORC WhiteList reset.</p>'
             setTimeout(RemoveWLSLabel, 1000);
+        };
+        var ReloadListBtn = document.getElementById('ORCReloadList');
+        ReloadListBtn.onclick = function() {
+            P1.after(WLSLabel);
+            WLSLabel.innerHTML = '<p>Reloading Outreach Data....</p>';
+            loadMasterList();
+            loadLeadershipList();
+            setTimeout(RemoveWLSLabel, 1500);
         };
         let SelectedRegion = $('#ORCRegList')[0];
         if (localStorage.getItem('SS') == MAR) {
