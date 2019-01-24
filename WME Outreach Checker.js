@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.05
+// @version      2019.01.24.06
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -28,10 +28,11 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = false;
+    var UPDATE_ALERT = true;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
-        ''
+        '',
+        '* Added multi-segment selection highlights'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -178,6 +179,11 @@
         const LandMark2 = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0];
         const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0];
         const Seg2 = $('#segment-edit-general > ul > li:nth-child(3) > a')[0];
+        const MultiSeg1 = $('#segment-edit-general > ul > li:nth-child(2) > span > a:nth-child(1)');
+        const MultiSeg2 = $('#segment-edit-general > ul > li:nth-child(3) > span > a:nth-child(1)');
+        const MultiSeg3 = $('#segment-edit-general > ul > li:nth-child(2) > ul > li > a');
+        const MultiSeg4 = $('#segment-edit-general > ul > li:nth-child(3) > ul > li > a');
+        const MultiSeg5 = $('#segment-edit-general > ul > li:nth-child(3) > span.value > a');
         const MapComment1 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
         const MapComment2 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
         const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
@@ -273,11 +279,228 @@
             };
         };
         if (WazeWrap.hasSegmentSelected() && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
-            if (Seg1.textContent.includes('(')) {
-                if (Seg1.textContent.includes('staff')) {
+            if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
+                if (MultiSeg1[0].textContent.includes('staff')) {
                     return;
-                } else {
-                    if (Seg1.textContent.includes('(')) {
+                }
+                else if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
+                    let ORCusername = MultiSeg1[0].textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    let RUN = MultiSeg1[0].textContent.match(RRE);
+                    let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                    let leadership = getMgtFromSheetList(username);
+                    let entry = getFromSheetList(username);
+                    if (username.toLowerCase() == ORCME.toLowerCase()) {
+                        MultiSeg1[0].style.backgroundColor = youColor;
+                        MultiSeg1[0].style.color = youFColor;
+                        MultiSeg1[0].title = 'This is you';
+                    }
+                    else if (leadership != null) {
+                        MultiSeg1[0].style.backgroundColor = managementColor;
+                        MultiSeg1[0].style.color = managementFColor;
+                        MultiSeg1[0].title = username + ' is Regional Management';
+                    }
+                    else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                        MultiSeg1[0].style.backgroundColor = whitelistColor;
+                        MultiSeg1[0].style.color = whitelistFColor;
+                        MultiSeg1[0].title = username + ' is listed in the WhiteList';
+                    }
+                    else if (entry != null) {
+                        MultiSeg1[0].style.backgroundColor = inSheetColor;
+                        MultiSeg1[0].style.color = inSheetFColor;
+                        MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                    }
+                    else {
+                        MultiSeg1[0].style.backgroundColor = notInSheetColor;
+                        MultiSeg1[0].style.color = notInSheetFColor;
+                        MultiSeg1[0].title = username + ' not located in the outreach spreadsheet.';
+                    };
+                };
+            };
+            if (MultiSeg2.length > '0') {
+                if (MultiSeg2[0].textContent.includes('(')) {
+                    if (MultiSeg2[0].textContent.includes('staff')) {
+                        return;
+                    } else {
+                        if (MultiSeg2[0].textContent.includes('(')) {
+                            let ORCusername = MultiSeg2[0].textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = MultiSeg2[0].textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                MultiSeg2[0].style.backgroundColor = youColor;
+                                MultiSeg2[0].style.color = youFColor;
+                                MultiSeg2[0].title = 'This is you';
+                            }
+                            else if (leadership != null) {
+                                MultiSeg2[0].style.backgroundColor = managementColor;
+                                MultiSeg2[0].style.color = managementFColor;
+                                MultiSeg2[0].title = username + ' is Regional Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
+                                MultiSeg2[0].style.backgroundColor = whitelistColor;
+                                MultiSeg2[0].style.color = whitelistFColor;
+                                MultiSeg2[0].title = username + ' is listed in the WhiteList';
+                            }
+                            else if (entry != null) {
+                                MultiSeg2[0].style.backgroundColor = inSheetColor;
+                                MultiSeg2[0].style.color = inSheetFColor;
+                                MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            }
+                            else {
+                                MultiSeg2[0].style.backgroundColor = notInSheetColor;
+                                MultiSeg2[0].style.color = notInSheetFColor;
+                                MultiSeg2[0].title = username + ' not located in the outreach spreadsheet.';
+                            };
+                        };
+                    };
+                };
+            };
+            if (MultiSeg3.length > '0') {
+                let i;
+                for (i = 0; i < MultiSeg3.length; i++) {
+                    if (MultiSeg3[i].textContent.includes('staff')) {
+                        return;
+                    }
+                    else {
+                        if (MultiSeg3[i].textContent.includes('(')) {
+                            let ORCusername = MultiSeg3[i].textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = MultiSeg3[i].textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                MultiSeg3[i].style.backgroundColor = youColor;
+                                MultiSeg3[i].style.color = youFColor;
+                                MultiSeg3[i].title = 'This is you';
+                                continue;
+                            }
+                            else if (leadership != null) {
+                                MultiSeg3[i].style.backgroundColor = managementColor;
+                                MultiSeg3[i].style.color = managementFColor;
+                                MultiSeg3[i].title = username + ' is Regional Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                                MultiSeg3[i].style.backgroundColor = whitelistColor;
+                                MultiSeg3[i].style.color = whitelistFColor;
+                                MultiSeg3[i].title = username + ' is listed in the WhiteList';
+                                continue;
+                            }
+                            else if (entry != null) {
+                                MultiSeg3[i].style.backgroundColor = inSheetColor;
+                                MultiSeg3[i].style.color = inSheetFColor;
+                                MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                continue;
+                            }
+                            else {
+                                MultiSeg3[i].style.backgroundColor = notInSheetColor;
+                                MultiSeg3[i].style.color = notInSheetFColor;
+                                MultiSeg3[i].title = username + ' not located in the outreach spreadsheet.';
+                            };
+                        };
+                    };
+                };
+            };
+            if (MultiSeg4.length > '0') {
+                let i;
+                for (i = 0; i < MultiSeg4.length; i++) {
+                    if (MultiSeg4[i].textContent.includes('staff')) {
+                        return;
+                    }
+                    else {
+                        if (MultiSeg4[i].textContent.includes('(')) {
+                            let ORCusername = MultiSeg4[i].textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = MultiSeg4[i].textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                MultiSeg4[i].style.backgroundColor = youColor;
+                                MultiSeg4[i].style.color = youFColor;
+                                MultiSeg4[i].title = 'This is you';
+                                continue;
+                            }
+                            else if (leadership != null) {
+                                MultiSeg4[i].style.backgroundColor = managementColor;
+                                MultiSeg4[i].style.color = managementFColor;
+                                MultiSeg4[i].title = username + ' is Regional Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                                MultiSeg4[i].style.backgroundColor = whitelistColor;
+                                MultiSeg4[i].style.color = whitelistFColor;
+                                MultiSeg4[i].title = username + ' is listed in the WhiteList';
+                                continue;
+                            }
+                            else if (entry != null) {
+                                MultiSeg4[i].style.backgroundColor = inSheetColor;
+                                MultiSeg4[i].style.color = inSheetFColor;
+                                MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                continue;
+                            }
+                            else {
+                                MultiSeg4[i].style.backgroundColor = notInSheetColor;
+                                MultiSeg4[i].style.color = notInSheetFColor;
+                                MultiSeg4[i].title = username + ' not located in the outreach spreadsheet.';
+                            };
+                        };
+                    };
+                };
+            };
+            if (MultiSeg5.length > '0') {
+                let i;
+                for (i = 0; i < MultiSeg5.length; i++) {
+                    if (MultiSeg5[i].textContent.includes('staff')) {
+                        return;
+                    }
+                    else {
+                        if (MultiSeg5[i].textContent.includes('(')) {
+                            let ORCusername = MultiSeg5[i].textContent.match(INCRegEx);
+                            let username = ORCusername[1];
+                            let RUN = MultiSeg5[i].textContent.match(RRE);
+                            let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                            let entry = getFromSheetList(username);
+                            let leadership = getMgtFromSheetList(username);
+                            if (username.toLowerCase() == ORCME.toLowerCase()) {
+                                MultiSeg5[i].style.backgroundColor = youColor;
+                                MultiSeg5[i].style.color = youFColor;
+                                MultiSeg5[i].title = 'This is you';
+                                continue;
+                            }
+                            else if (leadership != null) {
+                                MultiSeg5[i].style.backgroundColor = managementColor;
+                                MultiSeg5[i].style.color = managementFColor;
+                                MultiSeg5[i].title = username + ' is Regional Management';
+                            }
+                            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                                MultiSeg5[i].style.backgroundColor = whitelistColor;
+                                MultiSeg5[i].style.color = whitelistFColor;
+                                MultiSeg5[i].title = username + ' is listed in the WhiteList';
+                                continue;
+                            }
+                            else if (entry != null) {
+                                MultiSeg5[i].style.backgroundColor = inSheetColor;
+                                MultiSeg5[i].style.color = inSheetFColor;
+                                MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                continue;
+                            }
+                            else {
+                                MultiSeg5[i].style.backgroundColor = notInSheetColor;
+                                MultiSeg5[i].style.color = notInSheetFColor;
+                                MultiSeg5[i].title = username + ' not located in the outreach spreadsheet.';
+                            };
+                        };
+                    };
+                };
+            };
+            if (Seg1 !== undefined) {
+                if (Seg1.textContent.includes('(')) {
+                    if (Seg1.textContent.includes('staff')) {
+                        return;
+                    } else {
                         let ORCusername = Seg1.textContent.match(INCRegEx);
                         let username = ORCusername[1];
                         let RUN = Seg1.textContent.match(RRE);
