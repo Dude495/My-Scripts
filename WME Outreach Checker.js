@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.01
+// @version      2019.01.24.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -163,12 +163,11 @@
         const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0];
         const URName = $('span.username');
         const ORCME = W.loginManager.user.userName;
-        const ObjReady = WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0';
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
         };
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
-        if (WazeWrap.hasPlaceSelected() && PUR == undefined && ObjReady) {
+        if (WazeWrap.hasPlaceSelected() && PUR == undefined && WazeWrap.getSelectedFeatures()[0].model.attributes.categories[0] !== 'RESIDENCE_HOME' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff')) {
                     return;
@@ -250,7 +249,7 @@
                 };
             };
         };
-        if (WazeWrap.hasSegmentSelected() && ObjReady) {
+        if (WazeWrap.hasSegmentSelected() && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             if (Seg1.textContent.includes('(')) {
                 if (Seg1.textContent.includes('staff')) {
                     return;
@@ -332,7 +331,7 @@
                 };
             };
         };
-        if (WazeWrap.hasMapCommentSelected() && ObjReady) {
+        if (WazeWrap.hasMapCommentSelected() && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             if (MapComment1.textContent.includes('(')) {
                 if (MapComment1.textContent.includes('staff')) {
                     return;
@@ -412,7 +411,7 @@
                 };
             };
         };
-        if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && ObjReady) {
+        if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             if (Camera1.textContent.includes('(')) {
                 if (Camera1.textContent.includes('staff')) {
                     return;
