@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.02
+// @version      2019.01.24.03
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require      https://greasyfork.org/scripts/27023-jscolor/code/JSColor.js
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
+// @require      https://greasyfork.org/scripts/27254-clipboard-js/code/clipboardjs.js
 // @license      GNU GPLv3
 // @grant        none
 /* global W */
@@ -30,9 +31,7 @@
     var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
-        '',
-        '* Added custom color picker for highlights',
-        '* This feature is not fully complete and may be buggy. Reload WME if it does not load the colors within a minute.'
+        ''
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -114,7 +113,7 @@
         saveSettings();
     };
     function initColorPicker(tries){
-         tries = tries || 1;
+        tries = tries || 1;
 
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor) {
             $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
@@ -714,6 +713,11 @@
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     };
+    function RemoveWLSLabel() {
+        //document.getElementById('ORC-WLSaveMsg').remove();
+        $('#ORC-WLSaveMsg')[0].innerHTML = ''
+        $('#ORWLVal')[0].value = ''
+    }
     function createTab() {
         var $section = $('<div>');
         $section.html([
@@ -734,22 +738,56 @@
             '</div>',
             '</div>',
             '<p><div id="ORC-resources"><p><b>Resources:</b><br>',
+            '<p><div id="ORC-WhiteList"></div>',
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
+        var P = document.createElement('P');
         var btn = document.createElement("BUTTON");
         btn.id = 'ORCBtn';
         var Button = document.getElementById('ORCBtn');
-        btn.textContent = 'Save';
+        btn.textContent = 'Add';
         var WLLabel = document.createElement('LABEL');
         WLLabel.innerHTML = '<br><b><h6>Username(s) to be whitelisted (separated by comma):</h6>';
-        var ORCTOP = document.getElementById('ORC-Top');
+        var ORCResources = document.getElementById('ORC-resources');
         var tb = document.createElement('INPUT');
         tb.id = 'ORWLVal';
+        tb.size = '40';
         tb.setAttribute('type', 'text');
-        ORCTOP.after(tb);
-        tb.after(btn);
+        ORCResources.after(tb);
+        tb.after(P);
+        P.after(btn);
         tb.before(WLLabel);
+        var SaveWL = document.createElement('BUTTON');
+        SaveWL.id = 'SaveWLButton';
+        SaveWL.textContent = 'Save';
+        btn.after(SaveWL);
+        var ResetWL = document.createElement('BUTTON');
+        ResetWL.id = 'SaveWLButton';
+        ResetWL.textContent = 'Reset';
+        SaveWL.after(ResetWL);
+        var WLSLabel = document.createElement('LABEL')
+        WLSLabel.id = 'ORC-WLSaveMsg';
+        var P1 = P
+        ResetWL.after(P1)
+        SaveWL.onclick = function() {
+            var copyText = localStorage.getItem('ORWL')
+            var copied = $('<textarea id="ORCWLCopy" rows="1" cols="1">').val(copyText.replace('ORC ORWL: ', '')).appendTo('body').select();
+            var ORCWLCopy = document.getElementById('ORCWLCopy');
+            document.execCommand('copy');
+            document.body.removeChild(ORCWLCopy);
+            //alert('ORC WhiteList saved to clipboard.');
+            P1.after(WLSLabel);
+            WLSLabel.innerHTML = '<p>ORC WhiteList saved to clipboard.</p>'
+            setTimeout(RemoveWLSLabel, 1000);
+        };
+        ResetWL.onclick = function() {
+            localStorage.setItem('ORWL', 'ORWList: ');
+            //alert('ORC WhiteList erased.');
+            P1.after(WLSLabel);
+            WLSLabel.innerHTML = '<p>ORC WhiteList reset.</p>'
+            setTimeout(RemoveWLSLabel, 1000);
+        };
         let SelectedRegion = $('#ORCRegList')[0];
         if (localStorage.getItem('SS') == MAR) {
             SelectedRegion.value = 'MAR';
@@ -805,16 +843,22 @@
         };
         ORCRes.after(ORCResList);
         btn.onclick = function() {
-            console.log('ORC ORWL: ' + tb.value + ' has been added.');
+            //console.log('ORC ORWL: ' + tb.value + ' has been added.');
             if (localStorage.getItem('ORWL') == null) {
                 localStorage.setItem('ORWL', 'ORWList: ')
                 let ORWLOld = localStorage.getItem('ORWL');
                 localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
+                P1.after(WLSLabel);
+                WLSLabel.innerHTML = '<p>ORC WhiteList updated.</p>'
                 runORC();
+                setTimeout(RemoveWLSLabel, 1000);
             } else {
                 let ORWLOld = localStorage.getItem('ORWL');
                 localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
+                P1.after(WLSLabel);
+                WLSLabel.innerHTML = '<p>ORC WhiteList updated.</p>'
                 runORC();
+                setTimeout(RemoveWLSLabel, 1000);
             };
         };
         setTimeout(StateCheck, 3000);
