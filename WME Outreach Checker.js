@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.06
+// @version      2019.01.24.07
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -971,7 +971,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently limited to the regions listed.<h4></div>',
-            '<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option><option value="SWR">SWR</option><option value="OH">Ohio</option></select>',
+            '<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option><option value="SWR">SWR</option><option value="OH">Ohio</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -989,6 +989,11 @@
             '</div></div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
+        var ReloadListBtn = document.getElementById('ORCReloadList');
+        ReloadListBtn.onclick = function() {
+            loadMasterList();
+            loadLeadershipList();
+        };
         var RSClrBtn = document.getElementById('ORCResetColors');
         RSClrBtn.style.width = '25px';
         RSClrBtn.style.height = '5px';
@@ -998,7 +1003,7 @@
         RSClrBtn.onclick = function() {
             localStorage.removeItem("ORC_Settings");
             resetDefault();
-        }
+        };
         var P = document.createElement('P');
         var btn = document.createElement("BUTTON");
         btn.id = 'ORCBtn';
