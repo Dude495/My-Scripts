@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.07
+// @version      2019.01.23.08
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
+// @require      https://greasyfork.org/scripts/27023-jscolor/code/JSColor.js
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @license      GNU GPLv3
 // @grant        none
@@ -15,25 +16,23 @@
 
 (async function() {
     'use strict';
+    var ORCSettings = [];
+    var attributes = {
+        name: ""
+    };
+    var currColor;
+    var currFColor;
     const ENRegEx = /([A-Za-z ])*: /g;
     const INCRegEx = /(.*)\(\d\)/;
     const RRE = /\(\d\)/g;
-    const whitelistColor = '#ffffff';
-    const inSheetColor = '#F7E000';
-    const notInSheetColor = '#ff0000';
-    const notInSheetFColor = '#ffffff'
-    const managementColor = '#99bbff';
-    const youColor = '#ffffff';
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
     var UPDATE_ALERT = true;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added support for MAR/SWR/Ohio sheets (Request)',
-        '* Added support for Cameras (Request)',
-        '* Added support for PURs',
-        '* Added Dropdown menu for region selection. (Request)'
+        '* Added custom color picker for highlights'
+        '* This feature is not fully complete and may be buggy. Reload WME if it does not load the colors within a minute.',
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -42,7 +41,116 @@
             localStorage.setItem(SCRIPT_NAME, VERSION);
         };
     };
+    //Color Change Box code from BeenThere with premissions of JustinS89
+    function LoadSettings(){
+        if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
+            $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
+            $('#colorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
+            $('#colorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
+            $('#colorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
+            $('#fontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
+            $('#fontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
+            $('#fontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
+            $('#fontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
+        };
+    };
+    function updatePanel() {
+        $('#ORCMenu-NotContacted > span')[0].style.backgroundColor = ORCSettings.CP1
+        $('#ORCMenu-Contacted > span')[0].style.backgroundColor = ORCSettings.CP2
+        $('#ORCMenu-Leadership > span')[0].style.backgroundColor = ORCSettings.CP3
+        $('#ORCMenu-WhiteListed > span')[0].style.backgroundColor = ORCSettings.CP4
+        $('#ORCMenu-NotContacted > span')[0].style.color = ORCSettings.FP1
+        $('#ORCMenu-Contacted > span')[0].style.color = ORCSettings.FP2
+        $('#ORCMenu-Leadership > span')[0].style.color = ORCSettings.FP3
+        $('#ORCMenu-WhiteListed > span')[0].style.color = ORCSettings.FP4
+    }
+    function saveSettings() {
+        if (localStorage) {
+            var localsettings = {
+                CP1: ORCSettings.CP1,
+                CP2: ORCSettings.CP2,
+                CP3: ORCSettings.CP3,
+                CP4: ORCSettings.CP4,
+                FP1: ORCSettings.FP1,
+                FP2: ORCSettings.FP2,
+                FP3: ORCSettings.FP3,
+                FP4: ORCSettings.FP4,
+            };
+        };
+        localStorage.setItem("ORC_Settings", JSON.stringify(localsettings));
+        updatePanel();
+    };
+    function LoadSettingsObj() {
+        var loadedSettings;
+        try{
+            loadedSettings = $.parseJSON(localStorage.getItem("ORC_Settings"));
+        }
+        catch(err){
+            loadedSettings = null;
+        };
+        var defaultSettings = {
+            CP1: "#ff0000",
+            CP2: "#F7E000",
+            CP3: "#99bbff",
+            CP4: "#ffffff",
+            FP1: "#ffffff",
+            FP2: "#000000",
+            FP3: "#000000",
+            FP4: "#000000",
+        };
+        ORCSettings = loadedSettings ? loadedSettings : defaultSettings;
+        currColor = ORCSettings.CP1;
+        currFColor = ORCSettings.FP1;
+    };
+    function jscolorChanged(){
+        ORCSettings.CP1 = "#" + $('#colorPicker1')[0].jscolor.toString();
+        ORCSettings.CP2 = "#" + $('#colorPicker2')[0].jscolor.toString();
+        ORCSettings.CP3 = "#" + $('#colorPicker3')[0].jscolor.toString();
+        ORCSettings.CP4 = "#" + $('#colorPicker4')[0].jscolor.toString();
+        ORCSettings.FP1 = "#" + $('#fontPicker1')[0].jscolor.toString();
+        ORCSettings.FP2 = "#" + $('#fontPicker2')[0].jscolor.toString();
+        ORCSettings.FP3 = "#" + $('#fontPicker3')[0].jscolor.toString();
+        ORCSettings.FP4 = "#" + $('#fontPicker4')[0].jscolor.toString();
+        saveSettings();
+    };
+    function initColorPicker(tries){
+         tries = tries || 1;
+
+        if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor) {
+            $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
+            $('#colorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
+            $('#colorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
+            $('#colorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
+            $('#fontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
+            $('#fontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
+            $('#fontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
+            $('#fontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
+            $('[id^="colorPicker"]')[0].jscolor.closeText = 'Close';
+            $('[id^="fontPicker"]')[0].jscolor.closeText = 'Close';
+            $('#colorPicker1')[0].jscolor.onChange = jscolorChanged;
+            $('#colorPicker2')[0].jscolor.onChange = jscolorChanged;
+            $('#colorPicker3')[0].jscolor.onChange = jscolorChanged;
+            $('#colorPicker4')[0].jscolor.onChange = jscolorChanged;
+            $('#fontPicker1')[0].jscolor.onChange = jscolorChanged;
+            $('#fontPicker2')[0].jscolor.onChange = jscolorChanged;
+            $('#fontPicker3')[0].jscolor.onChange = jscolorChanged;
+            $('#fontPicker4')[0].jscolor.onChange = jscolorChanged;
+
+        } else if (tries < 1000) {
+            setTimeout(function () {initColorPicker(tries++);}, 200);
+        };
+    };
     function runORC() {
+        const whitelistColor = ORCSettings.CP4;
+        const whitelistFColor = ORCSettings.FP4
+        const inSheetColor = ORCSettings.CP2;
+        const inSheetFColor = ORCSettings.FP2
+        const notInSheetColor = ORCSettings.CP1;
+        const notInSheetFColor = ORCSettings.FP1
+        const managementColor = ORCSettings.CP3;
+        const managementFColor = ORCSettings.FP3
+        const youColor = ORCSettings.CP4;
+        const youFColor = ORCSettings.FP4
         const LandMark1 = $('#landmark-edit-general > ul > li:nth-child(1) > a')[0]
         const LandMark2 = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0]
         const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0]
@@ -73,18 +181,22 @@
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             LandMark1.style.backgroundColor = youColor;
+                            LandMark1.style.color = youFColor;
                             LandMark1.title = 'This is you';
                         }
                         else if (leadership != null) {
                             LandMark1.style.backgroundColor = managementColor;
+                            LandMark1.style.color = managementFColor;
                             LandMark1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             LandMark1.style.backgroundColor = whitelistColor;
+                            LandMark1.style.color = whitelistFColor;
                             LandMark1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             LandMark1.style.backgroundColor = inSheetColor;
+                            LandMark1.style.color = inSheetFColor;
                             LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -109,18 +221,22 @@
                             let leadership = getMgtFromSheetList(username);
                             if (username.toLowerCase() == ORCME.toLowerCase()) {
                                 LandMark2.style.backgroundColor = youColor;
+                                LandMark2.style.color = youFColor;
                                 LandMark2.title = 'This is you';
                             }
                             else if (leadership != null) {
                                 LandMark2.style.backgroundColor = managementColor;
+                                LandMark2.style.color = managementFColor;
                                 LandMark2.title = username + ' is Regional Management';
                             }
                             else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                                 LandMark2.style.backgroundColor = whitelistColor;
+                                LandMark2.style.color = whitelistFColor;
                                 LandMark2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
                                 LandMark2.style.backgroundColor = inSheetColor;
+                                LandMark2.style.color = inSheetFColor;
                                 LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                             }
                             else {
@@ -147,18 +263,22 @@
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Seg1.style.backgroundColor = youColor;
+                            Seg1.style.color = youFColor;
                             Seg1.title = 'This is you';
                         }
                         else if (leadership != null) {
                             Seg1.style.backgroundColor = managementColor;
+                            Seg1.style.color = managementFColor;
                             Seg1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             Seg1.style.backgroundColor = whitelistColor;
+                            Seg1.style.color = whitelistFColor;
                             Seg1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             Seg1.style.backgroundColor = inSheetColor;
+                            Seg1.style.color = inSheetFColor;
                             Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -183,18 +303,22 @@
                             let leadership = getMgtFromSheetList(username);
                             if (username.toLowerCase() == ORCME.toLowerCase()) {
                                 Seg2.style.backgroundColor = youColor;
+                                Seg2.style.color = youFColor;
                                 Seg2.title = 'This is you';
                             }
                             else if (leadership != null) {
                                 Seg2.style.backgroundColor = managementColor;
+                                Seg2.style.color = managementFColor;
                                 Seg2.title = username + ' is Regional Management';
                             }
                             else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
                                 Seg2.style.backgroundColor = whitelistColor;
+                                Seg2.style.color = whitelistFColor;
                                 Seg2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
                                 Seg2.style.backgroundColor = inSheetColor;
+                                Seg2.style.color = inSheetFColor;
                                 Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                             }
                             else {
@@ -221,18 +345,22 @@
                         let entry = getFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             MapComment1.style.backgroundColor = youColor;
+                            MapComment1.style.color = youFColor;
                             MapComment1.title = 'This is you';
                         }
                         else if (leadership != null) {
                             MapComment1.style.backgroundColor = managementColor;
+                            MapComment1.style.color = managementFColor;
                             MapComment1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             MapComment1.style.backgroundColor = whitelistColor;
+                            MapComment1.style.color = whitelistFColor;
                             MapComment1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             MapComment1.style.backgroundColor = inSheetColor;
+                            MapComment1.style.color = inSheetFColor;
                             MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -256,18 +384,22 @@
                         let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             MapComment2.style.backgroundColor = youColor;
+                            MapComment2.style.color = youFColor;
                             MapComment2.title = 'This is you';
                         }
                         else if (leadership != null) {
                             MapComment2.style.backgroundColor = managementColor;
+                            MapComment2.style.color = managementFColor;
                             MapComment2.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
                             MapComment2.style.backgroundColor = whitelistColor;
+                            MapComment2.style.color = whitelistFColor;
                             MapComment2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             MapComment2.style.backgroundColor = inSheetColor;
+                            MapComment2.style.color = inSheetFColor;
                             MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -293,18 +425,22 @@
                         let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Camera1.style.backgroundColor = youColor;
+                            Camera1.style.color = youFColor;
                             Camera1.title = 'This is you';
                         }
                         else if (leadership != null) {
                             Camera1.style.backgroundColor = managementColor;
+                            Camera1.style.color = managementFColor;
                             Camera1.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             Camera1.style.backgroundColor = whitelistColor;
+                            Camera1.style.color = whitelistFColor;
                             Camera1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             Camera1.style.backgroundColor = inSheetColor;
+                            Camera1.style.color = inSheetFColor;
                             Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -328,18 +464,22 @@
                         let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Camera2.style.backgroundColor = youColor;
+                            Camera2.style.color = youFColor;
                             Camera2.title = 'This is you';
                         }
                         else if (leadership != null) {
                             Camera2.style.backgroundColor = managementColor;
+                            Camera2.style.color = managementFColor;
                             Camera2.title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
                             Camera2.style.backgroundColor = whitelistColor;
+                            Camera2.style.color = whitelistFColor;
                             Camera2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             Camera2.style.backgroundColor = inSheetColor;
+                            Camera2.style.color = inSheetFColor;
                             Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -365,18 +505,22 @@
                         let leadership = getMgtFromSheetList(username);
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             PUR.childNodes[1].style.backgroundColor = youColor;
+                            PUR.childNodes[1].style.color = youFColor;
                             PUR.childNodes[1].title = 'This is you';
                         }
                         else if (leadership != null) {
                             PUR.childNodes[1].style.backgroundColor = managementColor;
+                            PUR.childNodes[1].style.color = managementFColor;
                             PUR.childNodes[1].title = username + ' is Regional Management';
                         }
                         else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                             PUR.childNodes[1].style.backgroundColor = whitelistColor;
+                            PUR.childNodes[1].style.color = whitelistFColor;
                             PUR.childNodes[1].title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
                             PUR.childNodes[1].style.backgroundColor = inSheetColor;
+                            PUR.childNodes[1].style.color = inSheetFColor;
                             PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         }
                         else {
@@ -399,20 +543,24 @@
                     let leadership = getMgtFromSheetList(username);
                     if (username.toLowerCase() == ORCME.toLowerCase()) {
                         URName[i].style.backgroundColor = youColor;
+                        URName[i].style.color = youFColor;
                         URName[i].title = 'This is you';
                         continue;
                     }
                     else if (leadership != null) {
                         URName[i].style.backgroundColor = managementColor;
+                        URName[i].style.color = managementFColor;
                         URName[i].title = username + ' is Regional Management';
                     }
                     else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                         URName[i].style.backgroundColor = whitelistColor;
+                        URName[i].style.color = whitelistFColor;
                         URName[i].title = username + ' is listed in the WhiteList';
                         continue;
                     }
                     else if (entry != null) {
                         URName[i].style.backgroundColor = inSheetColor;
+                        URName[i].style.color = inSheetFColor;
                         URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                         continue;
                     }
@@ -577,10 +725,13 @@
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
             '<br><div id="ORC-info">',
-            '<br><span style="color: white; background-color: #ff0000">Red: User has not been contacted or whitelisted.</span>',
-            '<br><span style="color: black; background-color: #F7E000" title="User has been contacted but does not mean they have replied or joined Discord">Yellow: User has been contacted.</span>',
-            '<br><span style="color: black; background-color: #99bbff" title="N(EO)R Leadership">Light Blue: Regional Management (SM+).</span>',
-            '<br><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">White: Yourself/Whitelisted users (R4+).</span>',
+            '<div id="ORCColorOpts">',
+            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Fnt</span></font>',
+            '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="colorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" title="Region Leadership">Regional Management (SM+).</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">Yourself/Whitelisted users (R4+).</span></div>',
+            '</div>',
             '</div>',
             '<p><div id="ORC-resources"><p><b>Resources:</b><br>',
             '</div></div>'
@@ -666,9 +817,9 @@
                 runORC();
             };
         };
-        loadMasterList();
-        loadLeadershipList();
         setTimeout(StateCheck, 3000);
+        LoadSettingsObj();
+        setTimeout(initColorPicker, 500);
     };
     function init() {
         var mo = new MutationObserver(mutations => {
@@ -684,9 +835,12 @@
         };
     };
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && ($('#panel-container').length || $('span.username').length >= 1)) {
-            createTab();
+        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && ($('#panel-container').length || $('span.username').length >= 1)) {
+            loadMasterList();
+            loadLeadershipList();
             init();
+            createTab();
+            setTimeout(updatePanel, 1000);
             if (!localStorage.getItem('SS')) {
                 localStorage.setItem('SS', NEOR);
             }
