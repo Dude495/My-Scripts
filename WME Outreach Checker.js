@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.09
+// @version      2019.01.24.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -27,7 +27,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = true;
+    var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
@@ -148,26 +148,27 @@
         const notInSheetColor = ORCSettings.CP1;
         const notInSheetFColor = ORCSettings.FP1
         const managementColor = ORCSettings.CP3;
-        const managementFColor = ORCSettings.FP3
+        const managementFColor = ORCSettings.FP3;
         const youColor = ORCSettings.CP4;
-        const youFColor = ORCSettings.FP4
-        const LandMark1 = $('#landmark-edit-general > ul > li:nth-child(1) > a')[0]
-        const LandMark2 = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0]
-        const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0]
-        const Seg2 = $('#segment-edit-general > ul > li:nth-child(3) > a')[0]
-        const MapComment1 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0]
-        const MapComment2 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0]
-        const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0]
-        const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0]
-        const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0]
-        const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0]
-        const URName = $('span.username')
+        const youFColor = ORCSettings.FP4;
+        const LandMark1 = $('#landmark-edit-general > ul > li:nth-child(1) > a')[0];
+        const LandMark2 = $('#landmark-edit-general > ul > li:nth-child(2) > a')[0];
+        const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0];
+        const Seg2 = $('#segment-edit-general > ul > li:nth-child(3) > a')[0];
+        const MapComment1 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
+        const MapComment2 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
+        const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
+        const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
+        const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0];
+        const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0];
+        const URName = $('span.username');
         const ORCME = W.loginManager.user.userName;
+        const ObjReady = WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0';
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
         };
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
-        if (WazeWrap.hasPlaceSelected() && PUR == undefined) {
+        if (WazeWrap.hasPlaceSelected() && PUR == undefined && ObjReady) {
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff')) {
                     return;
@@ -249,7 +250,7 @@
                 };
             };
         };
-        if (WazeWrap.hasSegmentSelected()) {
+        if (WazeWrap.hasSegmentSelected() && ObjReady) {
             if (Seg1.textContent.includes('(')) {
                 if (Seg1.textContent.includes('staff')) {
                     return;
@@ -331,7 +332,7 @@
                 };
             };
         };
-        if (WazeWrap.hasMapCommentSelected()) {
+        if (WazeWrap.hasMapCommentSelected() && ObjReady) {
             if (MapComment1.textContent.includes('(')) {
                 if (MapComment1.textContent.includes('staff')) {
                     return;
@@ -411,7 +412,7 @@
                 };
             };
         };
-        if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera') {
+        if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && ObjReady) {
             if (Camera1.textContent.includes('(')) {
                 if (Camera1.textContent.includes('staff')) {
                     return;
