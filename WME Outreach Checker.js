@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.23.08
+// @version      2019.01.23.09
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,8 +31,8 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added custom color picker for highlights'
-        '* This feature is not fully complete and may be buggy. Reload WME if it does not load the colors within a minute.',
+        '* Added custom color picker for highlights',
+        '* This feature is not fully complete and may be buggy. Reload WME if it does not load the colors within a minute.'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
