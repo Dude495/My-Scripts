@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.25.03
+// @version      2019.01.25.04
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -1005,39 +1005,48 @@
         return null;
     };
     function getFromSheetList(editorName){
-        let mapped = ORCFeedList.feed.entry.slice(0).reverse().map(obj =>{
-            if (localStorage.getItem('SS') == NEOR) {
-                return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
-                       };
-            };
-            if (localStorage.getItem('SS') == MAR) {
+        if (localStorage.getItem('SS') == MAR) {
+            let mapped = ORCFeedList.feed.entry.slice(0).reverse().map(obj =>{
                 return {username: obj.gsx$editorusername.$t.trim(), responses: obj.gsx$didtheyjoindiscord.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                        };
-            };
-            if (localStorage.getItem('SS') == SWR) {
-                if (obj.gsx$ndoutreachdate.$t.trim() == null) {
-                    return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$stoutreachdate.$t
-                           };
-                } else {
-                    return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$ndoutreachdate.$t
-                           };
+            });
+            for(let i=0; i<mapped.length; i++){
+                if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
+                    return mapped[i];
                 };
             };
-            if (localStorage.getItem('SS') == OH) {
-                return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
-                       };
+            return null;
+        } else {
+            let mapped = ORCFeedList.feed.entry.map(obj =>{
+                if (localStorage.getItem('SS') == NEOR) {
+                    return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
+                           };
+                };
+                if (localStorage.getItem('SS') == SWR) {
+                    if (obj.gsx$ndoutreachdate.$t.trim() == null) {
+                        return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$stoutreachdate.$t
+                               };
+                    } else {
+                        return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$ndoutreachdate.$t
+                               };
+                    };
+                };
+                if (localStorage.getItem('SS') == OH) {
+                    return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
+                           };
+                };
+                if (localStorage.getItem('SS') == PLN) {
+                    return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                           };
+                };
+            });
+            for(let i=0; i<mapped.length; i++){
+                if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
+                    return mapped[i];
+                };
             };
-            if (localStorage.getItem('SS') == PLN) {
-                return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
-                       };
-            };
-        });
-        for(let i=0; i<mapped.length; i++){
-            if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
-                return mapped[i];
-            };
+            return null;
         };
-        return null;
     };
     function updateMasterList() {
         if ($('#ORCRegList')[0].value == 'NEOR') {
