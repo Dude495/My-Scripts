@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.24.08
+// @version      2019.01.25.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -13,6 +13,7 @@
 /* global W */
 /* global $ */
 /* global WazeWrap */
+/* global jscolor */
 // ==/UserScript==
 
 (async function() {
@@ -32,7 +33,8 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Added multi-segment selection highlights'
+        '* Auto-load regional sheets when you cross region boundaries.',
+        '* Added PLN Support'
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
@@ -164,6 +166,18 @@
             setTimeout(function () {initColorPicker(tries++);}, 200);
         };
     };
+    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
+    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
+    const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah'
+    const RegGLR = 'Ohio'
+    const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota'
+    const SState = [
+        RegNEOR,
+        RegMAR,
+        RegSWR,
+        RegGLR,
+        RegPLN
+    ].join(',')
     function runORC() {
         const whitelistColor = ORCSettings.CP4;
         const whitelistFColor = ORCSettings.FP4
@@ -224,9 +238,15 @@
                             LandMark1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            LandMark1.style.backgroundColor = inSheetColor;
-                            LandMark1.style.color = inSheetFColor;
-                            LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                LandMark1.style.backgroundColor = inSheetColor;
+                                LandMark1.style.color = inSheetFColor;
+                                LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                LandMark1.style.backgroundColor = inSheetColor;
+                                LandMark1.style.color = inSheetFColor;
+                                LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             LandMark1.style.backgroundColor = notInSheetColor;
@@ -264,9 +284,15 @@
                                 LandMark2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                LandMark2.style.backgroundColor = inSheetColor;
-                                LandMark2.style.color = inSheetFColor;
-                                LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    LandMark2.style.backgroundColor = inSheetColor;
+                                    LandMark2.style.color = inSheetFColor;
+                                    LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                } else {
+                                    LandMark2.style.backgroundColor = inSheetColor;
+                                    LandMark2.style.color = inSheetFColor;
+                                    LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                };
                             }
                             else {
                                 LandMark2.style.backgroundColor = notInSheetColor;
@@ -306,9 +332,15 @@
                         MultiSeg1[0].title = username + ' is listed in the WhiteList';
                     }
                     else if (entry != null) {
-                        MultiSeg1[0].style.backgroundColor = inSheetColor;
-                        MultiSeg1[0].style.color = inSheetFColor;
-                        MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            MultiSeg1[0].style.backgroundColor = inSheetColor;
+                            MultiSeg1[0].style.color = inSheetFColor;
+                            MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                        } else {
+                            MultiSeg1[0].style.backgroundColor = inSheetColor;
+                            MultiSeg1[0].style.color = inSheetFColor;
+                            MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                        };
                     }
                     else {
                         MultiSeg1[0].style.backgroundColor = notInSheetColor;
@@ -345,9 +377,15 @@
                                 MultiSeg2[0].title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                MultiSeg2[0].style.backgroundColor = inSheetColor;
-                                MultiSeg2[0].style.color = inSheetFColor;
-                                MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    MultiSeg2[0].style.backgroundColor = inSheetColor;
+                                    MultiSeg2[0].style.color = inSheetFColor;
+                                    MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                } else {
+                                    MultiSeg2[0].style.backgroundColor = inSheetColor;
+                                    MultiSeg2[0].style.color = inSheetFColor;
+                                    MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                };
                             }
                             else {
                                 MultiSeg2[0].style.backgroundColor = notInSheetColor;
@@ -390,9 +428,17 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                MultiSeg3[i].style.backgroundColor = inSheetColor;
-                                MultiSeg3[i].style.color = inSheetFColor;
-                                MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    MultiSeg3[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg3[i].style.color = inSheetFColor;
+                                    MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                } else {
+                                    MultiSeg3[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg3[i].style.color = inSheetFColor;
+                                    MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                };
                                 continue;
                             }
                             else {
@@ -436,9 +482,17 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                MultiSeg4[i].style.backgroundColor = inSheetColor;
-                                MultiSeg4[i].style.color = inSheetFColor;
-                                MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    MultiSeg4[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg4[i].style.color = inSheetFColor;
+                                    MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                } else {
+                                    MultiSeg4[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg4[i].style.color = inSheetFColor;
+                                    MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                };
                                 continue;
                             }
                             else {
@@ -482,9 +536,17 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                MultiSeg5[i].style.backgroundColor = inSheetColor;
-                                MultiSeg5[i].style.color = inSheetFColor;
-                                MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    MultiSeg5[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg5[i].style.color = inSheetFColor;
+                                    MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                } else {
+                                    MultiSeg5[i].style.backgroundColor = inSheetColor;
+                                    MultiSeg5[i].style.color = inSheetFColor;
+                                    MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                    continue;
+                                };
                                 continue;
                             }
                             else {
@@ -523,9 +585,15 @@
                             Seg1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            Seg1.style.backgroundColor = inSheetColor;
-                            Seg1.style.color = inSheetFColor;
-                            Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                Seg1.style.backgroundColor = inSheetColor;
+                                Seg1.style.color = inSheetFColor;
+                                Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                Seg1.style.backgroundColor = inSheetColor;
+                                Seg1.style.color = inSheetFColor;
+                                Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             Seg1.style.backgroundColor = notInSheetColor;
@@ -563,9 +631,15 @@
                                 Seg2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                Seg2.style.backgroundColor = inSheetColor;
-                                Seg2.style.color = inSheetFColor;
-                                Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                    Seg2.style.backgroundColor = inSheetColor;
+                                    Seg2.style.color = inSheetFColor;
+                                    Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                                } else {
+                                    Seg2.style.backgroundColor = inSheetColor;
+                                    Seg2.style.color = inSheetFColor;
+                                    Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                                };
                             }
                             else {
                                 Seg2.style.backgroundColor = notInSheetColor;
@@ -605,9 +679,15 @@
                             MapComment1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            MapComment1.style.backgroundColor = inSheetColor;
-                            MapComment1.style.color = inSheetFColor;
-                            MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                MapComment1.style.backgroundColor = inSheetColor;
+                                MapComment1.style.color = inSheetFColor;
+                                MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                MapComment1.style.backgroundColor = inSheetColor;
+                                MapComment1.style.color = inSheetFColor;
+                                MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             MapComment1.style.backgroundColor = notInSheetColor;
@@ -644,9 +724,15 @@
                             MapComment2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            MapComment2.style.backgroundColor = inSheetColor;
-                            MapComment2.style.color = inSheetFColor;
-                            MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                MapComment2.style.backgroundColor = inSheetColor;
+                                MapComment2.style.color = inSheetFColor;
+                                MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                MapComment2.style.backgroundColor = inSheetColor;
+                                MapComment2.style.color = inSheetFColor;
+                                MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             MapComment2.style.backgroundColor = notInSheetColor;
@@ -685,9 +771,15 @@
                             Camera1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            Camera1.style.backgroundColor = inSheetColor;
-                            Camera1.style.color = inSheetFColor;
-                            Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                Camera1.style.backgroundColor = inSheetColor;
+                                Camera1.style.color = inSheetFColor;
+                                Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                Camera1.style.backgroundColor = inSheetColor;
+                                Camera1.style.color = inSheetFColor;
+                                Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             Camera1.style.backgroundColor = notInSheetColor;
@@ -724,9 +816,15 @@
                             Camera2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            Camera2.style.backgroundColor = inSheetColor;
-                            Camera2.style.color = inSheetFColor;
-                            Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                Camera2.style.backgroundColor = inSheetColor;
+                                Camera2.style.color = inSheetFColor;
+                                Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                Camera2.style.backgroundColor = inSheetColor;
+                                Camera2.style.color = inSheetFColor;
+                                Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             Camera2.style.backgroundColor = notInSheetColor;
@@ -765,9 +863,15 @@
                             PUR.childNodes[1].title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            PUR.childNodes[1].style.backgroundColor = inSheetColor;
-                            PUR.childNodes[1].style.color = inSheetFColor;
-                            PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                PUR.childNodes[1].style.backgroundColor = inSheetColor;
+                                PUR.childNodes[1].style.color = inSheetFColor;
+                                PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            } else {
+                                PUR.childNodes[1].style.backgroundColor = inSheetColor;
+                                PUR.childNodes[1].style.color = inSheetFColor;
+                                PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            };
                         }
                         else {
                             PUR.childNodes[1].style.backgroundColor = notInSheetColor;
@@ -805,9 +909,17 @@
                         continue;
                     }
                     else if (entry != null) {
-                        URName[i].style.backgroundColor = inSheetColor;
-                        URName[i].style.color = inSheetFColor;
-                        URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s) ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            URName[i].style.backgroundColor = inSheetColor;
+                            URName[i].style.color = inSheetFColor;
+                            URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                            continue;
+                        } else {
+                            URName[i].style.backgroundColor = inSheetColor;
+                            URName[i].style.color = inSheetFColor;
+                            URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                            continue;
+                        };
                         continue;
                     }
                     else {
@@ -819,51 +931,21 @@
             };
         };
     };
-    const SState = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut,Maryland,District of Columbia,West Virginia,Virginia,Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah,Ohio'
-    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
-    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
-    const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah'
-    const RegGLR = 'Ohio'
-    function StateCheck() {
-        var State = W.model.states.additionalInfo[0].name
-        if (RegNEOR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R';
-        }
-        else if (RegMAR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR';
-        }
-        else if (RegSWR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: SWR';
-        }
-        else if (RegGLR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR';
-        }
-        else {
-            $('#ORC-Region')[0].innerHTML = '<b><span style="color: white; background-color: #ff0000">Current Region Not Supported.</span></b>';
-            //$('#ORC-Region')[0].style.backgroundColor = notInSheetColor
-        };
-        if (SState.includes(State)) {
-            runORC();
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
-            $('#ORC-State')[0].style.backgroundColor = '';
-        } else {
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
-            $('#ORC-State')[0].style.backgroundColor = 'red';
-        };
-    };
     var ORCFeedList = [];
     const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
     const MAR = 'https://spreadsheets.google.com/feeds/list/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/1/public/values?alt=json';
     const SWR = 'https://spreadsheets.google.com/feeds/list/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/1/public/values?alt=json';
     const OH = 'https://spreadsheets.google.com/feeds/list/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/1/public/values?alt=json';
+    const PLN = 'https://spreadsheets.google.com/feeds/list/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/1/public/values?alt=json';
     async function loadMasterList() {
+        var SS;
         if (!localStorage.getItem('SS')) {
             localStorage.setItem('SS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
-            var SS = localStorage.getItem('SS');
+            SS = localStorage.getItem('SS');
         }
         else {
-            var SS = localStorage.getItem('SS');
+            SS = localStorage.getItem('SS');
             console.log('ORC: Loading ' + localStorage.getItem('SS') + ' Master List....');
         }
         await $.getJSON(SS, function(data){
@@ -873,32 +955,39 @@
     };
     var RegMgt = [];
     async function loadLeadershipList() {
+        var MgtSheet;
+        var MgtReg;
         if (!localStorage.getItem('SS')) {
             localStorage.setItem('SS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
-            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
-            var MgtReg = 'NEOR'
-            }
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            MgtReg = 'NEOR'
+        }
         else if (localStorage.getItem('SS') == NEOR) {
-            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
             console.log('ORC: Loading NEOR Leadership Master List....');
-            var MgtReg = 'NEOR'
-            }
+            MgtReg = 'NEOR'
+        }
         else if (localStorage.getItem('SS') == MAR) {
-            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json'
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json';
             console.log('ORC: Loading MAR Leadership Master List....');
-            var MgtReg = 'MAR'
-            }
+            MgtReg = 'MAR';
+        }
         else if (localStorage.getItem('SS') == SWR) {
-            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/5/public/values?alt=json'
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/5/public/values?alt=json';
             console.log('ORC: Loading SWR Leadership Master List....');
-            var MgtReg = 'SWR'
-            }
+            MgtReg = 'SWR';
+        }
         else if (localStorage.getItem('SS') == OH) {
-            var MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json'
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading Ohio Leadership Master List....');
-            var MgtReg = 'Ohio'
-            };
+            MgtReg = 'Ohio';
+        }
+        else if (localStorage.getItem('SS') == PLN) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/7/public/values?alt=json';
+            console.log('ORC: Loading PLN Leadership Master List....');
+            MgtReg = 'PLN';
+        };
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
             console.log('ORC: '+MgtReg+' Leadership Masterlist Loaded....');
@@ -909,8 +998,9 @@
             return {username: obj.gsx$regionleadership.$t};
         });
         for(let i=0; i<MgtList.length; i++){
-            if(MgtList[i].username.toLowerCase() === editorName.toLowerCase())
+            if(MgtList[i].username.toLowerCase() === editorName.toLowerCase()) {
                 return MgtList[i];
+            };
         };
         return null;
     };
@@ -937,32 +1027,103 @@
                 return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
                        };
             };
+            if (localStorage.getItem('SS') == PLN) {
+                return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                       };
+            };
         });
         for(let i=0; i<mapped.length; i++){
-            if(mapped[i].username.toLowerCase() === editorName.toLowerCase())
+            if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
                 return mapped[i];
+            };
         };
         return null;
     };
     function updateMasterList() {
-        if ($('#ORCRegList')[0].value == NEOR) {
+        if ($('#ORCRegList')[0].value == 'NEOR') {
             localStorage.setItem('SS', NEOR);
         }
-        else if ($('#ORCRegList')[0].value == MAR) {
+        else if ($('#ORCRegList')[0].value == 'MAR') {
             localStorage.setItem('SS', MAR);
         }
-        else if ($('#ORCRegList')[0].value == SWR) {
+        else if ($('#ORCRegList')[0].value == 'SWR') {
             localStorage.setItem('SS', SWR);
         }
-        else if ($('#ORCRegList')[0].value == OH) {
+        else if ($('#ORCRegList')[0].value == 'OH') {
             localStorage.setItem('SS', OH);
+        }
+        else if ($('#ORCRegList')[0].value == 'PLN') {
+            localStorage.setItem('SS', PLN);
         };
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     };
+    function StateCheck() {
+        var State = W.model.states.additionalInfo[0].name
+        if (RegNEOR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R';
+            if (localStorage.getItem('SS') !== NEOR) {
+                localStorage.setItem('SS', NEOR);
+                $('#ORCRegList')[0].value = 'NEOR';
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegMAR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR';
+            if (localStorage.getItem('SS') !== MAR) {
+                localStorage.setItem('SS', MAR);
+                $('#ORCRegList')[0].value = 'MAR';
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegSWR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: SWR';
+            if (localStorage.getItem('SS') !== SWR) {
+                localStorage.setItem('SS', SWR);
+                $('#ORCRegList')[0].value = 'SWR';
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegGLR.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR';
+            if (localStorage.getItem('SS') !== OH) {
+                localStorage.setItem('SS', OH);
+                $('#ORCRegList')[0].value = 'OH';
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegPLN.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: PLN';
+            if (localStorage.getItem('SS') !== PLN) {
+                localStorage.setItem('SS', PLN);
+                $('#ORCRegList')[0].value = 'PLN';
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else {
+            $('#ORC-Region')[0].innerHTML = '<b><span style="color: white; background-color: #ff0000">Current Region Not Supported.</span></b>';
+        };
+        if (SState.includes(State)) {
+            sessionStorage.setItem('ORCState', State);
+            runORC();
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
+            $('#ORC-State')[0].style.backgroundColor = '';
+        } else {
+            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
+            $('#ORC-State')[0].style.backgroundColor = 'red';
+        };
+    };
     function RemoveWLSLabel() {
         $('#ORC-WLSaveMsg')[0].innerHTML = ''
         $('#ORWLVal')[0].value = ''
+    }
+    function resetRegList() {
+        $('#ORCRegList')[0].value = '0'
     }
     function createTab() {
         var $section = $('<div>');
@@ -970,7 +1131,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently limited to the regions listed.<h4></div>',
-            '<select id="ORCRegList"><option value="NEOR">N(EO)R</option><option value="MAR">MAR</option><option value="SWR">SWR</option><option value="OH">Ohio</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
+            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="OH">OHIO</option><option value="PLN">PLN</option><option value="SWR">SWR</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -1064,31 +1225,45 @@
         }
         else if (localStorage.getItem('SS') == OH) {
             SelectedRegion.value = 'OH';
+        }
+        else if (localStorage.getItem('SS') == PLN) {
+            SelectedRegion.value ='PLN';
         };
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', NEOR);
                 setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', MAR);
                 setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', SWR);
                 setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'OH' && RegGLR.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', OH);
                 setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
+            else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', PLN);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
             }
             else {
                 $('#ORC-Warning')[0].innerHTML = '<br><span style="color: white; background-color: #ff0000">ERROR: Your selected region list does not match your current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
+                setTimeout(resetRegList, 500);
             };
         };
         var ORCRes = document.getElementById('ORC-resources');
@@ -1103,7 +1278,10 @@
             ORCResList.innerHTML = '<a href="https://docs.google.com/spreadsheets/d/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/edit#gid=0" target="_blank">Published Contacts Sheet</a>'
         };
         if (localStorage.getItem('SS') == OH) {
-            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSccibGYNPyCDU-oR9MTR5T3q8ZgpoYrdw6sSvXVS4SSSCA6xQ/viewform="_blank">Ohio New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/pubhtml" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSccibGYNPyCDU-oR9MTR5T3q8ZgpoYrdw6sSvXVS4SSSCA6xQ/viewform" target="_blank">Ohio New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/pubhtml" target="_blank">Published Contacts Sheet</a>'
+        };
+        if (localStorage.getItem('SS') == PLN) {
+            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>'
         };
         ORCRes.after(ORCResList);
         btn.onclick = function() {
@@ -1144,6 +1322,7 @@
     };
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && ($('#panel-container').length || $('span.username').length >= 1)) {
+            sessionStorage.removeItem('ORCState');
             loadMasterList();
             loadLeadershipList();
             init();
