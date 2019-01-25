@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.25.01
+// @version      2019.01.25.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -1005,7 +1005,7 @@
         return null;
     };
     function getFromSheetList(editorName){
-        let mapped = ORCFeedList.feed.entry.map(obj =>{
+        let mapped = ORCFeedList.feed.entry.slice(0).reverse().map(obj =>{
             if (localStorage.getItem('SS') == NEOR) {
                 return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
                        };
