@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.25.04
+// @version      2019.01.26.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -29,16 +29,16 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = true;
+    var UPDATE_ALERT = false;
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Auto-load regional sheets when you cross region boundaries.',
-        '* Added PLN Support'
+        ''
     ].join('\n');
     if (UPDATE_ALERT) {
         SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
         if (localStorage.getItem(SCRIPT_NAME) !== VERSION) {
+            localStorage.removeItem(SCRIPT_NAME);
             alert(UPDATE_NOTES);
             localStorage.setItem(SCRIPT_NAME, VERSION);
         };
@@ -204,6 +204,7 @@
         const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
         const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0];
         const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0];
+        const MP = $('#panel-container > div > div > div.actions > div > div > div.by > a')[0];
         const URName = $('span.username');
         const ORCME = W.loginManager.user.userName;
         if (localStorage.getItem('ORWL') == null) {
@@ -739,6 +740,51 @@
                             MapComment2.style.color = notInSheetFColor;
                             MapComment2.title = username + ' not located in the outreach spreadsheet.';
                         };
+                    };
+                };
+            };
+        };
+        if ($('#panel-container > div > div > div.actions > div > div > div.by > a').is(':visible')) {
+            if (MP.textContent.includes('(')) {
+                if (MP.textContent.includes('staff')) {
+                    return;
+                } else {
+                    let ORCusername = MP.textContent.match(INCRegEx);
+                    let username = ORCusername[1];
+                    let RUN = MP.textContent.match(RRE);
+                    let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
+                    let entry = getFromSheetList(username);
+                    let leadership = getMgtFromSheetList(username);
+                    if (username.toLowerCase() == ORCME.toLowerCase()) {
+                        MP.style.backgroundColor = youColor;
+                        MP.style.color = youFColor;
+                        MP.title = 'This is you';
+                    }
+                    else if (leadership != null) {
+                        MP.style.backgroundColor = managementColor;
+                        MP.style.color = managementFColor;
+                        MP.title = username + ' is Regional Management';
+                    }
+                    else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+                        MP.style.backgroundColor = whitelistColor;
+                        MP.style.color = whitelistFColor;
+                        MP.title = username + ' is listed in the WhiteList';
+                    }
+                    else if (entry != null) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            MP.style.backgroundColor = inSheetColor;
+                            MP.style.color = inSheetFColor;
+                            MP.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                        } else {
+                            MP.style.backgroundColor = inSheetColor;
+                            MP.style.color = inSheetFColor;
+                            MP.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
+                        };
+                    }
+                    else {
+                        MP.style.backgroundColor = notInSheetColor;
+                        MP.style.color = notInSheetFColor;
+                        MP.title = username + ' not located in the outreach spreadsheet.';
                     };
                 };
             };
@@ -1326,12 +1372,12 @@
     function init() {
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
-                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit')) StateCheck();
+                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit') || $(node).hasClass('mapProblem')) StateCheck();
             }));
         });
-        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true});
-        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true});
-        mo.observe(document.getElementById('edit-panel'), { childList: true, subtree: true });
+        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true, attributes: true});
+        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true, attributes: true});
+        mo.observe(document.getElementById('edit-panel'), { childList: true, subtree: true, attributes: true });
         if (WazeWrap.hasSegmentSelected() || WazeWrap.hasPlaceSelected() || WazeWrap.hasMapCommentSelected()) {
             StateCheck();
         };
