@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.26.01
+// @version      2019.01.26.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -25,6 +25,7 @@
     var currColor;
     var currFColor;
     const ENRegEx = /([A-Za-z ])*: /g;
+    const NEORRegEx = /(Read\?:|Responded\?:|Reporter:|Editor:|Contacted:|Rank:)/g
     const INCRegEx = /(.*)\(\d\)/;
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
@@ -239,7 +240,7 @@
                             LandMark1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 LandMark1.style.backgroundColor = inSheetColor;
                                 LandMark1.style.color = inSheetFColor;
                                 LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -285,7 +286,7 @@
                                 LandMark2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                     LandMark2.style.backgroundColor = inSheetColor;
                                     LandMark2.style.color = inSheetFColor;
                                     LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -333,7 +334,7 @@
                         MultiSeg1[0].title = username + ' is listed in the WhiteList';
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                             MultiSeg1[0].style.backgroundColor = inSheetColor;
                             MultiSeg1[0].style.color = inSheetFColor;
                             MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -378,7 +379,7 @@
                                 MultiSeg2[0].title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg2[0].style.backgroundColor = inSheetColor;
                                     MultiSeg2[0].style.color = inSheetFColor;
                                     MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -429,7 +430,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg3[i].style.backgroundColor = inSheetColor;
                                     MultiSeg3[i].style.color = inSheetFColor;
                                     MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -483,7 +484,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg4[i].style.backgroundColor = inSheetColor;
                                     MultiSeg4[i].style.color = inSheetFColor;
                                     MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -537,7 +538,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg5[i].style.backgroundColor = inSheetColor;
                                     MultiSeg5[i].style.color = inSheetFColor;
                                     MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -586,7 +587,7 @@
                             Seg1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 Seg1.style.backgroundColor = inSheetColor;
                                 Seg1.style.color = inSheetFColor;
                                 Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -680,7 +681,7 @@
                             MapComment1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 MapComment1.style.backgroundColor = inSheetColor;
                                 MapComment1.style.color = inSheetFColor;
                                 MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -725,7 +726,7 @@
                             MapComment2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 MapComment2.style.backgroundColor = inSheetColor;
                                 MapComment2.style.color = inSheetFColor;
                                 MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -771,7 +772,7 @@
                         MP.title = username + ' is listed in the WhiteList';
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                             MP.style.backgroundColor = inSheetColor;
                             MP.style.color = inSheetFColor;
                             MP.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -817,7 +818,7 @@
                             Camera1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 Camera1.style.backgroundColor = inSheetColor;
                                 Camera1.style.color = inSheetFColor;
                                 Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -862,7 +863,7 @@
                             Camera2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 Camera2.style.backgroundColor = inSheetColor;
                                 Camera2.style.color = inSheetFColor;
                                 Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -909,7 +910,7 @@
                             PUR.childNodes[1].title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                                 PUR.childNodes[1].style.backgroundColor = inSheetColor;
                                 PUR.childNodes[1].style.color = inSheetFColor;
                                 PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -955,7 +956,7 @@
                         continue;
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
                             URName[i].style.backgroundColor = inSheetColor;
                             URName[i].style.color = inSheetFColor;
                             URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -1065,7 +1066,7 @@
         } else {
             let mapped = ORCFeedList.feed.entry.map(obj =>{
                 if (localStorage.getItem('SS') == NEOR) {
-                    return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').trim(), responses: obj.gsx$changescantakeupto.$t, reporter: obj.gsx$minutesdelaytoappear.$t, dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t
+                    return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').replace(NEORRegEx,'').trim(), forumread: obj.gsx$_cre1l.$t.replace(NEORRegEx,''), responses: obj.gsx$changescantakeupto.$t.replace(NEORRegEx,''), reporter: obj.gsx$minutesdelaytoappear.$t.replace(NEORRegEx,''), dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t.replace(NEORRegEx,'')
                            };
                 };
                 if (localStorage.getItem('SS') == SWR) {
