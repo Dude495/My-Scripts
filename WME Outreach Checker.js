@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.26.02
+// @version      2019.01.28.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -167,16 +167,20 @@
             setTimeout(function () {initColorPicker(tries++);}, 200);
         };
     };
-    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut'
-    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia'
-    const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah'
-    const RegGLR = 'Ohio'
-    const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota'
+    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
+    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
+    const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
+    const RegOH = 'Ohio';
+    const RegIN = 'Indiana';
+    const RegMI = 'Michigan';
+    const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
     const SState = [
         RegNEOR,
         RegMAR,
         RegSWR,
-        RegGLR,
+        RegOH,
+        RegIN,
+        RegMI,
         RegPLN
     ].join(',')
     function runORC() {
@@ -627,7 +631,7 @@
                                 Seg2.style.color = managementFColor;
                                 Seg2.title = username + ' is Regional Management';
                             }
-                            else if (ORWL.includes(username.toLowerCase() || RANK >= '4')) {
+                            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
                                 Seg2.style.backgroundColor = whitelistColor;
                                 Seg2.style.color = whitelistFColor;
                                 Seg2.title = username + ' is listed in the WhiteList';
@@ -984,6 +988,8 @@
     const SWR = 'https://spreadsheets.google.com/feeds/list/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/1/public/values?alt=json';
     const OH = 'https://spreadsheets.google.com/feeds/list/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/1/public/values?alt=json';
     const PLN = 'https://spreadsheets.google.com/feeds/list/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/1/public/values?alt=json';
+    const IN = 'https://spreadsheets.google.com/feeds/list/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/1/public/values?alt=json';
+    const MI = 'https://spreadsheets.google.com/feeds/list/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/4/public/values?alt=json';
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('SS')) {
@@ -1027,8 +1033,18 @@
         }
         else if (localStorage.getItem('SS') == OH) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
-            console.log('ORC: Loading Ohio Leadership Master List....');
-            MgtReg = 'Ohio';
+            console.log('ORC: Loading GLR Leadership Master List....');
+            MgtReg = 'OH';
+        }
+        else if (localStorage.getItem('SS') == MI) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            console.log('ORC: Loading GLR Leadership Master List....');
+            MgtReg = 'MI';
+        }
+        else if (localStorage.getItem('SS') == IN) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            console.log('ORC: Loading GLR Leadership Master List....');
+            MgtReg = 'IN';
         }
         else if (localStorage.getItem('SS') == PLN) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/7/public/values?alt=json';
@@ -1082,6 +1098,14 @@
                     return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
                            };
                 };
+                if (localStorage.getItem('SS') == IN) {
+                    return {username: obj.gsx$editorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$whomadecontact.$t, dateC: obj.gsx$outreachdate.$t
+                           };
+                };
+                if (localStorage.getItem('SS') == MI) {
+                    return {username: obj.gsx$_cn6ca.$t.trim(), responses: obj.gsx$welcomepacket.$t, reporter: obj.gsx$userwhosent.$t, dateC: obj.gsx$datewelcomesent.$t
+                           };
+                };
                 if (localStorage.getItem('SS') == PLN) {
                     return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                            };
@@ -1108,12 +1132,25 @@
         else if ($('#ORCRegList')[0].value == 'OH') {
             localStorage.setItem('SS', OH);
         }
+        else if ($('#ORCRegList')[0].value == 'IN') {
+            localStorage.setItem('SS', IN);
+        }
+        else if ($('#ORCRegList')[0].value == 'MI') {
+            localStorage.setItem('SS', MI);
+        }
         else if ($('#ORCRegList')[0].value == 'PLN') {
             localStorage.setItem('SS', PLN);
         };
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     };
+    const NEORResources = '<a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>';
+    const MARResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdfiaBesso7HTlAFxYdIW6oLdEOb0UQ9K9R4zys0gMTiyXpmQ/viewform" target="_blank">MAR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/pubhtml" target="_blank">Published Contacts Sheet</a>';
+    const SWRResources = '<a href="https://docs.google.com/spreadsheets/d/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/edit#gid=0" target="_blank">Published Contacts Sheet</a>';
+    const OHResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSccibGYNPyCDU-oR9MTR5T3q8ZgpoYrdw6sSvXVS4SSSCA6xQ/viewform" target="_blank">Ohio New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
+    const INResources = '<a href="#" target="_blank">Indiana New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/pubhtml" target="_blank">Published Contacts Sheet</a>';
+    const PLNResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
+    const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
     function StateCheck() {
         var State = W.model.states.additionalInfo[0].name
         if (RegNEOR.includes(State)) {
@@ -1121,7 +1158,7 @@
             if (localStorage.getItem('SS') !== NEOR) {
                 localStorage.setItem('SS', NEOR);
                 $('#ORCRegList')[0].value = 'NEOR';
-                $('#ORCResourceList')[0].innerHTML = '<a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>'
+                $('#ORCResourceList')[0].innerHTML = NEORResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
@@ -1131,7 +1168,7 @@
             if (localStorage.getItem('SS') !== MAR) {
                 localStorage.setItem('SS', MAR);
                 $('#ORCRegList')[0].value = 'MAR';
-                $('#ORCResourceList')[0].innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdfiaBesso7HTlAFxYdIW6oLdEOb0UQ9K9R4zys0gMTiyXpmQ/viewform" target="_blank">MAR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/pubhtml" target="_blank">Published Contacts Sheet</a>'
+                $('#ORCResourceList')[0].innerHTML = MARResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
@@ -1141,17 +1178,37 @@
             if (localStorage.getItem('SS') !== SWR) {
                 localStorage.setItem('SS', SWR);
                 $('#ORCRegList')[0].value = 'SWR';
-                $('#ORCResourceList')[0].innerHTML = '<a href="https://docs.google.com/spreadsheets/d/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/edit#gid=0" target="_blank">Published Contacts Sheet</a>'
+                $('#ORCResourceList')[0].innerHTML = SWRResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
         }
-        else if (RegGLR.includes(State)) {
+        else if (RegOH.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
             if (localStorage.getItem('SS') !== OH) {
                 localStorage.setItem('SS', OH);
                 $('#ORCRegList')[0].value = 'OH';
-                $('#ORCResourceList')[0].innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>'
+                $('#ORCResourceList')[0].innerHTML = OHResources
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegIN.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            if (localStorage.getItem('SS') !== IN) {
+                localStorage.setItem('SS', IN);
+                $('#ORCRegList')[0].value = 'IN';
+                $('#ORCResourceList')[0].innerHTML = INResources
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegMI.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            if (localStorage.getItem('SS') !== MI) {
+                localStorage.setItem('SS', MI);
+                $('#ORCRegList')[0].value = 'MI';
+                $('#ORCResourceList')[0].innerHTML = MIResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
@@ -1161,7 +1218,7 @@
             if (localStorage.getItem('SS') !== PLN) {
                 localStorage.setItem('SS', PLN);
                 $('#ORCRegList')[0].value = 'PLN';
-                $('#ORCResourceList')[0].innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>'
+                $('#ORCResourceList')[0].innerHTML = PLNResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
@@ -1187,13 +1244,26 @@
     function resetRegList() {
         $('#ORCRegList')[0].value = '0'
     }
+    function init() {
+        var mo = new MutationObserver(mutations => {
+            mutations.forEach(m => m.addedNodes.forEach(node => {
+                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit') || $(node).hasClass('mapProblem')) StateCheck();
+            }));
+        });
+        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true, attributes: true});
+        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true, attributes: true});
+        mo.observe(document.getElementById('edit-panel'), { childList: true, subtree: true, attributes: true });
+        if (WazeWrap.hasSegmentSelected() || WazeWrap.hasPlaceSelected() || WazeWrap.hasMapCommentSelected()) {
+            StateCheck();
+        };
+    };
     function createTab() {
         var $section = $('<div>');
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently limited to the regions listed.<h4></div>',
-            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="OH">OHIO</option><option value="PLN">PLN</option><option value="SWR">SWR</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
+            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">INDIANA</option><option value="MI">MICHIGAN</option><option value="OH">OHIO</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -1288,6 +1358,12 @@
         else if (localStorage.getItem('SS') == OH) {
             SelectedRegion.value = 'OH';
         }
+        else if (localStorage.getItem('SS') == IN) {
+            SelectedRegion.value = 'IN';
+        }
+        else if (localStorage.getItem('SS') == MI) {
+            SelectedRegion.value = 'MI';
+        }
         else if (localStorage.getItem('SS') == PLN) {
             SelectedRegion.value ='PLN';
         };
@@ -1310,9 +1386,21 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'OH' && RegGLR.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', OH);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
+            else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', IN);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
+            else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', MI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
@@ -1323,7 +1411,7 @@
                 setTimeout(resetRegList, 500);
             }
             else {
-                $('#ORC-Warning')[0].innerHTML = '<br><span style="color: white; background-color: #ff0000">ERROR: Your selected region list does not match your current WME location.</span>'
+                $('#ORC-Warning')[0].innerHTML = '<br><span style="color: white; background-color: #ff0000">ERROR: The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
                 setTimeout(resetRegList, 500);
             };
@@ -1332,19 +1420,25 @@
         var ORCResList = document.createElement('LABEL');
         ORCResList.id = 'ORCResourceList'
         if (localStorage.getItem('SS') == NEOR) {
-            ORCResList.innerHTML = '<a href="https://www.bit.ly/NewEditorForm" target="_blank">N(EO)R New Editor Contact Form</a><br><a href="https://www.bit.ly/NewEditorSheet" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = NEORResources;
         };
         if (localStorage.getItem('SS') == MAR) {
-            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdfiaBesso7HTlAFxYdIW6oLdEOb0UQ9K9R4zys0gMTiyXpmQ/viewform" target="_blank">MAR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/pubhtml" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = MARResources;
         };
         if (localStorage.getItem('SS') == SWR) {
-            ORCResList.innerHTML = '<a href="https://docs.google.com/spreadsheets/d/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/edit#gid=0" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = SWRResources;
         };
         if (localStorage.getItem('SS') == OH) {
-            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSccibGYNPyCDU-oR9MTR5T3q8ZgpoYrdw6sSvXVS4SSSCA6xQ/viewform" target="_blank">Ohio New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/pubhtml" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = OHResources;
+        };
+        if (localStorage.getItem('SS') == IN) {
+            ORCResList.innerHTML = INResources;
+        };
+        if (localStorage.getItem('SS') == MI) {
+            ORCResList.innerHTML = MIResources;
         };
         if (localStorage.getItem('SS') == PLN) {
-            ORCResList.innerHTML = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>'
+            ORCResList.innerHTML = PLNResources;
         };
         ORCRes.after(ORCResList);
         btn.onclick = function() {
@@ -1369,26 +1463,13 @@
         setTimeout(StateCheck, 3000);
         LoadSettingsObj();
         setTimeout(initColorPicker, 500);
-    };
-    function init() {
-        var mo = new MutationObserver(mutations => {
-            mutations.forEach(m => m.addedNodes.forEach(node => {
-                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit') || $(node).hasClass('mapProblem')) StateCheck();
-            }));
-        });
-        mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true, attributes: true});
-        mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true, attributes: true});
-        mo.observe(document.getElementById('edit-panel'), { childList: true, subtree: true, attributes: true });
-        if (WazeWrap.hasSegmentSelected() || WazeWrap.hasPlaceSelected() || WazeWrap.hasMapCommentSelected()) {
-            StateCheck();
-        };
+        init();
     };
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && ($('#panel-container').length || $('span.username').length >= 1)) {
+        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && W.model.states.additionalInfo && ($('#panel-container').length || $('span.username').length >= 1)) {
             sessionStorage.removeItem('ORCState');
             loadMasterList();
             loadLeadershipList();
-            init();
             createTab();
             setTimeout(updatePanel, 1000);
             if (!localStorage.getItem('SS')) {
@@ -1402,5 +1483,5 @@
             window.setTimeout(() => bootstrap(), 500);
         };
     };
-    bootstrap();
+    setTimeout(bootstrap, 3000);
 })();
