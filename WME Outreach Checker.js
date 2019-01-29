@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.28.01
+// @version      2019.01.29.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -173,6 +173,7 @@
     const RegOH = 'Ohio';
     const RegIN = 'Indiana';
     const RegMI = 'Michigan';
+    const RegWI = 'Wisconsin';
     const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
     const SState = [
         RegNEOR,
@@ -181,6 +182,7 @@
         RegOH,
         RegIN,
         RegMI,
+        RegWI,
         RegPLN
     ].join(',')
     function runORC() {
@@ -244,7 +246,7 @@
                             LandMark1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 LandMark1.style.backgroundColor = inSheetColor;
                                 LandMark1.style.color = inSheetFColor;
                                 LandMark1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -290,7 +292,7 @@
                                 LandMark2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     LandMark2.style.backgroundColor = inSheetColor;
                                     LandMark2.style.color = inSheetFColor;
                                     LandMark2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -338,7 +340,7 @@
                         MultiSeg1[0].title = username + ' is listed in the WhiteList';
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                             MultiSeg1[0].style.backgroundColor = inSheetColor;
                             MultiSeg1[0].style.color = inSheetFColor;
                             MultiSeg1[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -383,7 +385,7 @@
                                 MultiSeg2[0].title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg2[0].style.backgroundColor = inSheetColor;
                                     MultiSeg2[0].style.color = inSheetFColor;
                                     MultiSeg2[0].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -434,7 +436,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg3[i].style.backgroundColor = inSheetColor;
                                     MultiSeg3[i].style.color = inSheetFColor;
                                     MultiSeg3[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -488,7 +490,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg4[i].style.backgroundColor = inSheetColor;
                                     MultiSeg4[i].style.color = inSheetFColor;
                                     MultiSeg4[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -542,7 +544,7 @@
                                 continue;
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     MultiSeg5[i].style.backgroundColor = inSheetColor;
                                     MultiSeg5[i].style.color = inSheetFColor;
                                     MultiSeg5[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -591,7 +593,7 @@
                             Seg1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 Seg1.style.backgroundColor = inSheetColor;
                                 Seg1.style.color = inSheetFColor;
                                 Seg1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -637,7 +639,7 @@
                                 Seg2.title = username + ' is listed in the WhiteList';
                             }
                             else if (entry != null) {
-                                if (RegPLN.includes(sessionStorage.getItem('ORCState'))) {
+                                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                     Seg2.style.backgroundColor = inSheetColor;
                                     Seg2.style.color = inSheetFColor;
                                     Seg2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -685,7 +687,7 @@
                             MapComment1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 MapComment1.style.backgroundColor = inSheetColor;
                                 MapComment1.style.color = inSheetFColor;
                                 MapComment1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -730,7 +732,7 @@
                             MapComment2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 MapComment2.style.backgroundColor = inSheetColor;
                                 MapComment2.style.color = inSheetFColor;
                                 MapComment2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -776,7 +778,7 @@
                         MP.title = username + ' is listed in the WhiteList';
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                             MP.style.backgroundColor = inSheetColor;
                             MP.style.color = inSheetFColor;
                             MP.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -822,7 +824,7 @@
                             Camera1.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 Camera1.style.backgroundColor = inSheetColor;
                                 Camera1.style.color = inSheetFColor;
                                 Camera1.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -867,7 +869,7 @@
                             Camera2.title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 Camera2.style.backgroundColor = inSheetColor;
                                 Camera2.style.color = inSheetFColor;
                                 Camera2.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -914,7 +916,7 @@
                             PUR.childNodes[1].title = username + ' is listed in the WhiteList';
                         }
                         else if (entry != null) {
-                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                            if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                                 PUR.childNodes[1].style.backgroundColor = inSheetColor;
                                 PUR.childNodes[1].style.color = inSheetFColor;
                                 PUR.childNodes[1].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -960,7 +962,7 @@
                         continue;
                     }
                     else if (entry != null) {
-                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState'))) {
+                        if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                             URName[i].style.backgroundColor = inSheetColor;
                             URName[i].style.color = inSheetFColor;
                             URName[i].title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
@@ -990,6 +992,7 @@
     const PLN = 'https://spreadsheets.google.com/feeds/list/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/1/public/values?alt=json';
     const IN = 'https://spreadsheets.google.com/feeds/list/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/1/public/values?alt=json';
     const MI = 'https://spreadsheets.google.com/feeds/list/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/4/public/values?alt=json';
+    const WI = 'https://spreadsheets.google.com/feeds/list/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/2/public/values?alt=json';
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('SS')) {
@@ -1045,6 +1048,11 @@
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'IN';
+        }
+        else if (localStorage.getItem('SS') == WI) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            console.log('ORC: Loading GLR Leadership Master List....');
+            MgtReg = 'WI';
         }
         else if (localStorage.getItem('SS') == PLN) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/7/public/values?alt=json';
@@ -1106,6 +1114,10 @@
                     return {username: obj.gsx$_cn6ca.$t.trim(), responses: obj.gsx$welcomepacket.$t, reporter: obj.gsx$userwhosent.$t, dateC: obj.gsx$datewelcomesent.$t
                            };
                 };
+                if (localStorage.getItem('SS') == WI) {
+                    return {username: obj.gsx$username.$t.trim(), forumread: obj.gsx$readpm.$t, responses: obj.gsx$responded.$t, reporter: obj.gsx$bywhom.$t, dateC: obj.gsx$date.$t
+                           };
+                };
                 if (localStorage.getItem('SS') == PLN) {
                     return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                            };
@@ -1138,6 +1150,9 @@
         else if ($('#ORCRegList')[0].value == 'MI') {
             localStorage.setItem('SS', MI);
         }
+        else if ($('#ORCRegList')[0].value == 'WI') {
+            localStorage.setItem('SS', WI);
+        }
         else if ($('#ORCRegList')[0].value == 'PLN') {
             localStorage.setItem('SS', PLN);
         };
@@ -1151,6 +1166,7 @@
     const INResources = '<a href="#" target="_blank">Indiana New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const PLNResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
+    const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     function StateCheck() {
         var State = W.model.states.additionalInfo[0].name
         if (RegNEOR.includes(State)) {
@@ -1199,6 +1215,16 @@
                 localStorage.setItem('SS', IN);
                 $('#ORCRegList')[0].value = 'IN';
                 $('#ORCResourceList')[0].innerHTML = INResources
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        }
+        else if (RegWI.includes(State)) {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            if (localStorage.getItem('SS') !== WI) {
+                localStorage.setItem('SS', WI);
+                $('#ORCRegList')[0].value = 'WI';
+                $('#ORCResourceList')[0].innerHTML = WIResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             };
@@ -1263,7 +1289,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently limited to the regions listed.<h4></div>',
-            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">INDIANA</option><option value="MI">MICHIGAN</option><option value="OH">OHIO</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
+            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -1364,6 +1390,9 @@
         else if (localStorage.getItem('SS') == MI) {
             SelectedRegion.value = 'MI';
         }
+        else if (localStorage.getItem('SS') == WI) {
+            SelectedRegion.value = 'WI';
+        }
         else if (localStorage.getItem('SS') == PLN) {
             SelectedRegion.value ='PLN';
         };
@@ -1404,6 +1433,12 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
+            else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', WI);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
             else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', PLN);
@@ -1436,6 +1471,9 @@
         };
         if (localStorage.getItem('SS') == MI) {
             ORCResList.innerHTML = MIResources;
+        };
+        if (localStorage.getItem('SS') == WI) {
+            ORCResList.innerHTML = WIResources;
         };
         if (localStorage.getItem('SS') == PLN) {
             ORCResList.innerHTML = PLNResources;
