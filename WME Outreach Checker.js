@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.29.01
+// @version      2019.01.30.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -580,7 +580,7 @@
                         if (username.toLowerCase() == ORCME.toLowerCase()) {
                             Seg1.style.backgroundColor = youColor;
                             Seg1.style.color = youFColor;
-                            Seg1.title = 'This is you';
+                            Seg1.tooltip = 'This is you';
                         }
                         else if (leadership != null) {
                             Seg1.style.backgroundColor = managementColor;
@@ -1169,8 +1169,10 @@
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     function StateCheck() {
         var State = W.model.states.additionalInfo[0].name
+        var Display = document.getElementById('RegListDiv')
         if (RegNEOR.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== NEOR) {
                 localStorage.setItem('SS', NEOR);
                 $('#ORCRegList')[0].value = 'NEOR';
@@ -1181,6 +1183,7 @@
         }
         else if (RegMAR.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== MAR) {
                 localStorage.setItem('SS', MAR);
                 $('#ORCRegList')[0].value = 'MAR';
@@ -1191,16 +1194,19 @@
         }
         else if (RegSWR.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: SWR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== SWR) {
                 localStorage.setItem('SS', SWR);
                 $('#ORCRegList')[0].value = 'SWR';
                 $('#ORCResourceList')[0].innerHTML = SWRResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
+                Display.style.display = "block";
             };
         }
         else if (RegOH.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== OH) {
                 localStorage.setItem('SS', OH);
                 $('#ORCRegList')[0].value = 'OH';
@@ -1211,6 +1217,7 @@
         }
         else if (RegIN.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== IN) {
                 localStorage.setItem('SS', IN);
                 $('#ORCRegList')[0].value = 'IN';
@@ -1221,6 +1228,7 @@
         }
         else if (RegWI.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== WI) {
                 localStorage.setItem('SS', WI);
                 $('#ORCRegList')[0].value = 'WI';
@@ -1231,16 +1239,19 @@
         }
         else if (RegMI.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== MI) {
                 localStorage.setItem('SS', MI);
                 $('#ORCRegList')[0].value = 'MI';
                 $('#ORCResourceList')[0].innerHTML = MIResources
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
+                Display.style.display = "block";
             };
         }
         else if (RegPLN.includes(State)) {
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: PLN</span>';
+            Display.style.display = "block";
             if (localStorage.getItem('SS') !== PLN) {
                 localStorage.setItem('SS', PLN);
                 $('#ORCRegList')[0].value = 'PLN';
@@ -1250,8 +1261,9 @@
             };
         }
         else {
-            $('#ORC-Region')[0].innerHTML = '<b><span style="color: white; background-color: #ff0000">Current Region Not Supported.</span></b>';
+            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Region Not Supported.</div></b>';
             $('#ORCResourceList')[0].innerHTML = ''
+            Display.style.display = "none";
         };
         if (SState.includes(State)) {
             sessionStorage.setItem('ORCState', State);
@@ -1259,8 +1271,8 @@
             $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
             $('#ORC-State')[0].style.backgroundColor = '';
         } else {
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
-            $('#ORC-State')[0].style.backgroundColor = 'red';
+            $('#ORC-State')[0].innerHTML = '';
+            //$('#ORC-State')[0].style.backgroundColor = 'red';
         };
     };
     function RemoveWLSLabel() {
@@ -1289,7 +1301,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
             '<br><h4>This script is currently limited to the regions listed.<h4></div>',
-            '<select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -1321,6 +1333,7 @@
         var btn = document.createElement("BUTTON");
         btn.id = 'ORCBtn';
         var Button = document.getElementById('ORCBtn');
+        btn.className = 'btn btn-primary';
         btn.textContent = 'Add';
         var WLLabel = document.createElement('LABEL');
         WLLabel.innerHTML = '<br><b><h6>Username(s) to be whitelisted (separated by comma):</h6>';
@@ -1334,11 +1347,13 @@
         P.after(btn);
         tb.before(WLLabel);
         var SaveWL = document.createElement('BUTTON');
+        SaveWL.className = 'btn btn-success';
         SaveWL.id = 'SaveWLButton';
         SaveWL.textContent = 'Save';
         btn.after(SaveWL);
         var ResetWL = document.createElement('BUTTON');
-        ResetWL.id = 'SaveWLButton';
+        ResetWL.id = 'ResetWLButton';
+        ResetWL.className = 'btn btn-danger';
         ResetWL.textContent = 'Reset';
         SaveWL.after(ResetWL);
         var WLSLabel = document.createElement('LABEL')
@@ -1353,20 +1368,21 @@
             document.body.removeChild(ORCWLCopy);
             //alert('ORC WhiteList saved to clipboard.');
             P1.after(WLSLabel);
-            WLSLabel.innerHTML = '<p>ORC WhiteList saved to clipboard.</p>'
+            WLSLabel.innerHTML = '<p><div class="alert alert-success">ORC WhiteList saved to clipboard.</div></p>'
             setTimeout(RemoveWLSLabel, 1000);
         };
         ResetWL.onclick = function() {
             localStorage.setItem('ORWL', 'ORWList: ');
             //alert('ORC WhiteList erased.');
             P1.after(WLSLabel);
-            WLSLabel.innerHTML = '<p>ORC WhiteList reset.</p>'
+            WLSLabel.innerHTML = '<p><div class="alert alert-info">ORC WhiteList reset.</div></p>'
             setTimeout(RemoveWLSLabel, 1000);
         };
         var ReloadListBtn = document.getElementById('ORCReloadList');
+        var ORCWarning = document.getElementById('ORC-Warning');
         ReloadListBtn.onclick = function() {
-            P1.after(WLSLabel);
-            WLSLabel.innerHTML = '<p>Reloading Outreach Data....</p>';
+            ORCWarning.after(WLSLabel);
+            WLSLabel.innerHTML = '<p><div class="alert alert-info">Reloading Outreach Data....</div></p>';
             loadMasterList();
             loadLeadershipList();
             setTimeout(RemoveWLSLabel, 1500);
@@ -1446,7 +1462,7 @@
                 setTimeout(resetRegList, 500);
             }
             else {
-                $('#ORC-Warning')[0].innerHTML = '<br><span style="color: white; background-color: #ff0000">ERROR: The selected region/state list does not match the current WME location.</span>'
+                $('#ORC-Warning')[0].innerHTML = '<br><div class="alert alert-danger"><strong>ERROR:</strong> The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
                 setTimeout(resetRegList, 500);
             };
@@ -1486,14 +1502,14 @@
                 let ORWLOld = localStorage.getItem('ORWL');
                 localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
                 P1.after(WLSLabel);
-                WLSLabel.innerHTML = '<p>ORC WhiteList updated.</p>'
+                WLSLabel.innerHTML = '<p><div class="alert alert-success">ORC WhiteList updated.</div></p>'
                 runORC();
                 setTimeout(RemoveWLSLabel, 1000);
             } else {
                 let ORWLOld = localStorage.getItem('ORWL');
                 localStorage.setItem('ORWL', ORWLOld += tb.value + ',');
                 P1.after(WLSLabel);
-                WLSLabel.innerHTML = '<p>ORC WhiteList updated.</p>'
+                WLSLabel.innerHTML = '<p><div class="alert alert-success">ORC WhiteList updated.</div></p>'
                 runORC();
                 setTimeout(RemoveWLSLabel, 1000);
             };
