@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.01.30.01
+// @version      2019.02.02.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,21 +30,8 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_ALERT = false;
-    var UPDATE_NOTES = [
-        SCRIPT_NAME + ' has been updated to v' + VERSION,
-        '',
-        ''
-    ].join('\n');
-    if (UPDATE_ALERT) {
-        SCRIPT_NAME = SCRIPT_NAME.replace( /\s/g, '') + VERSION;
-        if (localStorage.getItem(SCRIPT_NAME) !== VERSION) {
-            localStorage.removeItem(SCRIPT_NAME);
-            alert(UPDATE_NOTES);
-            localStorage.setItem(SCRIPT_NAME, VERSION);
-        };
-    };
-    //Color Change Box code from BeenThere with premissions of JustinS89
+    var UPDATE_NOTES = 'Minor Changes';
+    //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
             $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
@@ -1094,7 +1081,7 @@
                            };
                 };
                 if (localStorage.getItem('SS') == SWR) {
-                    if (obj.gsx$ndoutreachdate.$t.trim() == null) {
+                    if (obj.gsx$ndoutreachdate.$t == null) {
                         return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$stoutreachdate.$t
                                };
                     } else {
@@ -1307,7 +1294,7 @@
             '<div id="ORC-Warning"></div>',
             '<br><div id="ORC-info">',
             '<div id="ORCColorOpts">',
-            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Txt</span>   </font><button id="ORCResetColors">Reset</button>',
+            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" id="ORCResetColors">Reset</button>',
             '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="colorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" title="Region Leadership">Regional Management (SM+).</span></div>',
@@ -1320,10 +1307,10 @@
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
         var RSClrBtn = document.getElementById('ORCResetColors');
-        RSClrBtn.style.width = '25px';
-        RSClrBtn.style.height = '5px';
-        RSClrBtn.style.fontSize = '8px';
-        RSClrBtn.style.paddingLeft = '1px';
+        //RSClrBtn.style.width = '25px';
+        //RSClrBtn.style.height = '5px';
+        //RSClrBtn.style.fontSize = '8px';
+        //RSClrBtn.style.paddingLeft = '1px';
         RSClrBtn.title = 'Reset to default color settings';
         RSClrBtn.onclick = function() {
             localStorage.removeItem("ORC_Settings");
@@ -1520,7 +1507,7 @@
         init();
     };
     function bootstrap() {
-        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && W.model.states.additionalInfo && ($('#panel-container').length || $('span.username').length >= 1)) {
+        if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready && jscolor && ($('#panel-container').length || $('span.username').length >= 1)) {
             sessionStorage.removeItem('ORCState');
             loadMasterList();
             loadLeadershipList();
@@ -1531,6 +1518,7 @@
             }
             W.selectionManager.events.register("selectionchanged", null, StateCheck);
             W.map.events.register("moveend", W.map, StateCheck);
+            WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
             console.log(GM_info.script.name, 'Initialized');
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
