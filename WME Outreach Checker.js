@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.05.02
+// @version      2019.02.05.03
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '* Internal code cleanup.<br><br>* Make sure ORC is loaded BEFORE URO+ in Tampermonkey. URO+ is causing issues with venues on ORC.';
+    var UPDATE_NOTES = '* Internal code cleanup.<br><br>* URO+ is causing problems with ORC not loading data on venues at this time.';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -238,7 +238,7 @@
         const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
         const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
         const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0];
-        const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user')[0];
+        const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user > a')[0];
         const MP = $('#panel-container > div > div > div.actions > div > div > div.by > a');
         const URName = $('span.username');
         if (localStorage.getItem('ORWL') == null) {
@@ -342,8 +342,8 @@
             }
         }
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user').is(':visible')) {
-            if (PUR.childNodes[1].textContent.includes('(')) {
-                if (PUR.childNodes[1].textContent.includes('staff'))
+            if (PUR.textContent.includes('(')) {
+                if (PUR.textContent.includes('staff'))
                     return;
                 doHighlight(PUR);
             }
