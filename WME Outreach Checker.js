@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.05.03
+// @version      2019.02.19.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '* Internal code cleanup.<br><br>* URO+ is causing problems with ORC not loading data on venues at this time.';
+    var UPDATE_NOTES = '* Minor code change to impliment WazeWrap updates.';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -900,8 +900,8 @@
             if (!localStorage.getItem('SS')) {
                 localStorage.setItem('SS', NEOR);
             }
-            W.selectionManager.events.register("selectionchanged", null, StateCheck);
-            W.map.events.register("moveend", W.map, StateCheck);
+            WazeWrap.Events.register("selectionchanged", null, StateCheck);
+            WazeWrap.Events.register("moveend", W.map, StateCheck);
             WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
             console.log(GM_info.script.name, 'Initialized');
         } else {
