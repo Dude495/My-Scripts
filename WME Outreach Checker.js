@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.23.01
+// @version      2019.02.23.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -683,7 +683,7 @@
         var $section = $('<div>');
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
-            '<h1>Outreach Checker</h2>',
+            '<h1>Outreach Checker</h2></div>',
             '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
@@ -699,7 +699,7 @@
             '</div>',
             '<p><div id="ORC-resources"><p><b>Resources:</b><br>',
             '<p><div id="ORC-WhiteList"></div>',
-            '</div></div>'
+            '</div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
         var RSClrBtn = document.getElementById('ORCResetColors');
@@ -718,6 +718,8 @@
         var Button = document.getElementById('ORCBtn');
         btn.className = 'btn btn-primary';
         btn.textContent = 'Add';
+        var Title = $('#ORC-title')[0];
+        Title.innerHTML += '<small>v' + VERSION + '</small>'
         var WLLabel = document.createElement('LABEL');
         WLLabel.innerHTML = '<br><b><h6>Username(s) to be whitelisted (separated by comma):</h6>';
         var ORCResources = document.getElementById('ORC-resources');
