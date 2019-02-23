@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.19.01
+// @version      2019.02.23.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '* Minor code change to impliment WazeWrap updates.';
+    var UPDATE_NOTES = 'Added additional location checks to verify current country.<p><h3>Supported Countries</h3><ul><li>United States</li></ul><h3>Supported Regions/States</h3><ul><li>N[EO]R</li><li>MAR</li><li>SWR</li><li>PLN</li><li>Ohio</li><li>Michigan</li><li>Indiana</li><li>Wisconsin</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -540,110 +540,123 @@
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     function StateCheck() {
+        var Country = W.model.countries.top.name
         var State = W.model.states.additionalInfo[0].name
         var Display = document.getElementById('RegListDiv')
-        if (RegNEOR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== NEOR) {
-                localStorage.setItem('SS', NEOR);
-                $('#ORCRegList')[0].value = 'NEOR';
-                $('#ORCResourceList')[0].innerHTML = NEORResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
-            }
-        }
-        else if (RegMAR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== MAR) {
-                localStorage.setItem('SS', MAR);
-                $('#ORCRegList')[0].value = 'MAR';
-                $('#ORCResourceList')[0].innerHTML = MARResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
-            }
-        }
-        else if (RegSWR.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: SWR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== SWR) {
-                localStorage.setItem('SS', SWR);
-                $('#ORCRegList')[0].value = 'SWR';
-                $('#ORCResourceList')[0].innerHTML = SWRResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
+        if (Country == 'United States') {
+            if (RegNEOR.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: N(EO)R</span>';
                 Display.style.display = "block";
+                if (localStorage.getItem('SS') !== NEOR) {
+                    localStorage.setItem('SS', NEOR);
+                    $('#ORCRegList')[0].value = 'NEOR';
+                    $('#ORCResourceList')[0].innerHTML = NEORResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
             }
-        }
-        else if (RegOH.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== OH) {
-                localStorage.setItem('SS', OH);
-                $('#ORCRegList')[0].value = 'OH';
-                $('#ORCResourceList')[0].innerHTML = OHResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
-            }
-        }
-        else if (RegIN.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== IN) {
-                localStorage.setItem('SS', IN);
-                $('#ORCRegList')[0].value = 'IN';
-                $('#ORCResourceList')[0].innerHTML = INResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
-            }
-        }
-        else if (RegWI.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== WI) {
-                localStorage.setItem('SS', WI);
-                $('#ORCRegList')[0].value = 'WI';
-                $('#ORCResourceList')[0].innerHTML = WIResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
-            }
-        }
-        else if (RegMI.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== MI) {
-                localStorage.setItem('SS', MI);
-                $('#ORCRegList')[0].value = 'MI';
-                $('#ORCResourceList')[0].innerHTML = MIResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
+            else if (RegMAR.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: MAR</span>';
                 Display.style.display = "block";
+                if (localStorage.getItem('SS') !== MAR) {
+                    localStorage.setItem('SS', MAR);
+                    $('#ORCRegList')[0].value = 'MAR';
+                    $('#ORCResourceList')[0].innerHTML = MARResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
             }
-        }
-        else if (RegPLN.includes(State)) {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: PLN</span>';
-            Display.style.display = "block";
-            if (localStorage.getItem('SS') !== PLN) {
-                localStorage.setItem('SS', PLN);
-                $('#ORCRegList')[0].value = 'PLN';
-                $('#ORCResourceList')[0].innerHTML = PLNResources
-                setTimeout(loadMasterList, 100);
-                setTimeout(loadLeadershipList, 100);
+            else if (RegSWR.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: SWR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== SWR) {
+                    localStorage.setItem('SS', SWR);
+                    $('#ORCRegList')[0].value = 'SWR';
+                    $('#ORCResourceList')[0].innerHTML = SWRResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                    Display.style.display = "block";
+                }
+            }
+            else if (RegOH.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== OH) {
+                    localStorage.setItem('SS', OH);
+                    $('#ORCRegList')[0].value = 'OH';
+                    $('#ORCResourceList')[0].innerHTML = OHResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
+            else if (RegIN.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== IN) {
+                    localStorage.setItem('SS', IN);
+                    $('#ORCRegList')[0].value = 'IN';
+                    $('#ORCResourceList')[0].innerHTML = INResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
+            else if (RegWI.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== WI) {
+                    localStorage.setItem('SS', WI);
+                    $('#ORCRegList')[0].value = 'WI';
+                    $('#ORCResourceList')[0].innerHTML = WIResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
+            else if (RegMI.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: GLR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== MI) {
+                    localStorage.setItem('SS', MI);
+                    $('#ORCRegList')[0].value = 'MI';
+                    $('#ORCResourceList')[0].innerHTML = MIResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                    Display.style.display = "block";
+                }
+            }
+            else if (RegPLN.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Region: PLN</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== PLN) {
+                    localStorage.setItem('SS', PLN);
+                    $('#ORCRegList')[0].value = 'PLN';
+                    $('#ORCResourceList')[0].innerHTML = PLNResources
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
+            else {
+                $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Region Not Supported.</div></b>';
+                $('#ORCResourceList')[0].innerHTML = ''
+                Display.style.display = "none";
+            }
+            if (SState.includes(State)) {
+                sessionStorage.setItem('ORCState', State);
+                runORC();
+                $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
+                $('#ORC-State')[0].style.backgroundColor = '';
+            } else {
+                $('#ORC-State')[0].innerHTML = '';
             }
         }
         else {
-            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Region Not Supported.</div></b>';
-            $('#ORCResourceList')[0].innerHTML = ''
-            Display.style.display = "none";
-        }
-        if (SState.includes(State)) {
-            sessionStorage.setItem('ORCState', State);
-            runORC();
-            $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
-            $('#ORC-State')[0].style.backgroundColor = '';
-        } else {
+            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country Not Supported.</div></b>';
+            $('#ORCResourceList')[0].innerHTML = '';
+            $('#RegListDiv')[0].innerHTML = '';
             $('#ORC-State')[0].innerHTML = '';
+            $('#ORCColorOpts')[0].innerHTML = '';
+            $('#ORC-resources')[0].innerHTML = '';
+            $('#ORC-Top > label:nth-child(12)')[0].innerHTML = '';
+            Display.style.display = "none";
         }
     }
     function RemoveWLSLabel() {
@@ -671,7 +684,6 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2>',
-            '<br><h4>This script is currently limited to the regions listed.<h4></div>',
             '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
