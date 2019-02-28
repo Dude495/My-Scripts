@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.23.03
+// @version      2019.02.28.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = 'Added additional location checks to verify current country.<p><h3>Supported Countries</h3><ul><li>United States</li></ul><h3>Supported Regions/States</h3><ul><li>N[EO]R</li><li>MAR</li><li>SWR</li><li>PLN</li><li>Ohio</li><li>Michigan</li><li>Indiana</li><li>Wisconsin</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Edit History support</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -250,6 +250,13 @@
             localStorage.setItem('ORWL', 'ORWList: ');
         }
         if (WazeWrap.hasPlaceSelected() && PUR == undefined && WazeWrap.getSelectedFeatures()[0].model.attributes.categories[0] !== 'RESIDENCE_HOME' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
+            $('div.toggleHistory')[0].onclick = setTimeout(function() {
+                var HXLandMark = $('#landmark-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
+                let i;
+                for (i = 0; i < HXLandMark.length; i++) {
+                doHighlight(HXLandMark[i])
+                }
+            }, 1500)
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff'))
                     return;
@@ -264,7 +271,21 @@
             }
         }
         if (WazeWrap.hasSegmentSelected() && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
+            $('div.toggleHistory')[0].onclick = setTimeout(function() {
+                var HXSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
+                let i;
+                for (i = 0; i < HXSeg.length; i++) {
+                doHighlight(HXSeg[i])
+                }
+            }, 1500)
             if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
+                $('div.toggleHistory')[0].onclick = setTimeout(function() {
+                var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
+                let i;
+                for (i = 0; i < HXMultiSeg.length; i++) {
+                doHighlight(HXMultiSeg[i])
+                }
+            }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
                     return;
                 doHighlight(MultiSeg1[0]);
