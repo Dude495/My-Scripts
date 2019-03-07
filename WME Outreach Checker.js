@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.07.01
+// @version      2019.03.07.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -462,7 +462,7 @@
         }
         else if (localStorage.getItem('SS') == NWR) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/8/public/values?alt=json';
-            console.log('ORC: Loading PLN Leadership Master List....');
+            console.log('ORC: Loading NWR Leadership Master List....');
             MgtReg = 'NWR';
         }
         await $.getJSON(MgtSheet, function(ldata){
