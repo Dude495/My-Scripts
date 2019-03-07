@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.02.28.01
+// @version      2019.03.06.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Edit History support</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Toggle ON/OFF Option - Auto Whitelist R4+ Editors</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -202,7 +202,7 @@
                 element.style.color = managementFColor;
                 element.title = username + ' is Regional Management';
             }
-            else if (ORWL.includes(username.toLowerCase()) || RANK >= '4') {
+            else if (ORWL.includes(username.toLowerCase()) || (localStorage.getItem('ORCR4WL') == "true" && RANK >= '4')) {
                 element.style.backgroundColor = whitelistColor;
                 element.style.color = whitelistFColor;
                 element.title = username + ' is listed in the WhiteList';
@@ -254,7 +254,7 @@
                 var HXLandMark = $('#landmark-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
                 let i;
                 for (i = 0; i < HXLandMark.length; i++) {
-                doHighlight(HXLandMark[i])
+                    doHighlight(HXLandMark[i])
                 }
             }, 1500)
             if (LandMark1.textContent.includes('(')) {
@@ -275,17 +275,17 @@
                 var HXSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                 let i;
                 for (i = 0; i < HXSeg.length; i++) {
-                doHighlight(HXSeg[i])
+                    doHighlight(HXSeg[i])
                 }
             }, 1500)
             if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
                 $('div.toggleHistory')[0].onclick = setTimeout(function() {
-                var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
-                let i;
-                for (i = 0; i < HXMultiSeg.length; i++) {
-                doHighlight(HXMultiSeg[i])
-                }
-            }, 1500)
+                    var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
+                    let i;
+                    for (i = 0; i < HXMultiSeg.length; i++) {
+                        doHighlight(HXMultiSeg[i])
+                    }
+                }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
                     return;
                 doHighlight(MultiSeg1[0]);
@@ -738,17 +738,18 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm"><span class="fa fa-repeat" title="Reload Outreach Lists"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button>',
+            '<br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
             '<br><div id="ORC-info">',
             '<div id="ORCColorOpts">',
-            '<font size="1.9"><span title="Set Background Color">Bg</span> | <span title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" id="ORCResetColors">Reset</button>',
+            '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
             '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="colorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" title="Region Leadership">Regional Management (SM+).</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" title="All R4+ users are automatically whitelisted.">Yourself/Whitelisted users (R4+).</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" data-toggle="tooltip" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" data-toggle="tooltip" title="Region Leadership">Regional Management (SM+).</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" data-toggle="tooltip" title="All R4+ editors will be whitelisted if enabled.">Yourself/Whitelisted users.</span></div>',
             '</div>',
             '</div>',
             '<p><div id="ORC-resources"><p><b>Resources:</b><br>',
@@ -756,12 +757,10 @@
             '</div>'
         ].join(' '));
         new WazeWrap.Interface.Tab('ORC', $section.html());
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         var RSClrBtn = document.getElementById('ORCResetColors');
-        //RSClrBtn.style.width = '25px';
-        //RSClrBtn.style.height = '5px';
-        //RSClrBtn.style.fontSize = '8px';
-        //RSClrBtn.style.paddingLeft = '1px';
-        RSClrBtn.title = 'Reset to default color settings';
         RSClrBtn.onclick = function() {
             localStorage.removeItem("ORC_Settings");
             resetDefault();
@@ -826,6 +825,25 @@
             loadMasterList();
             loadLeadershipList();
             setTimeout(RemoveWLSLabel, 1500);
+        }
+        var R4WL = document.getElementById('R4WL')
+        if (localStorage.getItem('ORCR4WL') == 'true') {
+            $('#R4WL')[0].checked = true
+        } else {
+            $('#R4WL')[0].checked = false
+        }
+        R4WL.onclick = function() {
+            ORCWarning.after(WLSLabel);
+            localStorage.setItem('ORCR4WL', R4WL.checked)
+            if (R4WL.checked == true) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-warning">All Editors R4+ will be Auto Whitelisted.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            if (R4WL.checked == false) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-warning">All Editors R4+ will not be Auto Whitelisted.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            StateCheck();
         }
         let SelectedRegion = $('#ORCRegList')[0];
         if (localStorage.getItem('SS') == MAR) {
