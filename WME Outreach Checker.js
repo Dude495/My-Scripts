@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.06.01
+// @version      2019.03.07.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -30,7 +30,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Toggle ON/OFF Option - Auto Whitelist R4+ Editors</li></ul>';
+    var UPDATE_NOTES = '<ul><li>ORC Welcomes NWR!</li><li>Toggle ON/OFF Option - Auto Whitelist R4+ Editors</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -157,6 +157,7 @@
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
     const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
     const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
+    const RegNWR = 'Alaska,Idaho,Montana,Oregon,Washington,Wyoming';
     const RegOH = 'Ohio';
     const RegIN = 'Indiana';
     const RegMI = 'Michigan';
@@ -170,7 +171,8 @@
         RegIN,
         RegMI,
         RegWI,
-        RegPLN
+        RegPLN,
+        RegNWR
     ].join(',')
     function doHighlight(element) {
         const whitelistColor = ORCSettings.CP4;
@@ -391,6 +393,7 @@
     const IN = 'https://spreadsheets.google.com/feeds/list/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/1/public/values?alt=json';
     const MI = 'https://spreadsheets.google.com/feeds/list/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/4/public/values?alt=json';
     const WI = 'https://spreadsheets.google.com/feeds/list/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/2/public/values?alt=json';
+    const NWR = 'https://spreadsheets.google.com/feeds/list/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/1/public/values?alt=json';
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('SS')) {
@@ -457,6 +460,11 @@
             console.log('ORC: Loading PLN Leadership Master List....');
             MgtReg = 'PLN';
         }
+        else if (localStorage.getItem('SS') == NWR) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/8/public/values?alt=json';
+            console.log('ORC: Loading PLN Leadership Master List....');
+            MgtReg = 'NWR';
+        }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
             console.log('ORC: '+MgtReg+' Leadership Masterlist Loaded....');
@@ -520,6 +528,10 @@
                     return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                            }
                 }
+                if (localStorage.getItem('SS') == NWR) {
+                    return {username: obj.gsx$usernameofcontactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                           }
+                }
             });
             for(let i=0; i<mapped.length; i++){
                 if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
@@ -554,6 +566,9 @@
         else if ($('#ORCRegList')[0].value == 'PLN') {
             localStorage.setItem('SS', PLN);
         }
+        else if ($('#ORCRegList')[0].value == 'NWR') {
+            localStorage.setItem('SS', NWR);
+        }
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     }
@@ -565,6 +580,7 @@
     const PLNResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
+    const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
     function showPanel() {
         $('#ORCResourceList').show();
         $('#RegListDiv').show();
@@ -691,6 +707,18 @@
                     setTimeout(loadLeadershipList, 100);
                 }
             }
+            else if (RegNWR.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: NWR</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('SS') !== NWR) {
+                    localStorage.setItem('SS', NWR);
+                    $('#ORCRegList')[0].value = 'NWR';
+                    $('#ORCResourceList')[0].innerHTML = NWRResources
+                    showPanel();
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
             else {
                 $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Region Not Supported.</div></b>';
                 hidePanel();
@@ -738,7 +766,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button>',
             '<br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
@@ -870,6 +898,9 @@
         else if (localStorage.getItem('SS') == PLN) {
             SelectedRegion.value ='PLN';
         }
+        else if (localStorage.getItem('SS') == NWR) {
+            SelectedRegion.value ='NWR';
+        }
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.additionalInfo[0].name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
@@ -919,6 +950,12 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
+            else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.states.additionalInfo[0].name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', NWR);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
             else {
                 $('#ORC-Warning')[0].innerHTML = '<br><div class="alert alert-danger"><strong>ERROR:</strong> The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
@@ -951,6 +988,9 @@
         }
         if (localStorage.getItem('SS') == PLN) {
             ORCResList.innerHTML = PLNResources;
+        }
+        if (localStorage.getItem('SS') == NWR) {
+            ORCResList.innerHTML = NWRResources;
         }
         ORCRes.after(ORCResList);
         btn.onclick = function() {
