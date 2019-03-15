@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.11.01
+// @version      2019.03.15.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -18,6 +18,7 @@
 
 (async function() {
     'use strict';
+    const PMImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKx2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjarZd3UFP5FsfPvTedhJaAgJTQmyCdAFJCD0WQDjZCEkggxJAEVGyoLK7gWhARwYqsiCi4FkDWgliwsAj2vkEWFXVdLNhQeX+whH3z5v3xZt6Z+c39zHfO73vOuXP/OBeA+okrlYpRTYBciUIWFxbITElNYxKfAAXIQAFH0OPy5FJ2bGwUAMDE8x+BAHy4DQgAwA0HrlQqhv8ttPgCOQ8AiQWADL6clwuAHANAlDypTAGAVQCA+UKFVAGAtQEAQ5aSmgaAdQMAI2uclQDAyBjn9wDAkCXEBQHgSAAkKpcrywKgMgCAWcDLUgBQ3QDAScIXSQCofADw4wm5fABqHQBMy81dwAeg9gKATcY/fLL+zTND5cnlZql4fBYAACAFi+RSMXcx/L8jV5w/UcMKAKhCWXgcAJAAkLs5CyJVLMmYGTPBIv54TwDIXWF+eOIE8+RBaRPM5wZHqu6KZ0ZNcKYolKPyUXASJlggD4mfYNmCOFWtTFkQe4K5ssm6+TmJKl0o4Kj8C4UJyRNcIEqaOcHynPjIyZwglS7Lj1P1L5CEBU7WDVXNniv/x7wijuquQpgQrpqdO9m/QMKe9JSnqHrjC4JDJnMSVflSRaCqllQcq8oXiMNUurwgXnVXIUuYzFfEqt5hNjcidoJBBNHABZ5CsEgBABC0QLpYJsoSKphsqVQsYHIkPMdpTBcnZxZASmoac/wTeKcLCAAgulcmtbwOAK9SACRrUuOaA5x4CkD/MKmZvwWgbgQ41cvLlxWMazgAADxQQAMYoA/GYA424AAu4AE+EAAhEAExkACpMA94IIRckMFCWAoroQTKYCNsgWrYBXthPxyCI9AKJ+EsXISr0Au34AEoYRBewjB8gFEEQYgIDaEj+ogJYonYIy4IC/FDQpAoJA5JRdKRLESC5CNLkdVIGVKOVCN7kAbkF+QEcha5jPQh95B+ZAh5i3xBMZSKMlAj1AqdjrJQNhqJJqBz0Sw0Dy1Ei9H1aBVaix5EW9Cz6FX0FqpEX6IjGGBqmC5mijlgLCwIi8HSsExMhi3HSrFKrBZrwtqxLuwGpsReYZ9xBBwdx8Q54Hxw4bhEHA+Xh1uOW4erxu3HteDO427g+nHDuO94Gt4Qb4/3xnPwKfgs/EJ8Cb4Svw9/HH8Bfws/iP9AIBB0CdYET0I4IZWQTVhCWEfYQWgmdBD6CAOEESKRqE+0J/oSY4hcooJYQtxGPEg8Q7xOHCR+IqmRTEgupFBSGklCWkWqJB0gnSZdJz0jjZI1yZZkb3IMmU9eTN5AriO3k6+RB8mjFC2KNcWXkkDJpqykVFGaKBcoDynv1NTUzNS81GapidSK1KrUDqtdUutX+0zVptpRg6hzqPnU9dR6agf1HvUdjUazogXQ0mgK2npaA+0c7THtkzpd3VGdo85XX6Feo96ifl39tQZZw1KDrTFPo1CjUuOoxjWNV5pkTSvNIE2u5nLNGs0Tmnc0R7ToWs5aMVq5Wuu0Dmhd1nquTdS20g7R5msXa+/VPqc9QMfo5vQgOo++ml5Hv0AfZBAY1gwOI5tRxjjE6GEM62jruOkk6SzSqdE5paPUxXStdDm6Yt0Nukd0b+t+mWI0hT1FMGXtlKYp16d81JuqF6An0CvVa9a7pfdFn6kfop+jv0m/Vf+RAc7AzmCWwUKDnQYXDF5NZUz1mcqbWjr1yNT7hqihnWGc4RLDvYbdhiNGxkZhRlKjbUbnjF4Z6xoHGGcbVxifNh4yoZv4mYhMKkzOmLxg6jDZTDGzinmeOWxqaBpumm+6x7THdNTM2izRbJVZs9kjc4o5yzzTvMK803zYwsQi2mKpRaPFfUuyJctSaLnVssvyo5W1VbLVGqtWq+fWetYc60LrRuuHNjQbf5s8m1qbm7YEW5Ztju0O21471M7dTmhXY3fNHrX3sBfZ77Dvm4af5jVNMq122h0HqgPbocCh0aHfUdcxynGVY6vj6+kW09Omb5reNf27k7uT2KnO6YGztnOE8yrndue3LnYuPJcal5uuNNdQ1xWuba5v3OzdBG473e66092j3de4d7p/8/D0kHk0eQx5Wnime273vMNisGJZ61iXvPBegV4rvE56ffb28FZ4H/H+y8fBJ8fngM/zGdYzBDPqZgz4mvlyfff4Kv2Yful+u/2U/qb+XP9a/ycB5gH8gH0Bz9i27Gz2QfbrQKdAWeDxwI9B3kHLgjqCseCw4NLgnhDtkMSQ6pDHoWahWaGNocNh7mFLwjrC8eGR4ZvC73CMODxOA2c4wjNiWcT5SGpkfGR15JMouyhZVHs0Gh0RvTn64UzLmZKZrTEQw4nZHPMo1jo2L/bXWYRZsbNqZj2Nc45bGtcVT4+fH38g/kNCYMKGhAeJNon5iZ1JGklzkhqSPiYHJ5cnK1OmpyxLuZpqkCpKbUsjpiWl7UsbmR0ye8vswTnuc0rm3J5rPXfR3MvzDOaJ552arzGfO/9oOj49Of1A+lduDLeWO5LBydieMcwL4m3lveQH8Cv4QwJfQbngWaZvZnnm8yzfrM1ZQ0J/YaXwlShIVC16kx2evSv7Y05MTn3OmDhZ3JxLyk3PPSHRluRIzi8wXrBoQZ/UXloiVeZ5523JG5ZFyvbJEflceZuCoZAquvNt8n/I7y/wK6gp+LQwaeHRRVqLJIu6F9stXrv4WWFo4c9LcEt4SzqXmi5dubR/GXvZnuXI8ozlnSvMVxSvGCwKK9q/krIyZ+Vvq5xWla96vzp5dXuxUXFR8cAPYT80lqiXyErurPFZs+tH3I+iH3vWuq7dtvZ7Kb/0SplTWWXZ13W8dVd+cv6p6qex9ZnrezZ4bNi5kbBRsvH2Jv9N+8u1ygvLBzZHb26pYFaUVrzfMn/L5Uq3yl1bKVvztyqroqratlls27jta7Ww+lZNYE3zdsPta7d/3MHfcX1nwM6mXUa7ynZ92S3afXdP2J6WWqvayr2EvQV7n9Yl1XX9zPq5YZ/BvrJ93+ol9cr9cfvPN3g2NBwwPLChEW3Mbxw6OOdg76HgQ21NDk17mnWbyw7D4fzDL35J/+X2kcgjnUdZR5uOWR7bfpx+vLQFaVncMtwqbFW2pbb1nYg40dnu0378V8df60+anqw5pXNqw2nK6eLTY2cKz4x0SDtenc06O9A5v/PBuZRzN8/POt9zIfLCpYuhF891sbvOXPK9dPKy9+UTV1hXWq96XG3pdu8+/pv7b8d7PHparnlea+v16m3vm9F3+rr/9bM3gm9cvMm5efXWzFt9txNv370z547yLv/u83vie2/uF9wffVD0EP+w9JHmo8rHho9rf7f9vVnpoTzVH9zf/ST+yYMB3sDLP+R/fB0sfkp7WvnM5FnDc5fnJ4dCh3pfzH4x+FL6cvRVyZ9af25/bfP62F8Bf3UPpwwPvpG9GXu77p3+u/r3bu87R2JHHn/I/TD6sfST/qf9n1mfu74kf3k2uvAr8WvVN9tv7d8jvz8cyx0bk3JlXAAAwAAAzcwEeFsPQEsFoPcCUGaP79B/7/7I5F/Af+PxPRsAADwA6gMAEosAojoAdnYAWBYBUDsAYgEgIQBQV1fV+Tvkma4u415UGQD+09jYOyMAYjvAN9nY2OiOsbFvdQDYPYCOvPHdHQCAoAmwWxsAoNt4+X/s0P8CfioOUyoBvaUAAAAgY0hSTQAAbXUAAHOgAAD83QAAg2QAAHDoAADsaAAAMD4AABCQ5OyZ6gAAAmxJREFUeNrM1N9Lk1EYB/CX/QXbO9/t3dtyO9vYdOlBKoO66C8IZYGE6wcEWURYV+2HETTxj9jsonewcv3YVpvHac41yDSciIUm2EUQNZrnLwiEbxfbO+amXYgXXjw35xw+nPOc53kEAMJRhnD8wbi+oxGcUB0ndJgTmuWE7nBCcUDs1M8Mc0J1+4KcUAcndPU/yEGxygl17AHrWPUQmBZVDdWeWdY2/9h7sSQTvBFlJPQSnuslvNBLmDKYkDSY8NJgRrZDwYriRJX0NqNlTqhO4IT6m7Fch4KEQYNMSBokvDKY8Fo0IyWakTJakDFakJEULMi2VtQvcELz2sKyhSA5MIj0wwAygSAyo/eREmW8G/AhFwhhetAHdu4CWDCEmZE7yMud+GJ1N4N5gRPKtYW0UUY6EARjDNPPVDDGwG7dRj4QAmMMc08iKFy9AcYYZqMxlBQHPlldzWBFaE5uUjTjrQb6r9WQYBiFYBizqoo5VUUxMo45NY756CTKnR6UbZ5m8O+eG2alE8jWQcYYZqamsHj+IkqhMRSiMcyrccyrcXyMTKAYm8Smowdbzp62GzZyWFZcyAVrzyspBJ+tTqyddGMx/AjF2CSWxiewoMaxMvYYpdhT/HD34Zerry2HjV+ukl588A3hfSiMZasLa50ebNq9+Drkx/rdUWxfuoxvN0ewfeU6Nu49QKXrTGs9+tvqsEootmzdWLd3Y8NxCt9dFD/dfah4TqPadRY73n5wbz+4pw2r1WFCNAmcUOcRdIoTgCAkRJOQNMoaethedjZ6WQNTktI6bX5zQnf3AXY5oZX6GX/btDn2A/bfABSntliMlt5LAAAAAElFTkSuQmCC';
     var ORCSettings = [];
     var attributes = {
         name: ""
@@ -30,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Additional Resources link for NWR added (Update Existing Records).</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Added a <img src='+PMImg+'> button next to the usernames should Toolbox not be used or fail to load.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -174,6 +175,36 @@
         RegPLN,
         RegNWR
     ].join(',')
+    function addPMBttn(element) {
+        if ($('#WMEFP-SEG-PM-E > img').is(':visible') == false || $('#WMEFP-UR-PM-FORM-1 > img').is(':visible') == false) {
+            let ORCusername = element.textContent.match(INCRegEx);
+            let username = ORCusername[1];
+            var center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
+            var LON = center.lon;
+            var LAT = center.lat;
+            var ZOOM = W.map.zoom;
+            var ENVL = $('#sidepanel-prefs > div > div > form > div:nth-child(4) > select')[0].value;
+            var ENV = $('#env-select > div > select')[0].value;
+            var PermaLink;
+            var ID;
+            var SUBJECT;
+            var PMLink = document.createElement('DIV');
+            PMLink.id = 'ORCPMButton';
+            PMLink.style.display = 'inline';
+            if (WazeWrap.hasPlaceSelected()) {
+                ID = $('#landmark-edit-general > ul')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
+                PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&venues=' + ID);
+            SUBJECT = 'About this Venue';
+            }
+            if (WazeWrap.hasSegmentSelected()) {
+                SUBJECT = 'About this Segment';
+                ID = $('#segment-edit-general > ul')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
+                PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&segments=' + ID);
+            }
+            PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+            element.after(PMLink);
+        }
+    }
     function doHighlight(element) {
         const whitelistColor = ORCSettings.CP4;
         const whitelistFColor = ORCSettings.FP4
@@ -256,19 +287,22 @@
                 var HXLandMark = $('#landmark-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
                 let i;
                 for (i = 0; i < HXLandMark.length; i++) {
-                    doHighlight(HXLandMark[i])
+                    doHighlight(HXLandMark[i]);
+                    addPMBttn(HXLandMark[i]);
                 }
             }, 1500)
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff'))
                     return;
                 doHighlight(LandMark1);
+                addPMBttn(LandMark1);
             }
             if (LandMark2 !== undefined) {
                 if (LandMark2.textContent.includes('(')) {
                     if (LandMark2.textContent.includes('staff'))
                         return;
                     doHighlight(LandMark2);
+                    addPMBttn(LandMark2);
                 }
             }
         }
@@ -277,7 +311,8 @@
                 var HXSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                 let i;
                 for (i = 0; i < HXSeg.length; i++) {
-                    doHighlight(HXSeg[i])
+                    doHighlight(HXSeg[i]);
+                    addPMBttn(HXSeg[i]);
                 }
             }, 1500)
             if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
@@ -285,18 +320,21 @@
                     var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                     let i;
                     for (i = 0; i < HXMultiSeg.length; i++) {
-                        doHighlight(HXMultiSeg[i])
+                        doHighlight(HXMultiSeg[i]);
+                        addPMBttn(HXMutliSeg[i]);
                     }
                 }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
                     return;
                 doHighlight(MultiSeg1[0]);
+                addPMBttn(MultiSeg1[0]);
             }
             if (MultiSeg2.length > '0') {
                 if (MultiSeg2[0].textContent.includes('(')) {
                     if (MultiSeg2[0].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg2[0]);
+                    addPMBttn(MultiSeg2[0]);
                 }
             }
             if (MultiSeg3.length > '0') {
@@ -305,6 +343,7 @@
                     if (MultiSeg3[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg3[i]);
+                    addPMBttn(MultiSeg3[i]);
                 }
             }
             if (MultiSeg4.length > '0') {
@@ -313,6 +352,7 @@
                     if (MultiSeg4[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg4[i]);
+                    addPMBttn(MultiSeg4[i]);
                 }
             }
             if (MultiSeg5.length > '0') {
@@ -321,6 +361,7 @@
                     if (MultiSeg5[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg5[i]);
+                    addPMBttn(MultiSeg5[i]);
                 }
             }
             if (Seg1 !== undefined) {
@@ -328,6 +369,7 @@
                     if (Seg1.textContent.includes('staff'))
                         return;
                     doHighlight(Seg1);
+                    addPMBttn(Seg1);
                 }
             }
             if (Seg2 !== undefined) {
@@ -335,6 +377,7 @@
                     if (Seg2.textContent.includes('staff'))
                         return;
                     doHighlight(Seg2);
+                    addPMBttn(Seg2);
                 }
             }
         }
@@ -343,11 +386,13 @@
                 if (MapComment1.textContent.includes('staff'))
                     return;
                 doHighlight(MapComment1);
+                addPMBttn(MapComment1);
             }
             if (MapComment2.textContent.includes('(')) {
                 if (MapComment2.textContent.includes('staff'))
                     return;
                 doHighlight(MapComment2);
+                addPMBttn(MapComment2);
             }
         }
         if (MP.is(':visible')) {
@@ -355,6 +400,7 @@
                 if (MP[0].textContent.includes('staff'))
                     return;
                 doHighlight(MP[0]);
+                addPMBttn(MP[0]);
             }
         }
         if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
@@ -362,11 +408,13 @@
                 if (Camera1.textContent.includes('staff'))
                     return;
                 doHighlight(Camera1);
+                addPMBttn(Camera1);
             }
             if (Camera2.textContent.includes('(')) {
                 if (Camera2.textContent.includes('staff'))
                     return;
                 doHighlight(Camera2);
+                addPMBttn(Camera2);
             }
         }
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user').is(':visible')) {
@@ -374,12 +422,14 @@
                 if (PUR.textContent.includes('staff'))
                     return;
                 doHighlight(PUR);
+                addPMBttn(PUR);
             }
         } else {
             let i;
             for (i = 0; i < URName.length; i++) {
                 if (URName[i].textContent.includes('(')) {
                     doHighlight(URName[i]);
+                    addPMBttn(URName[i]);
                 }
             }
         }
