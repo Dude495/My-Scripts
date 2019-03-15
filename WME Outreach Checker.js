@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.15.01
+// @version      2019.03.15.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Added a <img src='+PMImg+'> button next to the usernames should Toolbox not be used or fail to load.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Added a <img src='+PMImg+'> button next to the usernames should Toolbox not be used or fail to load.</li><li>Bug Fixes</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -176,7 +176,7 @@
         RegNWR
     ].join(',')
     function addPMBttn(element) {
-        if ($('#WMEFP-SEG-PM-E > img').is(':visible') == false || $('#WMEFP-UR-PM-FORM-1 > img').is(':visible') == false) {
+        if ($('[id^=WMEFP-SEG-PM]').length === 0) {
             let ORCusername = element.textContent.match(INCRegEx);
             let username = ORCusername[1];
             var center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
@@ -189,20 +189,36 @@
             var ID;
             var SUBJECT;
             var PMLink = document.createElement('DIV');
-            PMLink.id = 'ORCPMButton';
+            PMLink.className = 'ORCPMBtn';
             PMLink.style.display = 'inline';
             if (WazeWrap.hasPlaceSelected()) {
-                ID = $('#landmark-edit-general > ul')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
+                ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                 PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&venues=' + ID);
-            SUBJECT = 'About this Venue';
+                SUBJECT = 'About this Venue';
+                console.log('Place Selected');
+                PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+                element.after(PMLink);
             }
             if (WazeWrap.hasSegmentSelected()) {
-                SUBJECT = 'About this Segment';
-                ID = $('#segment-edit-general > ul')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
-                PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&segments=' + ID);
+                if($(element).parent().find('.ORCPMBtn').length === 0){
+                    SUBJECT = 'About this Segment';
+                    ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
+                    PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&segments=' + ID);
+                    console.log('Segment Selected');
+                    PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+                    element.after(PMLink);
+                }
             }
-            PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
-            element.after(PMLink);
+            if (WazeWrap.hasMapCommentSelected()) {
+                if($(element).parent().find('.ORCPMBtn').length === 0){
+                    SUBJECT = 'About this Map Comment';
+                    ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
+                    PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&cameras=' + ID);
+                    console.log('Comment Selected');
+                    PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+                    element.after(PMLink);
+                }
+            }
         }
     }
     function doHighlight(element) {
@@ -285,83 +301,77 @@
         if (WazeWrap.hasPlaceSelected() && PUR == undefined && WazeWrap.getSelectedFeatures()[0].model.attributes.categories[0] !== 'RESIDENCE_HOME' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             $('div.toggleHistory')[0].onclick = setTimeout(function() {
                 var HXLandMark = $('#landmark-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
-                let i;
-                for (i = 0; i < HXLandMark.length; i++) {
+                for (let i = 0; i < HXLandMark.length; i++) {
                     doHighlight(HXLandMark[i]);
-                    addPMBttn(HXLandMark[i]);
+                    setTimeout(addPMBttn(HXLandMark[i]), 1000);
                 }
             }, 1500)
             if (LandMark1.textContent.includes('(')) {
                 if (LandMark1.textContent.includes('staff'))
                     return;
                 doHighlight(LandMark1);
-                addPMBttn(LandMark1);
+                setTimeout(addPMBttn(LandMark1), 1000);
             }
             if (LandMark2 !== undefined) {
                 if (LandMark2.textContent.includes('(')) {
                     if (LandMark2.textContent.includes('staff'))
                         return;
                     doHighlight(LandMark2);
-                    addPMBttn(LandMark2);
+                    setTimeout(addPMBttn(LandMark2), 1000);
                 }
             }
         }
         if (WazeWrap.hasSegmentSelected() && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             $('div.toggleHistory')[0].onclick = setTimeout(function() {
                 var HXSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
-                let i;
-                for (i = 0; i < HXSeg.length; i++) {
+                for (let i = 0; i < HXSeg.length; i++) {
                     doHighlight(HXSeg[i]);
-                    addPMBttn(HXSeg[i]);
+                    setTimeout(addPMBttn(HXSeg[i]), 1000);
                 }
             }, 1500)
             if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
                 $('div.toggleHistory')[0].onclick = setTimeout(function() {
                     var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
-                    let i;
-                    for (i = 0; i < HXMultiSeg.length; i++) {
+                    for (let i = 0; i < HXMultiSeg.length; i++) {
                         doHighlight(HXMultiSeg[i]);
-                        addPMBttn(HXMutliSeg[i]);
+                        setTimeout(addPMBttn(HXMutliSeg[i]), 1000);
                     }
                 }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
                     return;
                 doHighlight(MultiSeg1[0]);
-                addPMBttn(MultiSeg1[0]);
+                setTimeout(addPMBttn(MultiSeg1[0]), 1000);
             }
             if (MultiSeg2.length > '0') {
                 if (MultiSeg2[0].textContent.includes('(')) {
                     if (MultiSeg2[0].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg2[0]);
-                    addPMBttn(MultiSeg2[0]);
+                    setTimeout(addPMBttn(MultiSeg2[0]), 1000);
                 }
             }
             if (MultiSeg3.length > '0') {
-                let i;
-                for (i = 0; i < MultiSeg3.length; i++) {
+                for (let i = 0; i < MultiSeg3.length; i++) {
                     if (MultiSeg3[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg3[i]);
-                    addPMBttn(MultiSeg3[i]);
+                    setTimeout(addPMBttn(MultiSeg3[i]), 1000);
                 }
             }
             if (MultiSeg4.length > '0') {
-                let i;
-                for (i = 0; i < MultiSeg4.length; i++) {
+                for (let i = 0; i < MultiSeg4.length; i++) {
                     if (MultiSeg4[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg4[i]);
-                    addPMBttn(MultiSeg4[i]);
+                    setTimeout(addPMBttn(MultiSeg4[i]), 1000);
                 }
             }
             if (MultiSeg5.length > '0') {
-                let i;
-                for (i = 0; i < MultiSeg5.length; i++) {
+                for (let i = 0; i < MultiSeg5.length; i++) {
                     if (MultiSeg5[i].textContent.includes('staff'))
                         return;
                     doHighlight(MultiSeg5[i]);
-                    addPMBttn(MultiSeg5[i]);
+                    setTimeout(addPMBttn(MultiSeg5[i]), 1000);
                 }
             }
             if (Seg1 !== undefined) {
@@ -369,7 +379,7 @@
                     if (Seg1.textContent.includes('staff'))
                         return;
                     doHighlight(Seg1);
-                    addPMBttn(Seg1);
+                    setTimeout(addPMBttn(Seg1), 1000);
                 }
             }
             if (Seg2 !== undefined) {
@@ -377,7 +387,7 @@
                     if (Seg2.textContent.includes('staff'))
                         return;
                     doHighlight(Seg2);
-                    addPMBttn(Seg2);
+                    setTimeout(addPMBttn(Seg2), 1000);
                 }
             }
         }
@@ -386,13 +396,13 @@
                 if (MapComment1.textContent.includes('staff'))
                     return;
                 doHighlight(MapComment1);
-                addPMBttn(MapComment1);
+                setTimeout(addPMBttn(MapComment1), 1000);
             }
             if (MapComment2.textContent.includes('(')) {
                 if (MapComment2.textContent.includes('staff'))
                     return;
                 doHighlight(MapComment2);
-                addPMBttn(MapComment2);
+                setTimeout(addPMBttn(MapComment2), 1000);
             }
         }
         if (MP.is(':visible')) {
@@ -400,7 +410,7 @@
                 if (MP[0].textContent.includes('staff'))
                     return;
                 doHighlight(MP[0]);
-                addPMBttn(MP[0]);
+                setTimeout(addPMBttn(MP[0]), 1000);
             }
         }
         if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
@@ -408,13 +418,13 @@
                 if (Camera1.textContent.includes('staff'))
                     return;
                 doHighlight(Camera1);
-                addPMBttn(Camera1);
+                setTimeout(addPMBttn(Camera1), 1000);
             }
             if (Camera2.textContent.includes('(')) {
                 if (Camera2.textContent.includes('staff'))
                     return;
                 doHighlight(Camera2);
-                addPMBttn(Camera2);
+                setTimeout(addPMBttn(Camera2), 1000);
             }
         }
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user').is(':visible')) {
@@ -422,14 +432,13 @@
                 if (PUR.textContent.includes('staff'))
                     return;
                 doHighlight(PUR);
-                addPMBttn(PUR);
+                setTimeout(addPMBttn(PUR), 1000);
             }
         } else {
-            let i;
-            for (i = 0; i < URName.length; i++) {
+            for (let i=0; i < URName.length; i++) {
                 if (URName[i].textContent.includes('(')) {
                     doHighlight(URName[i]);
-                    addPMBttn(URName[i]);
+                    setTimeout(addPMBttn(URName[i]), 1000);
                 }
             }
         }
