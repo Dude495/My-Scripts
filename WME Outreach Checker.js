@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.15.02
+// @version      2019.03.16.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Added a <img src='+PMImg+'> button next to the usernames should Toolbox not be used or fail to load.</li><li>Bug Fixes</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug Fixes</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -176,7 +176,7 @@
         RegNWR
     ].join(',')
     function addPMBttn(element) {
-        if ($('[id^=WMEFP-SEG-PM]').length === 0) {
+        if (($('[id^=WMEFP-SEG]').length === 0) || ($('[id^=WMEFP-UR]').length === 0)) {
             let ORCusername = element.textContent.match(INCRegEx);
             let username = ORCusername[1];
             var center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
@@ -191,30 +191,36 @@
             var PMLink = document.createElement('DIV');
             PMLink.className = 'ORCPMBtn';
             PMLink.style.display = 'inline';
-            if (WazeWrap.hasPlaceSelected()) {
+            if (WazeWrap.hasPlaceSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
                 ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                 PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&venues=' + ID);
                 SUBJECT = 'About this Venue';
-                console.log('Place Selected');
                 PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
                 element.after(PMLink);
             }
-            if (WazeWrap.hasSegmentSelected()) {
+            if (WazeWrap.hasSegmentSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Segment';
                     ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                     PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&segments=' + ID);
-                    console.log('Segment Selected');
                     PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
                     element.after(PMLink);
                 }
             }
-            if (WazeWrap.hasMapCommentSelected()) {
+            if (WazeWrap.hasMapCommentSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Map Comment';
                     ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
                     PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&cameras=' + ID);
-                    console.log('Comment Selected');
+                    PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+                    element.after(PMLink);
+                }
+            }
+            if ($('div.map-problem.user-generated.selected').is(':visible') == true && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
+                if($(element).parent().find('.ORCPMBtn').length === 0){
+                    SUBJECT = 'About this Update Request';
+                    ID = $('div.map-problem.user-generated.selected').data('id');
+                    PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&mapUpdateRequest=' + ID);
                     PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
                     element.after(PMLink);
                 }
@@ -334,7 +340,7 @@
                     var HXMultiSeg = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                     for (let i = 0; i < HXMultiSeg.length; i++) {
                         doHighlight(HXMultiSeg[i]);
-                        setTimeout(addPMBttn(HXMutliSeg[i]), 1000);
+                        setTimeout(addPMBttn(HXMultiSeg[i]), 1000);
                     }
                 }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
