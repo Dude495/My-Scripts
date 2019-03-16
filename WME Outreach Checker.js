@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.16.01
+// @version      2019.03.16.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fixes</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Added Settings Button</li><li>Bug Fixes</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
@@ -176,7 +176,7 @@
         RegNWR
     ].join(',')
     function addPMBttn(element) {
-        if (($('[id^=WMEFP-SEG]').length === 0) || ($('[id^=WMEFP-UR]').length === 0)) {
+        if (localStorage.getItem('ORCPM') == 'true') {
             let ORCusername = element.textContent.match(INCRegEx);
             let username = ORCusername[1];
             var center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
@@ -191,14 +191,14 @@
             var PMLink = document.createElement('DIV');
             PMLink.className = 'ORCPMBtn';
             PMLink.style.display = 'inline';
-            if (WazeWrap.hasPlaceSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
+            if (WazeWrap.hasPlaceSelected()) {
                 ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                 PermaLink = encodeURIComponent('https://www.waze.com/' + ENVL + '/editor?env=' + ENV + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + ZOOM + '&venues=' + ID);
                 SUBJECT = 'About this Venue';
                 PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
                 element.after(PMLink);
             }
-            if (WazeWrap.hasSegmentSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
+            if (WazeWrap.hasSegmentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Segment';
                     ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
@@ -207,7 +207,7 @@
                     element.after(PMLink);
                 }
             }
-            if (WazeWrap.hasMapCommentSelected() && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
+            if (WazeWrap.hasMapCommentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Map Comment';
                     ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
@@ -216,7 +216,7 @@
                     element.after(PMLink);
                 }
             }
-            if ($('div.map-problem.user-generated.selected').is(':visible') == true && ($('[id^=WMEFP-SEG]').length === 0 || $('[id^=WMEFP-UR]').length === 0)) {
+            if ($('div.map-problem.user-generated.selected').is(':visible') == true) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Update Request';
                     ID = $('div.map-problem.user-generated.selected').data('id');
@@ -225,6 +225,8 @@
                     element.after(PMLink);
                 }
             }
+        } else {
+            return;
         }
     }
     function doHighlight(element) {
@@ -385,7 +387,7 @@
                     if (Seg1.textContent.includes('staff'))
                         return;
                     doHighlight(Seg1);
-                    setTimeout(addPMBttn(Seg1), 1000);
+                    addPMBttn(Seg1);
                 }
             }
             if (Seg2 !== undefined) {
@@ -393,7 +395,7 @@
                     if (Seg2.textContent.includes('staff'))
                         return;
                     doHighlight(Seg2);
-                    setTimeout(addPMBttn(Seg2), 1000);
+                    addPMBttn(Seg2);
                 }
             }
         }
@@ -832,7 +834,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
             '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button>',
-            '<br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label></div>',
+            '<br><button data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label></div></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
             '<div id="ORC-Warning"></div>',
@@ -934,6 +936,25 @@
             }
             if (R4WL.checked == false) {
                 $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-warning">All Editors R4+ will not be Auto Whitelisted.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            StateCheck();
+        }
+        var ORCPM = document.getElementById('ORCPM-Btn')
+        if (localStorage.getItem('ORCPM') == 'true') {
+            $('#ORCPM-Btn')[0].checked = true
+        } else {
+            $('#ORCPM-Btn')[0].checked = false
+        }
+        ORCPM.onclick = function() {
+            ORCWarning.after(WLSLabel);
+            localStorage.setItem('ORCPM', ORCPM.checked)
+            if (ORCPM.checked == true) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-warning">Enabled ORCs PM Button.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            if (ORCPM.checked == false) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-warning">Disabled ORCs PM Button.</div></p>'
                 setTimeout(RemoveWLSLabel, 1500);
             }
             StateCheck();
@@ -1089,6 +1110,9 @@
             loadLeadershipList();
             createTab();
             setTimeout(updatePanel, 1000);
+            if (!localStorage.getItem('ORCPM')) {
+                localStorage.setItem('ORCPM', 'false');
+            }
             if (!localStorage.getItem('SS')) {
                 localStorage.setItem('SS', NEOR);
             }
