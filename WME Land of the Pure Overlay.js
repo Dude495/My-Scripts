@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Overlay
 // @namespace    Dude495
-// @version      2019.02.26.01
+// @version      2019.03.16.01
 // @description  Adds a group area overlay for the Land of the Pure (Pakistan) WoW.
 // @author       MapOMatic, Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -17,13 +17,11 @@
     const STATE_ABBR = 'Pakistan';
     const VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    const UPDATE_NOTES = 'Enter the Land of the Pure.';
-
     // Enter the MapRaid area names and the desired fill colors, in order they appear in the original map legend:
     const GROUPS = [
         {name: '1', fillColor:'#ff99e6', zoomTo: 3},
         {name: '2', fillColor:'#FF0000', zoomTo: 3},
-        {name: '3', fillColor:'#01579b', zoomTo: 3},
+        {name: '3', fillColor:'#e6eeff', zoomTo: 3},
         {name: '4', fillColor:'#7cb342', zoomTo: 2},
         /*{name: '5', fillColor:'#f57c00', zoomTo: 2},
         {name: '6', fillColor:'#ffcc33', zoomTo: 3},
@@ -210,7 +208,6 @@
         if (W && W.loginManager && W.loginManager.user && $('#topbar-container > div > div > div.location-info-region > div').length && $('#layer-switcher-group_display').length && WazeWrap.Interface) {
             init();
             console.log(STATE_ABBR + ' Area Overlay:', 'Initialized');
-            WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "", "");
         } else {
             console.log(STATE_ABBR + ' MR Overlay: ', 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
