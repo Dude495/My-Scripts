@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Timer
 // @namespace    Dude495
-// @version      2019.03.16.06
+// @version      2019.03.16.07
 // @description  Adds count down timer for the Land of the Pure (Pakistan) WoW
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -58,10 +58,10 @@
         }
         if (ProjStatus == 'true') {
             if (time > 604800000) {
-                document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + weeks + 'w ' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
+                document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + weeks + 'w ' + days + 'd ' + hours + 'h ' + minutes + 'm ';
             }
             else if ((time < 604800000) && (time >= 18000001)) {
-                document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
+                document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + days + 'd ' + hours + 'h ' + minutes + 'm ';
             }
             else if ((time <= 18000000) && (time > 0)) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
