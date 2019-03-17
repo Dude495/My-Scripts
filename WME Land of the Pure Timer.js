@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Timer
 // @namespace    Dude495
-// @version      2019.03.16.01
+// @version      2019.03.16.02
 // @description  Adds count down timer for the Land of the Pure (Pakistan) WoW
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -14,9 +14,15 @@
 (function() {
     'use strict';
     function startClock() {
-        const ProjStatus = 'false' //'true' means raid is in progress, 'false' means the raid hasnt started.
-        var PHASE = 'Land of the Pure'
-        var phaseTime = new Date('mar 17, 2019 00:00:00 UTC').getTime();
+        var PHASE = 'Land of the Pure';
+        var phaseTime;
+        var entry = getData('WoWs2Pak');
+        const ProjStatus = entry.status;
+        if (ProjStatus == 'Inactive') {
+            phaseTime = new Date(entry.start).getTime();
+        } else {
+            phaseTime = new Date(entry.end).getTime();
+        }
         var now = new Date().getTime();
         var time = phaseTime - now;
         var weeks = Math.floor(time / 604800000);
@@ -25,15 +31,25 @@
         var minutes = Math.floor((time % (3600000)) / 60000);
         var seconds = Math.floor((time % (60000)) / 1000);
         var div = [];
-        if (ProjStatus == 'false') {
+        if (ProjStatus == 'Inactive') {
             if (time > 18000001) {
                 div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'red'});
             }
             if ((time < 18000000) && (time > 0)) {
                 div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'yellow'});
             }
-            if (time < 0) {
+            if (time <= 0) {
                 div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'lime'});
+            }
+        } else {
+            if (time > 18000001) {
+                div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'lime'});
+            }
+            if ((time < 18000000) && (time > 0)) {
+                div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'yellow'});
+            }
+            if (time <= 0) {
+                div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'red'});
             }
         }
         if ($('#countdown-timer').length <= 0) {
@@ -42,7 +58,7 @@
             $('#user-profile').css('margin-bottom','5px');
         }
         $('#user-box').css('padding-bottom','5px');
-        if (ProjStatus == 'false') {
+        if (ProjStatus == 'Inactive') {
             if (time > 604800000) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW begins in ' + weeks + 'w ' + days + 'd ' + hours + 'h ' + minutes + 'm ';
             }
@@ -56,7 +72,7 @@
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW has started, Happy Editing!';
             }
         }
-        if (ProjStatus == 'true') {
+        if (ProjStatus == 'Active') {
             if (time > 604800000) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + weeks + 'w ' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
             }
@@ -71,8 +87,26 @@
             }
         }
     }
+    var TimerData = [];
+    async function loadData() {
+        var SS = 'https://spreadsheets.google.com/feeds/list/1L8yxoTQEmnoLpENw5hzoL6W4p0rSsMME8G3bgRjdbHM/22/public/values?alt=json'
+        await $.getJSON(SS, function(data){
+            TimerData = data;
+        });
+    }
+    function getData(data){
+        let mapped = TimerData.feed.entry.map(obj =>{
+            return {name: obj.gsx$name.$t, status: obj.gsx$status.$t.trim(), start: obj.gsx$startdate.$t, end: obj.gsx$enddate.$t
+                   }
+        });
+        for(let i=0; i<mapped.length; i++){
+            return mapped[i];
+        }
+        return null;
+    }
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.isLoggedIn()) {
+            loadData();
             setInterval(startClock, 1000);
             console.log(GM_info.script.name, 'Initialized');
         } else {
