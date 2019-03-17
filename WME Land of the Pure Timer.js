@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Timer
 // @namespace    Dude495
-// @version      2019.03.16.03
+// @version      2019.03.16.04
 // @description  Adds count down timer for the Land of the Pure (Pakistan) WoW
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -112,7 +112,6 @@
         await $.getJSON(SS, function(data){
             TimerData = data;
         });
-        setInterval(loadData, 5000);
     }
     function getData(data){
         let mapped = TimerData.feed.entry.map(obj =>{
