@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Overlay
 // @namespace    Dude495
-// @version      2019.03.16.01
+// @version      2019.03.21.01
 // @description  Adds a group area overlay for the Land of the Pure (Pakistan) WoW.
 // @author       MapOMatic, Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -17,6 +17,7 @@
     const STATE_ABBR = 'Pakistan';
     const VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
+    var UPDATE_NOTES = '<ul><li>Added wiki to left panel with dropdown option to show Group Leaders and Supporting Editors for groups based on current view.</li></ul>';
     // Enter the MapRaid area names and the desired fill colors, in order they appear in the original map legend:
     const GROUPS = [
         {name: '1', fillColor:'#ff99e6', zoomTo: 3},
@@ -64,7 +65,49 @@
             localStorage.setItem(SETTINGS_STORE_NAME, JSON.stringify(settings));
         }
     }
-
+    function addwiki() {
+        var GroupNo = $('#mapraid')[0].innerText
+        if ($('#LoPwiki').length > 0 && GroupNo !== sessionStorage.getItem('W2Group')) {
+            $('#LoPwiki')[0].innerHTML = '';
+        }
+        if (document.getElementById('LoPwiki') == undefined) {
+            var w2div = document.createElement('DIV');
+            w2div.id = 'LoPwiki';
+            var CDT = document.getElementById('countdown-timer')
+            if (CDT !== null) {
+                w2div;
+                CDT.after(w2div);
+            } else {
+                w2div;
+                $('#user-box').after(w2div);
+            }
+        }
+        var localHosts = 'Jawadch (Local)<br>Kashif_Alvi';
+        if (GroupNo == "Group: 1") {
+            if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 1 Lead:</b><br>Freesoft<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>RIMAJUES<br>Walter-Bravo<br></div>';
+                sessionStorage.setItem('W2Group', GroupNo);
+            }
+        }
+        if (GroupNo == "Group: 2") {
+            if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 2 Lead:</b><br>Dude495<br>GeekDriverPeaceful<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Airchair<br>Michelle-S<br>';
+                sessionStorage.setItem('W2Group', GroupNo);
+            }
+        }
+        if (GroupNo == "Group: 3") {
+            if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 3 Lead:</b><br>Challenger3802<br>Moweez<br>Ronsek57<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Sebiseba<br>';
+                sessionStorage.setItem('W2Group', GroupNo);
+            }
+        }
+        if (GroupNo == "Group: 4") {
+            if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 4 Lead:</b><br>Marcin_S (Country Coordinator)<br>Mareku188<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>rain101<br>sampowicz<br>Voludu2<br>';
+                sessionStorage.setItem('W2Group', GroupNo);
+            }
+        }
+    }
     function updateDistrictNameDisplay(){
         $('.mapraid-region').remove();
         if (_layer !== null) {
@@ -87,6 +130,7 @@
                     }
                 }
             }
+            addwiki();
         }
     }
 
@@ -203,11 +247,12 @@
             }
         });
     }
-
     function bootstrap() {
         if (W && W.loginManager && W.loginManager.user && $('#topbar-container > div > div > div.location-info-region > div').length && $('#layer-switcher-group_display').length && WazeWrap.Interface) {
             init();
+            sessionStorage.removeItem('W2Group');
             console.log(STATE_ABBR + ' Area Overlay:', 'Initialized');
+            WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/378294-wme-land-of-the-pure-overlay", "");
         } else {
             console.log(STATE_ABBR + ' MR Overlay: ', 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
