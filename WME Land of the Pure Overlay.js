@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Overlay
 // @namespace    Dude495
-// @version      2019.03.21.01
+// @version      2019.03.22.01
 // @description  Adds a group area overlay for the Land of the Pure (Pakistan) WoW.
 // @author       MapOMatic, Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -17,7 +17,7 @@
     const STATE_ABBR = 'Pakistan';
     const VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Added wiki to left panel with dropdown option to show Group Leaders and Supporting Editors for groups based on current view.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug Fixes.</li></ul>';
     // Enter the MapRaid area names and the desired fill colors, in order they appear in the original map legend:
     const GROUPS = [
         {name: '1', fillColor:'#ff99e6', zoomTo: 3},
@@ -130,10 +130,13 @@
                     }
                 }
             }
+        }
+    }
+    window.onload = function() {
+        if (W.model.countries.additionalInfo[0].name == "Pakistan") {
             addwiki();
         }
     }
-
     function toggleAreaFill() {
         var text = $('#mapraid span').text();
         if (text) {
