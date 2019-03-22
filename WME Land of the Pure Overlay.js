@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Overlay
 // @namespace    Dude495
-// @version      2019.03.22.01
+// @version      2019.03.22.02
 // @description  Adds a group area overlay for the Land of the Pure (Pakistan) WoW.
 // @author       MapOMatic, Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -66,45 +66,47 @@
         }
     }
     function addwiki() {
-        var GroupNo = $('#mapraid')[0].innerText
-        if ($('#LoPwiki').length > 0 && GroupNo !== sessionStorage.getItem('W2Group')) {
-            $('#LoPwiki')[0].innerHTML = '';
-        }
-        if (document.getElementById('LoPwiki') == undefined) {
-            var w2div = document.createElement('DIV');
-            w2div.id = 'LoPwiki';
-            var CDT = document.getElementById('countdown-timer')
-            if (CDT !== null) {
-                w2div;
-                CDT.after(w2div);
-            } else {
-                w2div;
-                $('#user-box').after(w2div);
+        if (W.model.countries.additionalInfo[0].name == "Pakistan") {
+            var GroupNo = $('#mapraid')[0].innerText
+            if ($('#LoPwiki').length > 0 && GroupNo !== sessionStorage.getItem('W2Group')) {
+                $('#LoPwiki')[0].innerHTML = '';
             }
-        }
-        var localHosts = 'Jawadch (Local)<br>Kashif_Alvi';
-        if (GroupNo == "Group: 1") {
-            if (GroupNo !== sessionStorage.getItem('W2Group')) {
-                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 1 Lead:</b><br>Freesoft<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>RIMAJUES<br>Walter-Bravo<br></div>';
-                sessionStorage.setItem('W2Group', GroupNo);
+            if (document.getElementById('LoPwiki') == undefined) {
+                var w2div = document.createElement('DIV');
+                w2div.id = 'LoPwiki';
+                var CDT = document.getElementById('countdown-timer')
+                if (CDT !== null) {
+                    w2div;
+                    CDT.after(w2div);
+                } else {
+                    w2div;
+                    $('#user-box').after(w2div);
+                }
             }
-        }
-        if (GroupNo == "Group: 2") {
-            if (GroupNo !== sessionStorage.getItem('W2Group')) {
-                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 2 Lead:</b><br>Dude495<br>GeekDriverPeaceful<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Airchair<br>Michelle-S<br>';
-                sessionStorage.setItem('W2Group', GroupNo);
+            var localHosts = 'Jawadch (Local)<br>Kashif_Alvi';
+            if (GroupNo == "Group: 1") {
+                if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                    $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 1 Lead:</b><br>Freesoft<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>RIMAJUES<br>Walter-Bravo<br></div>';
+                    sessionStorage.setItem('W2Group', GroupNo);
+                }
             }
-        }
-        if (GroupNo == "Group: 3") {
-            if (GroupNo !== sessionStorage.getItem('W2Group')) {
-                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 3 Lead:</b><br>Challenger3802<br>Moweez<br>Ronsek57<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Sebiseba<br>';
-                sessionStorage.setItem('W2Group', GroupNo);
+            if (GroupNo == "Group: 2") {
+                if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                    $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 2 Lead:</b><br>Dude495<br>GeekDriverPeaceful<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Airchair<br>Michelle-S<br>';
+                    sessionStorage.setItem('W2Group', GroupNo);
+                }
             }
-        }
-        if (GroupNo == "Group: 4") {
-            if (GroupNo !== sessionStorage.getItem('W2Group')) {
-                $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 4 Lead:</b><br>Marcin_S (Country Coordinator)<br>Mareku188<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>rain101<br>sampowicz<br>Voludu2<br>';
-                sessionStorage.setItem('W2Group', GroupNo);
+            if (GroupNo == "Group: 3") {
+                if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                    $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 3 Lead:</b><br>Challenger3802<br>Moweez<br>Ronsek57<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>Sebiseba<br>';
+                    sessionStorage.setItem('W2Group', GroupNo);
+                }
+            }
+            if (GroupNo == "Group: 4") {
+                if (GroupNo !== sessionStorage.getItem('W2Group')) {
+                    $('#LoPwiki')[0].innerHTML = '<p style="margin-left: 100px"><b><a href="https://www.bit.ly/LoPwiki" target="_blank">WoWs2 Pakistan wiki</a> <a href="#" data-toggle="collapse" data-target="#w2info"><i class="fa fa-expand"></i></a></b><div id="w2info" class="collapse"><p style="margin-left: 10px"><b>Local Hosts:</b><br>'+localHosts+'<p style="margin-left: 10px"><b>Group 4 Lead:</b><br>Marcin_S (Country Coordinator)<br>Mareku188<p style="margin-left: 10px"><b>Group Supporting Editors:</b><br>rain101<br>sampowicz<br>Voludu2<br>';
+                    sessionStorage.setItem('W2Group', GroupNo);
+                }
             }
         }
     }
@@ -130,11 +132,7 @@
                     }
                 }
             }
-        }
-    }
-    window.onload = function() {
-        if (W.model.countries.additionalInfo[0].name == "Pakistan") {
-            addwiki();
+            setTimeout(addwiki, 1500);
         }
     }
     function toggleAreaFill() {
