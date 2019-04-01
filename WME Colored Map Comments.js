@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2019.04.01.01
+// @version      2019.04.01.02
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -17,27 +17,56 @@
     'use strict';
     function ChangeColor() {
         let mcStyle;
-        let rules = W.map.getLayersByName("Map comments")[0].styleMap.styles.default.rules;
-        for(let i=0; i< rules.length; i++){
-            if (rules[i].id === "Waze_Rule_180"){
-                mcStyle = rules[i];
+        let hoverStyle;
+        let selectedStyle;
+        let defaultRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.default.rules;
+        let highlightRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.highlight.rules;
+        let selectRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.highlightselected.rules;
+        for (let i=0; i< defaultRules.length; i++){
+            if (defaultRules[i].id === "Waze_Rule_180") {
+                mcStyle = defaultRules[i];
+                break;
+            }
+        }
+        for (let i=0; i< highlightRules.length; i++){
+            if (highlightRules[i].id === "Waze_Rule_182") {
+                hoverStyle = highlightRules[i];
+                break;
+            }
+        }
+        for (let i=0; i< selectRules.length; i++){
+            if (selectRules[i].id === "Waze_Rule_175") {
+                selectedStyle = selectRules[i];
                 break;
             }
         }
         if (mcStyle) {
             if ($('#MCP').is(':checked')) {
                 mcStyle.symbolizer.Point.fillColor = localStorage.getItem('CMC');
+                hoverStyle.symbolizer.Point.fillColor = localStorage.getItem('CMC');
+                selectedStyle.symbolizer.Point.fillColor = localStorage.getItem('CMC');
                 W.map.getLayersByName("Map comments")[0].redraw();
             } else {
                 mcStyle.symbolizer.Point.fillColor = '#ffffff';
+                hoverStyle.symbolizer.Point.fillColor = '#ffffff';
+                selectedStyle.symbolizer.Point.fillColor = '#ffffff';
                 W.map.getLayersByName("Map comments")[0].redraw();
             }
             if ($('#MCA').is(':checked')) {
                 mcStyle.symbolizer.Polygon.fillColor = localStorage.getItem('CMC');
                 mcStyle.symbolizer.Polygon.strokeColor = localStorage.getItem('CMC');
+                hoverStyle.symbolizer.Polygon.fillColor = localStorage.getItem('CMC');
+                hoverStyle.symbolizer.Polygon.strokeColor = localStorage.getItem('CMC');
+                selectedStyle.symbolizer.Polygon.fillColor = localStorage.getItem('CMC');
+                selectedStyle.symbolizer.Polygon.strokeColor = localStorage.getItem('CMC');
                 W.map.getLayersByName("Map comments")[0].redraw();
             } else {
                 mcStyle.symbolizer.Polygon.fillColor = '#ffffff';
+                mcStyle.symbolizer.Polygon.strokeColor = '#ffffff';
+                hoverStyle.symbolizer.Point.fillColor = '#ffffff';
+                hoverStyle.symbolizer.Polygon.strokeColor = '#ffffff';
+                selectedStyle.symbolizer.Polygon.fillColor = '#ffffff';
+                selectedStyle.symbolizer.Polygon.strokeColor = '#ffffff';
                 W.map.getLayersByName("Map comments")[0].redraw();
             }
         }
