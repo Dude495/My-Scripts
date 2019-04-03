@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Timer
 // @namespace    Dude495
-// @version      2019.03.16.07
+// @version      2019.04.03.01
 // @description  Adds count down timer for the Land of the Pure (Pakistan) WoW
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -16,7 +16,7 @@
     function startClock() {
         const ProjStatus = 'true' //'true' means raid is in progress, 'false' means the raid hasnt started.
         var PHASE = 'Land of the Pure'
-        var phaseTime = new Date('apr 04, 2019 23:59:59 UTC').getTime();
+        var phaseTime = new Date('apr 03, 2019 23:59:59 UTC').getTime();
         var now = new Date().getTime();
         var time = phaseTime - now;
         var weeks = Math.floor(time / 604800000);
