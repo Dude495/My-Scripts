@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Timer
 // @namespace    Dude495
-// @version      2019.04.03.01
+// @version      2019.04.03.02
 // @description  Adds count down timer for the Land of the Pure (Pakistan) WoW
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -26,10 +26,10 @@
         var seconds = Math.floor((time % (60000)) / 1000);
         var div = [];
         if (ProjStatus == 'true') {
-            if (time > 18000001) {
+            if (time > 86400001) {
                 div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'lime'});
             }
-            if ((time < 18000000) && (time > 0)) {
+            if ((time < 86400000) && (time > 0)) {
                 div = $('<div>', {id: 'countdown-timer'}).css({marginBottom:'3px', paddingLeft:'2px', textAlign:'center', fontWeight:'600', background: 'yellow'});
             }
             if (time < 0) {
@@ -60,8 +60,11 @@
             if (time > 604800000) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + weeks + 'w ' + days + 'd ' + hours + 'h ' + minutes + 'm ';
             }
-            else if ((time < 604800000) && (time >= 18000001)) {
+            else if ((time < 604800000) && (time >= 86400001)) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + days + 'd ' + hours + 'h ' + minutes + 'm ';
+            }
+            else if ((time <= 86400000) && (time >= 18000001)) {
+                document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
             }
             else if ((time <= 18000000) && (time > 0)) {
                 document.getElementById('countdown-timer').innerHTML = 'The ' + PHASE + ' WoW ends in ' + hours + 'h ' + minutes + 'm ' + seconds + 's ';
