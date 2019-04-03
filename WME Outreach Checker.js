@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.03.16.04
+// @version      2019.04.03.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -686,7 +686,7 @@
         $('#ResetWLButton').hide();
     }
     function StateCheck() {
-        var State = W.model.states.additionalInfo[0].name
+        var State = W.model.states.top.name
         var Display = document.getElementById('RegListDiv')
         if (W.model.countries.top.name == 'United States') {
             if (RegNEOR.includes(State)) {
@@ -1044,61 +1044,61 @@
             SelectedRegion.value ='SER';
         }
         SelectedRegion.onchange = function() {
-            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.additionalInfo[0].name)) {
+            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', NEOR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', MAR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', SWR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'SER' && RegSER.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'SER' && RegSER.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', SER);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', OH);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', IN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', MI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', WI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', PLN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.states.additionalInfo[0].name)) {
+            else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('SS', NWR);
                 setTimeout(updateMasterList, 500);
