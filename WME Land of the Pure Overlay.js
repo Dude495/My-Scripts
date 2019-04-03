@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Land of the Pure Overlay
 // @namespace    Dude495
-// @version      2019.03.22.02
+// @version      2019.04.03.01
 // @description  Adds a group area overlay for the Land of the Pure (Pakistan) WoW.
 // @author       MapOMatic, Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -66,7 +66,7 @@
         }
     }
     function addwiki() {
-        if (W.model.countries.additionalInfo[0].name == "Pakistan") {
+        if (W.model.countries.top.name == "Pakistan") {
             var GroupNo = $('#mapraid')[0].innerText
             if ($('#LoPwiki').length > 0 && GroupNo !== sessionStorage.getItem('W2Group')) {
                 $('#LoPwiki')[0].innerHTML = '';
