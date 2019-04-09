@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2019.04.01.02
+// @version      2019.04.09.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -63,7 +63,7 @@
             } else {
                 mcStyle.symbolizer.Polygon.fillColor = '#ffffff';
                 mcStyle.symbolizer.Polygon.strokeColor = '#ffffff';
-                hoverStyle.symbolizer.Point.fillColor = '#ffffff';
+                hoverStyle.symbolizer.Polygon.fillColor = '#ffffff';
                 hoverStyle.symbolizer.Polygon.strokeColor = '#ffffff';
                 selectedStyle.symbolizer.Polygon.fillColor = '#ffffff';
                 selectedStyle.symbolizer.Polygon.strokeColor = '#ffffff';
@@ -144,7 +144,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, "<ul><li>Code adjustment (Thanks Justin!)</li><li>Added MC Area support.</li></ul>", "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Bug Fixes.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>MC Hover color not resetting when the option is disabled. (FIXED)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
