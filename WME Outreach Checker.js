@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.03.01
+// @version      2019.04.09.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -34,15 +34,15 @@
     var UPDATE_NOTES = '<ul><li>Bug Fixes</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
-        if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor && $('#colorPicker3')[0].jscolor && $('#colorPicker4')[0].jscolor){
-            $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
-            $('#colorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
-            $('#colorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
-            $('#colorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
-            $('#fontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
-            $('#fontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
-            $('#fontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
-            $('#fontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
+        if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
+            $('#ORCcolorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
+            $('#ORCcolorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
+            $('#ORCcolorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
+            $('#ORCcolorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
+            $('#ORCfontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
+            $('#ORCfontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
+            $('#ORCfontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
+            $('#ORCfontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
         }
     }
     function updatePanel() {
@@ -118,41 +118,41 @@
         LoadSettings();
     }
     function jscolorChanged(){
-        ORCSettings.CP1 = "#" + $('#colorPicker1')[0].jscolor.toString();
-        ORCSettings.CP2 = "#" + $('#colorPicker2')[0].jscolor.toString();
-        ORCSettings.CP3 = "#" + $('#colorPicker3')[0].jscolor.toString();
-        ORCSettings.CP4 = "#" + $('#colorPicker4')[0].jscolor.toString();
-        ORCSettings.FP1 = "#" + $('#fontPicker1')[0].jscolor.toString();
-        ORCSettings.FP2 = "#" + $('#fontPicker2')[0].jscolor.toString();
-        ORCSettings.FP3 = "#" + $('#fontPicker3')[0].jscolor.toString();
-        ORCSettings.FP4 = "#" + $('#fontPicker4')[0].jscolor.toString();
+        ORCSettings.CP1 = "#" + $('#ORCcolorPicker1')[0].jscolor.toString();
+        ORCSettings.CP2 = "#" + $('#ORCcolorPicker2')[0].jscolor.toString();
+        ORCSettings.CP3 = "#" + $('#ORCcolorPicker3')[0].jscolor.toString();
+        ORCSettings.CP4 = "#" + $('#ORCcolorPicker4')[0].jscolor.toString();
+        ORCSettings.FP1 = "#" + $('#ORCfontPicker1')[0].jscolor.toString();
+        ORCSettings.FP2 = "#" + $('#ORCfontPicker2')[0].jscolor.toString();
+        ORCSettings.FP3 = "#" + $('#ORCfontPicker3')[0].jscolor.toString();
+        ORCSettings.FP4 = "#" + $('#ORCfontPicker4')[0].jscolor.toString();
         saveSettings();
     }
-    function initColorPicker(tries){
+    function initORCcolorPicker(tries){
         tries = tries || 1;
 
-        if ($('#colorPicker1')[0].jscolor && $('#colorPicker2')[0].jscolor) {
-            $('#colorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
-            $('#colorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
-            $('#colorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
-            $('#colorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
-            $('#fontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
-            $('#fontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
-            $('#fontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
-            $('#fontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
-            $('[id^="colorPicker"]')[0].jscolor.closeText = 'Close';
-            $('[id^="fontPicker"]')[0].jscolor.closeText = 'Close';
-            $('#colorPicker1')[0].jscolor.onChange = jscolorChanged;
-            $('#colorPicker2')[0].jscolor.onChange = jscolorChanged;
-            $('#colorPicker3')[0].jscolor.onChange = jscolorChanged;
-            $('#colorPicker4')[0].jscolor.onChange = jscolorChanged;
-            $('#fontPicker1')[0].jscolor.onChange = jscolorChanged;
-            $('#fontPicker2')[0].jscolor.onChange = jscolorChanged;
-            $('#fontPicker3')[0].jscolor.onChange = jscolorChanged;
-            $('#fontPicker4')[0].jscolor.onChange = jscolorChanged;
+        if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor) {
+            $('#ORCcolorPicker1')[0].jscolor.fromString(ORCSettings.CP1);
+            $('#ORCcolorPicker2')[0].jscolor.fromString(ORCSettings.CP2);
+            $('#ORCcolorPicker3')[0].jscolor.fromString(ORCSettings.CP3);
+            $('#ORCcolorPicker4')[0].jscolor.fromString(ORCSettings.CP4);
+            $('#ORCfontPicker1')[0].jscolor.fromString(ORCSettings.FP1);
+            $('#ORCfontPicker2')[0].jscolor.fromString(ORCSettings.FP2);
+            $('#ORCfontPicker3')[0].jscolor.fromString(ORCSettings.FP3);
+            $('#ORCfontPicker4')[0].jscolor.fromString(ORCSettings.FP4);
+            $('[id^="ORCcolorPicker"]')[0].jscolor.closeText = 'Close';
+            $('[id^="ORCfontPicker"]')[0].jscolor.closeText = 'Close';
+            $('#ORCcolorPicker1')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCcolorPicker2')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCcolorPicker3')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCcolorPicker4')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCfontPicker1')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCfontPicker2')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCfontPicker3')[0].jscolor.onChange = jscolorChanged;
+            $('#ORCfontPicker4')[0].jscolor.onChange = jscolorChanged;
 
         } else if (tries < 1000) {
-            setTimeout(function () {initColorPicker(tries++);}, 200);
+            setTimeout(function () {initORCcolorPicker(tries++);}, 200);
         }
     }
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
@@ -891,10 +891,10 @@
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
-            '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="colorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" data-toggle="tooltip" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" data-toggle="tooltip" title="Region Leadership">Regional Management (SM+).</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="colorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="fontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" data-toggle="tooltip" title="All R4+ editors will be whitelisted if enabled.">Yourself/Whitelisted users.</span></div>',
+            '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" data-toggle="tooltip" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" data-toggle="tooltip" title="Region Leadership">Regional Management (SM+).</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" data-toggle="tooltip" title="All R4+ editors will be whitelisted if enabled.">Yourself/Whitelisted users.</span></div>',
             '</div></div></div>',
             '<br><div id="ORC-Region">Current Region: </div>',
             '<div id="ORC-State">Current State: </div>',
@@ -1165,7 +1165,7 @@
         }
         setTimeout(StateCheck, 3000);
         LoadSettingsObj();
-        setTimeout(initColorPicker, 500);
+        setTimeout(initORCcolorPicker, 500);
         init();
     }
     function bootstrap() {
