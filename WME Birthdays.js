@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2019.02.10.01
+// @version      2019.04.19.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -29,11 +29,12 @@
     //const today = new Date().toLocaleDateString('en-us', { month: 'long', day: 'numeric', year: 'numeric' });
     const todayRegEx = /(It is currently )|\s\d+:\d+\s(pm|am)/g
     const optoutnotice = encodeURIComponent('\n[size=85][color=#BF0000]** Should you wish to [b]OPT-OUT[/b] of any future birthday messages, please fill out [url=http://bit.ly/2SCslMA]this form[/url].[/color][/size]')
+    const MYNAME = $('#phpbb > div.waze-header > div > div > div.login_tab > span')[0].textContent.replace('hello ','').replace('  ','');
     function custMessage() {
         if (DBG == false) {
             let today = localStorage.getItem('WMEBtoday');
             const CUSTMSG = localStorage.getItem('CSTMSG');
-            const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + CUSTMSG + optoutnotice + '&username_list=';
+            const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message=' + CUSTMSG + optoutnotice + '&bcc_list=';
             let copyText = arrBirthdayList.join('\n');
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D')
@@ -67,7 +68,6 @@
     function createMessage() {
         if (DBG == false) {
             let today = localStorage.getItem('WMEBtoday');
-            const MYNAME = $('#phpbb > div.waze-header > div > div > div.login_tab > span')[0].textContent.replace('hello ','').replace('  ','');
             const PDMESSAGE = encodeURIComponent([
                 'Good day all,',' ',
                 'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
@@ -92,7 +92,7 @@
                 '[size=70]* Note your country may not utilize Discord, please check with your local community.',
                 '[color=#BF0000]** Should you wish to [b]OPT-OUT[/b] of any future birthday messages, please fill out [url=http://bit.ly/2SCslMA]this form[/url].[/color][/size]',
             ].join('\n'));
-            const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + PDMESSAGE + '&username_list=';
+            const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message='+ PDMESSAGE +'&bcc_list=';
             let copyText = arrBirthdayList.join( '\n' );
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
@@ -125,7 +125,7 @@
     function createBMessage() {
         if (DBG == false) {
             let today = localStorage.getItem('WMEBtoday');
-            const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&message=' + optoutnotice + '&username_list=';
+            const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message=' + optoutnotice + '&bcc_list=';
             let copyText = arrBirthdayList.join( '\n' );
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
@@ -180,12 +180,12 @@
             tbox.onclick = function() {
                 if ($('#message')[0].value == '') {
                     console.log('Save Template Box CHECKED\n\nTemplate successfully deleted. (Debug Only)');
-                    $('#TMSG').prop('checked', false);
+                    $('#TMSG').attr()[0].checked = false;
                 };
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
                     console.log('Save Template Box CHECKED\n\nTemplate successfully saved. (Debug Only): \n\n' + 'Plain Text:\n' + $('#message')[0].value +'\n\nEncoded Text:\n' + template);
-                    $('#TMSG').prop('checked', false);
+                    $('#TMSG').attr()[0].checked = false;
                 };
             };
         } else {
@@ -193,14 +193,14 @@
                 if ($('#message')[0].value == '') {
                     window.alert('Template successfully deleted. You may now close this PM window.');
                     localStorage.setItem('CSTMSG', '');
-                    $('#TMSG').prop('checked', false);
+                    $('#TMSG').attr()[0].checked = false;
                     localStorage.setItem('CMSG', false);
                 };
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
                     localStorage.setItem('CSTMSG', template);
                     window.alert('Template successfully saved. You may now close this PM window.');
-                    $('#TMSG').prop('checked', false);
+                    $('#TMSG').attr()[0].checked = false;
                 };
             };
         };
@@ -241,18 +241,18 @@
         box.after(cl);
         if (DBG == true) {
             box.onclick = function() {
-                if ($('#PDM').prop('checked') == true) {
-                    $('#CMSG').prop('checked', false)
+                if ($('#PDM').attr()[0].checked == true) {
+                    $('#CMSG').attr()[0].checked = false
                     console.log('Pre-Defined Message Box CHECEKD');
                 };
-                if ($('#PDM').prop('checked') == false) {
+                if ($('#PDM').attr()[0].checked == false) {
                     console.log('Pre-Defined Message Box UNCHECEKD');
                 };
             };
         } else {
             box.onclick = function() {
                 if (localStorage.getItem('CMSG') == 'true') {
-                    $('#CMSG').prop('checked', false);
+                    $('#CMSG').attr()[0].checked = false;
                     localStorage.setItem('CMSG', 'false');
                 };
                 localStorage.setItem('PDM', box.checked);
@@ -267,23 +267,23 @@
         box1.after(cl1)
         if (DBG == true) {
             box1.onclick = function() {
-                if ($('#CMSG').prop('checked') == true) {
-                    $('#PDM').prop('checked', false);
+                if (localStorage.getItem('PDM') == true) {
+                    $('#PDM').attr()[0].checked = false;
                     console.log('Custom Message Box CHECEKD');
                 };
-                if ($('#CMSG').prop('checked') == false) {
+                if (localStorage.getItem('PDM') == false) {
                     console.log('Custom Message Box UNCHECEKD');
                 };
             };
         } else {
             box1.onclick = function() {
                 if (localStorage.getItem('PDM') == 'true') {
-                    $('#PDM').prop('checked', false);
+                    $('#PDM').attr()[0].checked = false;
                     localStorage.setItem('PDM', 'false');
                 };
                 if (localStorage.getItem('CSTMSG') == '') {
                     window.alert('No custom message set. Please open a blank PM window and build your custom template first then select this feature after you have saved it.');
-                    $('#CMSG').prop('checked', false);
+                    $('#CMSG').attr()[0].checked = false;
                 };
                 if (localStorage.getItem('CSTMSG') !== '') {
                     localStorage.setItem('CMSG', box1.checked);
@@ -324,7 +324,6 @@
         }
         document.body.appendChild(dimg);
         document.getElementById('P-IMG').appendChild(dimg);
-        var beta = '(Beta)'
         $('#DS-IMG').wrap(a);
         $('#wrap').after(pdiv);
         if (DBG == true) {
@@ -345,6 +344,14 @@
             };
         };
     };
+    function removeMe() {
+        $('#postingbox > div > fieldset > div.column1 > dl:nth-child(1) > dd > input').click();
+    }
+    function addBCCList(bcc_list) {
+        $('#username_list').val(bcc_list);
+        $('input[name=add_bcc]').click()
+        removeMe();
+    }
     function init() {
         var checked = JSON.parse(localStorage.getItem('PDM'));
         var checked1 = JSON.parse(localStorage.getItem('CMSG'));
@@ -365,6 +372,11 @@
             if (DBG == true) { window.alert('You are in DEBUG Mode for ' + SCRIPTNAME + ' Script\n\nIf this is in error please contact Dude495.');
                               console.log('%c' + SCRIPTNAME +' (DEBUG MODE)', 'color: red; font-size:15px;');
                              };
+        } else if (/forum\/ucp\.php/.test(location.href)) {
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('bcc_list')) {
+                addBCCList(urlParams.get('bcc_list'));
+            }
         }
     }
     function bootstrap(tries = 1) {
