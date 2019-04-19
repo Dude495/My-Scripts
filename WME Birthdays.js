@@ -69,8 +69,8 @@
         if (DBG == false) {
             let today = localStorage.getItem('WMEBtoday');
             const PDMESSAGE = encodeURIComponent([
-                'Good day all,',' ',
-                'On behalf of all of the editing community, I just want to stop by and wish you all a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
+                'Happy Birthday!',' ',
+                'On behalf of all of the editing community, I just want to stop by and wish you a very [b]Happy Birthday[/b] and hope its as relaxing and enjoyable as possible. Thank you for all the hard work you do to make Waze such an amazing platform.',' ', '- '+MYNAME,' ',' ',
                 '[color=#FF0000][size=75]Note: If today is [b]NOT[/b] your birthday, please check your forum settings by [url=https://www.waze.com/forum/ucp.php?i=164]clicking here[/url] to verify it is entered correctly.[/size][/color]','','',
                 '[size=85]In case you are not aware, editors can use Discord to communicate with the editing community worldwide. Here is a list of servers available for you to join:',' ',
                 '[b]Global (ROW)* & MapRaid[/b] - [url]https://discord.gg/YEtgvCN[/url]',
