@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2019.04.19.02
+// @version      2019.04.19.03
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -37,16 +37,16 @@
             const CUSTPMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message=' + CUSTMSG + optoutnotice + '&bcc_list=';
             let copyText = arrBirthdayList.join('\n');
             console.info('Birthdays for PM: \n\n'+copyText);
-            let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 20).join('%0A%0D')
+            let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 19).join('%0A%0D')
             window.open(PMList1);
             if(arrBirthdayList.length > 20){
-                let PMList2 = CUSTPMLink + arrBirthdayList.slice(20, 40).join('%0A%0D')
+                let PMList2 = CUSTPMLink + arrBirthdayList.slice(19, 38).join('%0A%0D')
                 window.open(PMList2);
                 if (arrBirthdayList.length > 40){
-                    let PMList3 = CUSTPMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    let PMList3 = CUSTPMLink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
                     if (arrBirthdayList.length > 60){
-                        let PMList4 = CUSTPMLink + arrBirthdayList.slice(60, 80).join('%0A%0D');
+                        let PMList4 = CUSTPMLink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                         window.open(PMList4);
                     };
                 };
@@ -95,16 +95,16 @@
             const PMLink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message='+ PDMESSAGE +'&bcc_list=';
             let copyText = arrBirthdayList.join( '\n' );
             console.info('Birthdays for PM: \n\n'+copyText);
-            let PMList1 = PMLink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+            let PMList1 = PMLink + arrBirthdayList.slice(0, 19).join('%0A%0D');
             window.open(PMList1);
             if(arrBirthdayList.length > 20){
-                let PMList2 = PMLink + arrBirthdayList.slice(20, 40).join('%0A%0D');
+                let PMList2 = PMLink + arrBirthdayList.slice(19, 38).join('%0A%0D');
                 window.open(PMList2);
                 if (arrBirthdayList.length > 40){
-                    let PMList3 = PMLink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    let PMList3 = PMLink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
                     if (arrBirthdayList.length > 60) {
-                        let PMList4 = PMLink + arrBirthdayList.slice(60,80).join('%0A%0D');
+                        let PMList4 = PMLink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                     };
                 };
             };
@@ -128,16 +128,16 @@
             const BPMBlink = URL + 'ucp.php?i=pm&mode=compose&subject=Happy Birthday ('+ today +')&username_list='+ MYNAME +'&message=' + optoutnotice + '&bcc_list=';
             let copyText = arrBirthdayList.join( '\n' );
             console.info('Birthdays for PM: \n\n'+copyText);
-            let PMList1 = BPMBlink + arrBirthdayList.slice(0, 20).join('%0A%0D');
+            let PMList1 = BPMBlink + arrBirthdayList.slice(0, 19).join('%0A%0D');
             window.open(PMList1);
             if(arrBirthdayList.length > 20){
-                let PMList2 = BPMBlink + arrBirthdayList.slice(20, 40).join('%0A%0D');
+                let PMList2 = BPMBlink + arrBirthdayList.slice(19, 38).join('%0A%0D');
                 window.open(PMList2);
                 if (arrBirthdayList.length > 40){
-                    let PMList3 = BPMBlink + arrBirthdayList.slice(40, 60).join('%0A%0D');
+                    let PMList3 = BPMBlink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
                     if (arrBirthdayList.length > 60){
-                        let PMList4 = BPMBlink + arrBirthdayList.slice(60, 80).join('%0A%0D');
+                        let PMList4 = BPMBlink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                         window.open(PMList4);
                     };
                 };
@@ -344,13 +344,12 @@
             };
         };
     };
-    function removeMe() {
+    /*function removeMe() {
         $('#postingbox > div > fieldset > div.column1 > dl:nth-child(1) > dd > input').click();
-    }
+    }*/
     function addBCCList(bcc_list) {
         $('#username_list').val(bcc_list);
         $('input[name=add_bcc]').click()
-        removeMe();
     }
     function init() {
         var checked = JSON.parse(localStorage.getItem('PDM'));
@@ -375,7 +374,7 @@
         } else if (/forum\/ucp\.php/.test(location.href)) {
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('bcc_list')) {
-                addBCCList(urlParams.get('bcc_list'));
+                setTimeout(function(){ addBCCList(urlParams.get('bcc_list')); }, 1000);
             }
         }
     }
