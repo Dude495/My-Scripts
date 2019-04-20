@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.09.01
+// @version      2019.04.20.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -165,6 +165,7 @@
     const RegMI = 'Michigan';
     const RegWI = 'Wisconsin';
     const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
+    const RegMYS = 'Malaysia';
     const SState = [
         RegNEOR,
         RegMAR,
@@ -463,6 +464,7 @@
     const WI = 'https://spreadsheets.google.com/feeds/list/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/2/public/values?alt=json';
     const NWR = 'https://spreadsheets.google.com/feeds/list/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/1/public/values?alt=json';
     const SER = '';
+    const MYS = '';
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('SS')) {
@@ -538,6 +540,11 @@
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/9/public/values?alt=json';
             console.log('ORC: Loading SER Leadership Master List....');
             MgtReg = 'SER';
+        }
+        else if (localStorage.getItem('SS') == MYS) {
+            MgtSheet = '';
+            console.log('ORC: Loading Malaysia Leadership Master List....');
+            MgtReg = 'MYS';
         }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
@@ -646,6 +653,9 @@
         else if ($('#ORCRegList')[0].value == 'SER') {
             localStorage.setItem('SS', SER);
         }
+        else if ($('#ORCRegList')[0].value == 'MYS') {
+            localStorage.setItem('SS', MYS);
+        }
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     }
@@ -659,6 +669,7 @@
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/edit#gid=97729408">Update Existing Record(s)</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const SERResources = '';
+    const MYSResources = '';
     function showPanel() {
         $('#ORCSettingsBtn').show();
         $('#ORCResourceList').show();
@@ -834,6 +845,11 @@
                 $('#ORC-State')[0].style.backgroundColor = '';
             }
         }
+        else if (W.model.countries.top.name == 'Malaysia') {
+            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Pending Support.</div></b>';
+            hidePanel();
+            Display.style.display = "none";
+        }
         else {
             $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Country Not Supported.</div></b>';
             hidePanel();
@@ -887,7 +903,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Region</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="1" selected disabled>Malaysia</option><option value="2" selected disabled>USA</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
@@ -1043,6 +1059,9 @@
         else if (localStorage.getItem('SS') == SER) {
             SelectedRegion.value ='SER';
         }
+        else if (localStorage.getItem('SS') == MYS) {
+            SelectedRegion.value ='MYS';
+        }
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
@@ -1104,6 +1123,12 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
+            else if (SelectedRegion.value == 'MYS' && RegMYS.includes(W.model.countries.top.name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('SS', MYS);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
             else {
                 $('#ORC-Warning')[0].innerHTML = '<br><div class="alert alert-danger"><strong>ERROR:</strong> The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
@@ -1143,6 +1168,9 @@
         if (localStorage.getItem('SS') == NWR) {
             ORCResList.innerHTML = NWRResources;
         }
+        if (localStorage.getItem('SS') == MYS) {
+            ORCResList.innerHTML = MYSResources;
+        }
         ORCRes.after(ORCResList);
         btn.onclick = function() {
             //console.log('ORC ORWL: ' + tb.value + ' has been added.');
@@ -1175,6 +1203,7 @@
             loadLeadershipList();
             loadSAUApproved();
             createTab();
+            setTimeout(function(){if(W.selectionManager._selectedFeatures.length > 0){StateCheck();}}, 15000);
             setTimeout(updatePanel, 1000);
             if (!localStorage.getItem('ORCPM')) {
                 localStorage.setItem('ORCPM', 'false');
