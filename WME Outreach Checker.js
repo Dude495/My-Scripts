@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.20.01
+// @version      2019.04.20.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fixes</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Minor Adjustments to the Country selector.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -903,7 +903,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="1" selected disabled>Malaysia</option><option value="2" selected disabled>USA</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="1" selected disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS" disabled>Malaysia</option><optgroup label="USA"><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
