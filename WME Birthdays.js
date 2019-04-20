@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2019.04.19.03
+// @version      2019.04.20.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -166,41 +166,43 @@
         tdiv.id = 'TBOX';
         $('#message').after(tdiv);
         var tbox = document.createElement("INPUT");
-        tbox.setAttribute("type", "checkbox");
-        tbox.id = 'TMSG'
+        tbox.setAttribute("type", "button");
+        tbox.setAttribute("class", "button1");
+        tbox.id = 'TMSG';
+        tbox.title = 'Save/Delete WME Birthday Template';
         const tl = document.createElement("LABEL");
         if (DBG == true) {
-            tl.innerHTML = ' Save Template (Debug)';
+            tbox.setAttribute("value", "Save Template (Debug)");
         } else {
-            tl.innerHTML = '  Save Template';
+            tbox.setAttribute("value", "Save Template");
         };
         tdiv.after(tbox);
         tbox.after(tl);
         if (DBG == true) {
             tbox.onclick = function() {
                 if ($('#message')[0].value == '') {
-                    console.log('Save Template Box CHECKED\n\nTemplate successfully deleted. (Debug Only)');
+                    console.log('Save Template Button Clicked\n\nTemplate successfully deleted. (Debug Only)');
                     $('#TMSG').attr()[0].checked = false;
                 };
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
-                    console.log('Save Template Box CHECKED\n\nTemplate successfully saved. (Debug Only): \n\n' + 'Plain Text:\n' + $('#message')[0].value +'\n\nEncoded Text:\n' + template);
+                    console.log('Save Template Button Clicked\n\nTemplate successfully saved. (Debug Only): \n\n' + 'Plain Text:\n' + $('#message')[0].value +'\n\nEncoded Text:\n' + template);
                     $('#TMSG').attr()[0].checked = false;
                 };
             };
         } else {
             tbox.onclick = function() {
                 if ($('#message')[0].value == '') {
-                    window.alert('Template successfully deleted. You may now close this PM window.');
+                    tl.innerHTML = '   Birthday Template Successfully Deleted.';
                     localStorage.setItem('CSTMSG', '');
-                    $('#TMSG').attr()[0].checked = false;
                     localStorage.setItem('CMSG', false);
+                    setTimeout(function(){ tl.innerHTML = ''; }, 2000);
                 };
                 if ($('#message')[0].value !== "") {
                     var template = encodeURIComponent($('#message')[0].value);
                     localStorage.setItem('CSTMSG', template);
-                    window.alert('Template successfully saved. You may now close this PM window.');
-                    $('#TMSG').attr()[0].checked = false;
+                    tl.innerHTML = '   Birthday Template Successfully Saved.';
+                    setTimeout(function(){ tl.innerHTML = ''; }, 2000);
                 };
             };
         };
