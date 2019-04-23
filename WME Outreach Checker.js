@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.20.02
+// @version      2019.04.23.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Minor Adjustments to the Country selector.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Added support for American Territories (ATR).</li></ul><h2>ORC Goes International!</h2><ul><li>ORC Welcomes Malaysia!</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -155,6 +155,7 @@
             setTimeout(function () {initORCcolorPicker(tries++);}, 200);
         }
     }
+    const COUNTRIES = 'Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
     const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
     const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
@@ -166,6 +167,7 @@
     const RegWI = 'Wisconsin';
     const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
     const RegMYS = 'Malaysia';
+    const RegATR ='Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
     const SState = [
         RegNEOR,
         RegMAR,
@@ -232,6 +234,7 @@
         }
     }
     function doHighlight(element) {
+        var CurCountry = W.model.countries.top.name;
         const whitelistColor = ORCSettings.CP4;
         const whitelistFColor = ORCSettings.FP4
         const inSheetColor = ORCSettings.CP2;
@@ -250,7 +253,7 @@
         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
         let leadership = getMgtFromSheetList(username);
         let entry = getFromSheetList(username);
-        if (W.model.countries.top.name == 'United States') {
+        if (COUNTRIES.includes(CurCountry)) {
             if (username.toLowerCase() == ORCME.toLowerCase()) {
                 element.style.backgroundColor = youColor;
                 element.style.color = youFColor;
@@ -259,7 +262,7 @@
             else if (leadership != null) {
                 element.style.backgroundColor = managementColor;
                 element.style.color = managementFColor;
-                element.title = username + ' is Regional Management';
+                element.title = username + ' is Leadership';
             }
             else if (ORWL.includes(username.toLowerCase()) || (localStorage.getItem('ORCR4WL') == "true" && RANK >= '4')) {
                 element.style.backgroundColor = whitelistColor;
@@ -271,6 +274,16 @@
                     element.style.backgroundColor = inSheetColor;
                     element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                    if (CurCountry == 'Malaysia') {
+                        element.style.backgroundColor = inSheetColor;
+                        element.style.color = inSheetFColor;
+                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nCity: ' + entry.city + '\nState: ' + entry.state + '\nDate(s): ' + entry.dateC + '\nPM Read?:' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                    }
+                    if (RegATR.includes(CurCountry)) {
+                        element.style.backgroundColor = inSheetColor;
+                        element.style.color = inSheetFColor;
+                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '\nJoined GHO/Discord: ' + entry.joined + '.';
+                    }
                 } else {
                     element.style.backgroundColor = inSheetColor;
                     element.style.color = inSheetFColor;
@@ -464,17 +477,18 @@
     const WI = 'https://spreadsheets.google.com/feeds/list/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/2/public/values?alt=json';
     const NWR = 'https://spreadsheets.google.com/feeds/list/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/1/public/values?alt=json';
     const SER = '';
-    const MYS = '';
+    const MYS = 'https://spreadsheets.google.com/feeds/list/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/1/public/values?alt=json';
+    const ATR = 'https://spreadsheets.google.com/feeds/list/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/1/public/values?alt=json';
     async function loadMasterList() {
         var SS;
-        if (!localStorage.getItem('SS')) {
-            localStorage.setItem('SS', NEOR)
+        if (!localStorage.getItem('ORCSS')) {
+            localStorage.setItem('ORCSS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
-            SS = localStorage.getItem('SS');
+            SS = localStorage.getItem('ORCSS');
         }
         else {
-            SS = localStorage.getItem('SS');
-            console.log('ORC: Loading ' + localStorage.getItem('SS') + ' Master List....');
+            SS = localStorage.getItem('ORCSS');
+            console.log('ORC: Loading ' + localStorage.getItem('ORCSS') + ' Master List....');
         }
         await $.getJSON(SS, function(data){
             ORCFeedList = data;
@@ -485,66 +499,71 @@
     async function loadLeadershipList() {
         var MgtSheet;
         var MgtReg;
-        if (!localStorage.getItem('SS')) {
-            localStorage.setItem('SS', NEOR)
+        if (!localStorage.getItem('ORCSS')) {
+            localStorage.setItem('ORCSS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
             MgtReg = 'NEOR'
         }
-        else if (localStorage.getItem('SS') == NEOR) {
+        else if (localStorage.getItem('ORCSS') == NEOR) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
             console.log('ORC: Loading NEOR Leadership Master List....');
             MgtReg = 'NEOR'
         }
-        else if (localStorage.getItem('SS') == MAR) {
+        else if (localStorage.getItem('ORCSS') == MAR) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json';
             console.log('ORC: Loading MAR Leadership Master List....');
             MgtReg = 'MAR';
         }
-        else if (localStorage.getItem('SS') == SWR) {
+        else if (localStorage.getItem('ORCSS') == SWR) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/5/public/values?alt=json';
             console.log('ORC: Loading SWR Leadership Master List....');
             MgtReg = 'SWR';
         }
-        else if (localStorage.getItem('SS') == OH) {
+        else if (localStorage.getItem('ORCSS') == OH) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'OH';
         }
-        else if (localStorage.getItem('SS') == MI) {
+        else if (localStorage.getItem('ORCSS') == MI) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'MI';
         }
-        else if (localStorage.getItem('SS') == IN) {
+        else if (localStorage.getItem('ORCSS') == IN) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'IN';
         }
-        else if (localStorage.getItem('SS') == WI) {
+        else if (localStorage.getItem('ORCSS') == WI) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'WI';
         }
-        else if (localStorage.getItem('SS') == PLN) {
+        else if (localStorage.getItem('ORCSS') == PLN) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/7/public/values?alt=json';
             console.log('ORC: Loading PLN Leadership Master List....');
             MgtReg = 'PLN';
         }
-        else if (localStorage.getItem('SS') == NWR) {
+        else if (localStorage.getItem('ORCSS') == NWR) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/8/public/values?alt=json';
             console.log('ORC: Loading NWR Leadership Master List....');
             MgtReg = 'NWR';
         }
-        else if (localStorage.getItem('SS') == SER) {
+        else if (localStorage.getItem('ORCSS') == SER) {
             MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/9/public/values?alt=json';
             console.log('ORC: Loading SER Leadership Master List....');
             MgtReg = 'SER';
         }
-        else if (localStorage.getItem('SS') == MYS) {
-            MgtSheet = '';
+        else if (localStorage.getItem('ORCSS') == MYS) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/12/public/values?alt=json';
             console.log('ORC: Loading Malaysia Leadership Master List....');
             MgtReg = 'MYS';
+        }
+        else if (localStorage.getItem('ORCSS') == ATR) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/13/public/values?alt=json';
+            console.log('ORC: Loading ATR Leadership Master List....');
+            MgtReg = 'ATR';
         }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
@@ -563,7 +582,7 @@
         return null;
     }
     function getFromSheetList(editorName){
-        if (localStorage.getItem('SS') == MAR) {
+        if (localStorage.getItem('ORCSS') == MAR) {
             let mapped = ORCFeedList.feed.entry.slice(0).reverse().map(obj =>{
                 return {username: obj.gsx$editorusername.$t.trim(), responses: obj.gsx$didtheyjoindiscord.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                        }
@@ -576,11 +595,11 @@
             return null;
         } else {
             let mapped = ORCFeedList.feed.entry.map(obj =>{
-                if (localStorage.getItem('SS') == NEOR) {
+                if (localStorage.getItem('ORCSS') == NEOR) {
                     return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').replace(NEORRegEx,'').trim(), forumread: obj.gsx$_cre1l.$t.replace(NEORRegEx,''), responses: obj.gsx$changescantakeupto.$t.replace(NEORRegEx,''), reporter: obj.gsx$minutesdelaytoappear.$t.replace(NEORRegEx,''), dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t.replace(NEORRegEx,'')
                            }
                 }
-                if (localStorage.getItem('SS') == SWR) {
+                if (localStorage.getItem('ORCSS') == SWR) {
                     if (obj.gsx$ndoutreachdate.$t == null) {
                         return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$stoutreachdate.$t
                                }
@@ -589,28 +608,36 @@
                                }
                     }
                 }
-                if (localStorage.getItem('SS') == OH) {
+                if (localStorage.getItem('ORCSS') == OH) {
                     return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
                            }
                 }
-                if (localStorage.getItem('SS') == IN) {
+                if (localStorage.getItem('ORCSS') == IN) {
                     return {username: obj.gsx$editorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$whomadecontact.$t, dateC: obj.gsx$outreachdate.$t
                            }
                 }
-                if (localStorage.getItem('SS') == MI) {
+                if (localStorage.getItem('ORCSS') == MI) {
                     return {username: obj.gsx$_cn6ca.$t.trim(), responses: obj.gsx$welcomepacket.$t, reporter: obj.gsx$userwhosent.$t, dateC: obj.gsx$datewelcomesent.$t
                            }
                 }
-                if (localStorage.getItem('SS') == WI) {
+                if (localStorage.getItem('ORCSS') == WI) {
                     return {username: obj.gsx$username.$t.trim(), forumread: obj.gsx$readpm.$t, responses: obj.gsx$responded.$t, reporter: obj.gsx$bywhom.$t, dateC: obj.gsx$date.$t
                            }
                 }
-                if (localStorage.getItem('SS') == PLN) {
+                if (localStorage.getItem('ORCSS') == PLN) {
                     return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
                            }
                 }
-                if (localStorage.getItem('SS') == NWR) {
+                if (localStorage.getItem('ORCSS') == NWR) {
                     return {username: obj.gsx$usernameofcontactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                           }
+                }
+                if (localStorage.getItem('ORCSS') == MYS) {
+                    return {username: obj.gsx$wazeuseridyousentpmt.$t.trim(), forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmreplied.$t, reporter: obj.gsx$yourwazeuserid.$t, dateC: obj.gsx$timestamp.$t, state: obj.gsx$state.$t, city: obj.gsx$city.$t
+                           }
+                }
+                if (localStorage.getItem('ORCSS') == ATR) {
+                    return {username: obj.gsx$neweditorwazeusername.$t.trim(), joined: obj.gsx$neweditorjoineddiscordgho, responses: obj.gsx$neweditorresponded.$t, reporter: obj.gsx$reporterusername.$t, dateC: obj.gsx$outreachdate.$t
                            }
                 }
             });
@@ -624,37 +651,40 @@
     }
     function updateMasterList() {
         if ($('#ORCRegList')[0].value == 'NEOR') {
-            localStorage.setItem('SS', NEOR);
+            localStorage.setItem('ORCSS', NEOR);
         }
         else if ($('#ORCRegList')[0].value == 'MAR') {
-            localStorage.setItem('SS', MAR);
+            localStorage.setItem('ORCSS', MAR);
         }
         else if ($('#ORCRegList')[0].value == 'SWR') {
-            localStorage.setItem('SS', SWR);
+            localStorage.setItem('ORCSS', SWR);
         }
         else if ($('#ORCRegList')[0].value == 'OH') {
-            localStorage.setItem('SS', OH);
+            localStorage.setItem('ORCSS', OH);
         }
         else if ($('#ORCRegList')[0].value == 'IN') {
-            localStorage.setItem('SS', IN);
+            localStorage.setItem('ORCSS', IN);
         }
         else if ($('#ORCRegList')[0].value == 'MI') {
-            localStorage.setItem('SS', MI);
+            localStorage.setItem('ORCSS', MI);
         }
         else if ($('#ORCRegList')[0].value == 'WI') {
-            localStorage.setItem('SS', WI);
+            localStorage.setItem('ORCSS', WI);
         }
         else if ($('#ORCRegList')[0].value == 'PLN') {
-            localStorage.setItem('SS', PLN);
+            localStorage.setItem('ORCSS', PLN);
         }
         else if ($('#ORCRegList')[0].value == 'NWR') {
-            localStorage.setItem('SS', NWR);
+            localStorage.setItem('ORCSS', NWR);
         }
         else if ($('#ORCRegList')[0].value == 'SER') {
-            localStorage.setItem('SS', SER);
+            localStorage.setItem('ORCSS', SER);
         }
         else if ($('#ORCRegList')[0].value == 'MYS') {
-            localStorage.setItem('SS', MYS);
+            localStorage.setItem('ORCSS', MYS);
+        }
+        else if ($('#ORCRegList')[0].value == 'ATR') {
+            localStorage.setItem('ORCSS', ATR);
         }
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
@@ -669,7 +699,8 @@
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/edit#gid=97729408">Update Existing Record(s)</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const SERResources = '';
-    const MYSResources = '';
+    const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
+    const ATRResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdg7NXrvYffCI7Hukb8zfSEZ7euO0efuWim8lI9cjWkHijd7Q/viewform" target="_blank">ATR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/edit?usp=sharing" target="_blank">Published Contact Sheet</a>';
     function showPanel() {
         $('#ORCSettingsBtn').show();
         $('#ORCResourceList').show();
@@ -703,8 +734,8 @@
             if (RegNEOR.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: N(EO)R</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== NEOR) {
-                    localStorage.setItem('SS', NEOR);
+                if (localStorage.getItem('ORCSS') !== NEOR) {
+                    localStorage.setItem('ORCSS', NEOR);
                     $('#ORCRegList')[0].value = 'NEOR';
                     $('#ORCResourceList')[0].innerHTML = NEORResources
                     showPanel();
@@ -715,8 +746,8 @@
             else if (RegMAR.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: MAR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== MAR) {
-                    localStorage.setItem('SS', MAR);
+                if (localStorage.getItem('ORCSS') !== MAR) {
+                    localStorage.setItem('ORCSS', MAR);
                     $('#ORCRegList')[0].value = 'MAR';
                     showPanel();
                     $('#ORCResourceList')[0].innerHTML = MARResources
@@ -727,8 +758,8 @@
             else if (RegSWR.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: SWR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== SWR) {
-                    localStorage.setItem('SS', SWR);
+                if (localStorage.getItem('ORCSS') !== SWR) {
+                    localStorage.setItem('ORCSS', SWR);
                     $('#ORCRegList')[0].value = 'SWR';
                     $('#ORCResourceList')[0].innerHTML = SWRResources
                     showPanel();
@@ -740,8 +771,8 @@
             else if (RegOH.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== OH) {
-                    localStorage.setItem('SS', OH);
+                if (localStorage.getItem('ORCSS') !== OH) {
+                    localStorage.setItem('ORCSS', OH);
                     $('#ORCRegList')[0].value = 'OH';
                     showPanel();
                     $('#ORCResourceList')[0].innerHTML = OHResources
@@ -752,8 +783,8 @@
             else if (RegIN.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== IN) {
-                    localStorage.setItem('SS', IN);
+                if (localStorage.getItem('ORCSS') !== IN) {
+                    localStorage.setItem('ORCSS', IN);
                     $('#ORCRegList')[0].value = 'IN';
                     $('#ORCResourceList')[0].innerHTML = INResources
                     showPanel();
@@ -764,8 +795,8 @@
             else if (RegWI.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== WI) {
-                    localStorage.setItem('SS', WI);
+                if (localStorage.getItem('ORCSS') !== WI) {
+                    localStorage.setItem('ORCSS', WI);
                     $('#ORCRegList')[0].value = 'WI';
                     $('#ORCResourceList')[0].innerHTML = WIResources
                     showPanel();
@@ -776,8 +807,8 @@
             else if (RegMI.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== MI) {
-                    localStorage.setItem('SS', MI);
+                if (localStorage.getItem('ORCSS') !== MI) {
+                    localStorage.setItem('ORCSS', MI);
                     $('#ORCRegList')[0].value = 'MI';
                     $('#ORCResourceList')[0].innerHTML = MIResources
                     showPanel();
@@ -789,8 +820,8 @@
             else if (RegPLN.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: PLN</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== PLN) {
-                    localStorage.setItem('SS', PLN);
+                if (localStorage.getItem('ORCSS') !== PLN) {
+                    localStorage.setItem('ORCSS', PLN);
                     $('#ORCRegList')[0].value = 'PLN';
                     $('#ORCResourceList')[0].innerHTML = PLNResources
                     showPanel();
@@ -801,8 +832,8 @@
             else if (RegNWR.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: NWR</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('SS') !== NWR) {
-                    localStorage.setItem('SS', NWR);
+                if (localStorage.getItem('ORCSS') !== NWR) {
+                    localStorage.setItem('ORCSS', NWR);
                     $('#ORCRegList')[0].value = 'NWR';
                     $('#ORCResourceList')[0].innerHTML = NWRResources
                     showPanel();
@@ -816,9 +847,9 @@
                 if (Approved != null) {
                     $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: SER</span>';
                     Display.style.display = "block";
-                    if (localStorage.getItem('SS') !== SER) {
+                    if (localStorage.getItem('ORCSS') !== SER) {
                         showPanel();
-                        localStorage.setItem('SS', SER);
+                        localStorage.setItem('ORCSS', SER);
                         $('#ORCRegList')[0].value = 'SER';
                         $('#ORCResourceList')[0].innerHTML = SERResources;
                         $('#ORC-State')[0].innerHTML = 'Current State: ' + State;
@@ -846,9 +877,32 @@
             }
         }
         else if (W.model.countries.top.name == 'Malaysia') {
-            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Pending Support.</div></b>';
-            hidePanel();
-            Display.style.display = "none";
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+            Display.style.display = "block";
+            runORC();
+            if (localStorage.getItem('ORCSS') !== MYS) {
+                localStorage.setItem('ORCSS', MYS);
+                $('#ORCRegList')[0].value = 'MYS';
+                showPanel();
+                runORC();
+                $('#ORCResourceList')[0].innerHTML = MYSResources
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            }
+        }
+        else if (W.model.countries.top.name == 'Puerto Rico' || W.model.countries.top.name == 'Virgin Islands (U.S.)' || W.model.countries.top.name == 'Guam' || W.model.countries.top.name == 'American Samoa' || W.model.countries.top.name == 'Northern Mariana Islands') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+            Display.style.display = "block";
+            runORC();
+            if (localStorage.getItem('ORCSS') !== ATR) {
+                localStorage.setItem('ORCSS', ATR);
+                $('#ORCRegList')[0].value = 'ATR';
+                showPanel();
+                runORC();
+                $('#ORCResourceList')[0].innerHTML = ATRResources
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            }
         }
         else {
             $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Country Not Supported.</div></b>';
@@ -903,7 +957,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS" disabled>Malaysia</option><optgroup label="USA"><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS" disabled>Malaysia</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
@@ -1029,103 +1083,112 @@
             StateCheck();
         }
         let SelectedRegion = $('#ORCRegList')[0];
-        if (localStorage.getItem('SS') == MAR) {
+        if (localStorage.getItem('ORCSS') == MAR) {
             SelectedRegion.value = 'MAR';
         }
-        else if (localStorage.getItem('SS') == NEOR) {
+        else if (localStorage.getItem('ORCSS') == NEOR) {
             SelectedRegion.value = 'NEOR';
         }
-        else if (localStorage.getItem('SS') == SWR) {
+        else if (localStorage.getItem('ORCSS') == SWR) {
             SelectedRegion.value = 'SWR';
         }
-        else if (localStorage.getItem('SS') == OH) {
+        else if (localStorage.getItem('ORCSS') == OH) {
             SelectedRegion.value = 'OH';
         }
-        else if (localStorage.getItem('SS') == IN) {
+        else if (localStorage.getItem('ORCSS') == IN) {
             SelectedRegion.value = 'IN';
         }
-        else if (localStorage.getItem('SS') == MI) {
+        else if (localStorage.getItem('ORCSS') == MI) {
             SelectedRegion.value = 'MI';
         }
-        else if (localStorage.getItem('SS') == WI) {
+        else if (localStorage.getItem('ORCSS') == WI) {
             SelectedRegion.value = 'WI';
         }
-        else if (localStorage.getItem('SS') == PLN) {
+        else if (localStorage.getItem('ORCSS') == PLN) {
             SelectedRegion.value ='PLN';
         }
-        else if (localStorage.getItem('SS') == NWR) {
+        else if (localStorage.getItem('ORCSS') == NWR) {
             SelectedRegion.value ='NWR';
         }
-        else if (localStorage.getItem('SS') == SER) {
+        else if (localStorage.getItem('ORCSS') == SER) {
             SelectedRegion.value ='SER';
         }
-        else if (localStorage.getItem('SS') == MYS) {
+        else if (localStorage.getItem('ORCSS') == MYS) {
             SelectedRegion.value ='MYS';
+        }
+        else if (localStorage.getItem('ORCSS') == ATR) {
+            SelectedRegion.value = 'ATR';
         }
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', NEOR);
+                localStorage.setItem('ORCSS', NEOR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', MAR);
+                localStorage.setItem('ORCSS', MAR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', SWR);
+                localStorage.setItem('ORCSS', SWR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'SER' && RegSER.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', SER);
+                localStorage.setItem('ORCSS', SER);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', OH);
+                localStorage.setItem('ORCSS', OH);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', IN);
+                localStorage.setItem('ORCSS', IN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', MI);
+                localStorage.setItem('ORCSS', MI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', WI);
+                localStorage.setItem('ORCSS', WI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', PLN);
+                localStorage.setItem('ORCSS', PLN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', NWR);
+                localStorage.setItem('ORCSS', NWR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
             else if (SelectedRegion.value == 'MYS' && RegMYS.includes(W.model.countries.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('SS', MYS);
+                localStorage.setItem('ORCSS', MYS);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
+            else if (SelectedRegion.value == 'ATR' && RegATR.includes(W.model.countries.top.name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('ORCSS', ATR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
@@ -1138,38 +1201,41 @@
         var ORCRes = document.getElementById('ORC-resources');
         var ORCResList = document.createElement('LABEL');
         ORCResList.id = 'ORCResourceList'
-        if (localStorage.getItem('SS') == NEOR) {
+        if (localStorage.getItem('ORCSS') == NEOR) {
             ORCResList.innerHTML = NEORResources;
         }
-        if (localStorage.getItem('SS') == MAR) {
+        if (localStorage.getItem('ORCSS') == MAR) {
             ORCResList.innerHTML = MARResources;
         }
-        if (localStorage.getItem('SS') == SWR) {
+        if (localStorage.getItem('ORCSS') == SWR) {
             ORCResList.innerHTML = SWRResources;
         }
-        if (localStorage.getItem('SS') == SER) {
+        if (localStorage.getItem('ORCSS') == SER) {
             ORCResList.innerHTML = SERResources;
         }
-        if (localStorage.getItem('SS') == OH) {
+        if (localStorage.getItem('ORCSS') == OH) {
             ORCResList.innerHTML = OHResources;
         }
-        if (localStorage.getItem('SS') == IN) {
+        if (localStorage.getItem('ORCSS') == IN) {
             ORCResList.innerHTML = INResources;
         }
-        if (localStorage.getItem('SS') == MI) {
+        if (localStorage.getItem('ORCSS') == MI) {
             ORCResList.innerHTML = MIResources;
         }
-        if (localStorage.getItem('SS') == WI) {
+        if (localStorage.getItem('ORCSS') == WI) {
             ORCResList.innerHTML = WIResources;
         }
-        if (localStorage.getItem('SS') == PLN) {
+        if (localStorage.getItem('ORCSS') == PLN) {
             ORCResList.innerHTML = PLNResources;
         }
-        if (localStorage.getItem('SS') == NWR) {
+        if (localStorage.getItem('ORCSS') == NWR) {
             ORCResList.innerHTML = NWRResources;
         }
-        if (localStorage.getItem('SS') == MYS) {
+        if (localStorage.getItem('ORCSS') == MYS) {
             ORCResList.innerHTML = MYSResources;
+        }
+        if (localStorage.getItem('ORCSS') == ATR) {
+            ORCResList.innerHTML = ATRResources;
         }
         ORCRes.after(ORCResList);
         btn.onclick = function() {
@@ -1208,8 +1274,8 @@
             if (!localStorage.getItem('ORCPM')) {
                 localStorage.setItem('ORCPM', 'false');
             }
-            if (!localStorage.getItem('SS')) {
-                localStorage.setItem('SS', NEOR);
+            if (!localStorage.getItem('ORCSS')) {
+                localStorage.setItem('ORCSS', NEOR);
             }
             WazeWrap.Events.register("selectionchanged", null, StateCheck);
             WazeWrap.Events.register("moveend", W.map, StateCheck);
