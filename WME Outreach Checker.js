@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.23.01
+// @version      2019.04.24.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -31,7 +31,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Added support for American Territories (ATR).</li></ul><h2>ORC Goes International!</h2><ul><li>ORC Welcomes Malaysia!</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug fixes (Malaysia).</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -633,7 +633,7 @@
                            }
                 }
                 if (localStorage.getItem('ORCSS') == MYS) {
-                    return {username: obj.gsx$wazeuseridyousentpmt.$t.trim(), forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmreplied.$t, reporter: obj.gsx$yourwazeuserid.$t, dateC: obj.gsx$timestamp.$t, state: obj.gsx$state.$t, city: obj.gsx$city.$t
+                    return {username: obj.gsx$wazeuseridyousentpmto.$t.trim(), forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmreplied.$t, reporter: obj.gsx$yourwazeuserid.$t, dateC: obj.gsx$timestamp.$t, state: obj.gsx$state.$t, city: obj.gsx$city.$t
                            }
                 }
                 if (localStorage.getItem('ORCSS') == ATR) {
@@ -880,12 +880,13 @@
             $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
             Display.style.display = "block";
             runORC();
+            $('#ORC-State')[0].innerHTML = '';
             if (localStorage.getItem('ORCSS') !== MYS) {
                 localStorage.setItem('ORCSS', MYS);
                 $('#ORCRegList')[0].value = 'MYS';
                 showPanel();
                 runORC();
-                $('#ORCResourceList')[0].innerHTML = MYSResources
+                $('#ORCResourceList')[0].innerHTML = MYSResources;
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             }
@@ -899,7 +900,7 @@
                 $('#ORCRegList')[0].value = 'ATR';
                 showPanel();
                 runORC();
-                $('#ORCResourceList')[0].innerHTML = ATRResources
+                $('#ORCResourceList')[0].innerHTML = ATRResources;
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
             }
@@ -957,7 +958,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS" disabled>Malaysia</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS">Malaysia</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
