@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.26.02
+// @version      2019.04.26.03
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug fixes (USA).</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Clicking the PM button from a UR will now include the text from that response.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -180,49 +180,54 @@
         RegPLN,
         RegNWR
     ].join(',')
-    function injectPMLinkButton(SUBJECT, ID, element){
+    function injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username){
         let PMLink = document.createElement('DIV');
         PMLink.className = 'ORCPMBtn';
         PMLink.style.display = 'inline';
         let center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
         let LON = center.lon;
         let LAT = center.lat;
-        let ORCusername = element.textContent.match(INCRegEx);
-        let username = ORCusername[1];
-        let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.zoom + '&mapUpdateRequest=' + ID);
-        PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
+        let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.zoom + '&' + TYPE + '=' + ID);
+        PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=' + MESSAGE + '[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
         element.after(PMLink);
     }
-    function addPMBttn(element) {
+    function addPMBttn(element, MESSAGE) {
         if (localStorage.getItem('ORCPM') == 'true') {
             let ID;
             let SUBJECT;
+            let TYPE;
+            let ORCusername = element.textContent.match(INCRegEx);
+            let username = ORCusername[1];
             if (WazeWrap.hasPlaceSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                     SUBJECT = 'About this Venue';
-                    injectPMLinkButton(SUBJECT, ID, element);
+                    TYPE = 'venues';
+                    injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
             if (WazeWrap.hasSegmentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Segment';
+                    TYPE = 'segments';
                     ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
-                    injectPMLinkButton(SUBJECT, ID, element);
+                    injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
             if (WazeWrap.hasMapCommentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Map Comment';
+                    TYPE = 'mapComments';
                     ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
-                    injectPMLinkButton(SUBJECT, ID, element);
+                    injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
             if ($('div.map-problem.user-generated.selected').is(':visible') == true) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     SUBJECT = 'About this Update Request';
+                    TYPE = 'mapUpdateRequest';
                     ID = $('div.map-problem.user-generated.selected').data('id');
-                    injectPMLinkButton(SUBJECT, ID, element);
+                    injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
         } else
@@ -313,6 +318,7 @@
         const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user > a')[0];
         const MP = $('#panel-container > div > div > div.actions > div > div > div.by > a');
         const URName = $('span.username');
+        const URText = $('#panel-container > div > div > div.top-section > div.body > div > div.conversation.section > div.collapsible.content > div > div > ul > li > div > div.text');
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
         }
@@ -453,10 +459,12 @@
                 setTimeout(addPMBttn(PUR), 1000);
             }
         } else {
+            let MESSAGE;
             for (let i=0; i < URName.length; i++) {
                 if (URName[i].textContent.includes('(')) {
+                    MESSAGE = encodeURIComponent('[quote="' + URName[i].textContent.replace(RRE,"") + '"]' + URText[i].textContent + '[/quote]')
                     doHighlight(URName[i]);
-                    setTimeout(addPMBttn(URName[i]), 1000);
+                    setTimeout(addPMBttn(URName[i], MESSAGE), 1000);
                 }
             }
         }
