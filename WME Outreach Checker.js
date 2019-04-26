@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.26.03
+// @version      2019.04.26.04
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -180,7 +180,7 @@
         RegPLN,
         RegNWR
     ].join(',')
-    function injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username){
+    function injectPMLinkButton(SUBJECT, ID, element, MESSAGE = "", TYPE, username){
         let PMLink = document.createElement('DIV');
         PMLink.className = 'ORCPMBtn';
         PMLink.style.display = 'inline';
