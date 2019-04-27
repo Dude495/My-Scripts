@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.26.04
+// @version      2019.04.27.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Clicking the PM button from a UR will now include the text from that response.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Added support for Pakistan.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -156,7 +156,7 @@
             setTimeout(function () {initORCcolorPicker(tries++);}, 200);
         }
     }
-    const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
+    const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan';
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
     const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
     const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
@@ -168,6 +168,7 @@
     const RegWI = 'Wisconsin';
     const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
     const RegMYS = 'Malaysia';
+    const RegPK = 'Pakistan';
     const RegATR ='Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
     const SState = [
         RegNEOR,
@@ -245,6 +246,8 @@
         const managementFColor = ORCSettings.FP3;
         const youColor = ORCSettings.CP4;
         const youFColor = ORCSettings.FP4;
+        const isStaffBG = '#ff66b3';
+        const isStaffFont = '#000000';
         let ORCusername = element.textContent.match(INCRegEx);
         var ORWL = localStorage.getItem('ORWL').toLowerCase();
         let ORCME = W.loginManager.user.userName;
@@ -284,11 +287,21 @@
                         element.style.color = inSheetFColor;
                         element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '\nJoined GHO/Discord: ' + entry.joined + '.';
                     }
+                    if (CurCountry == 'Pakistan') {
+                        element.style.backgroundColor = inSheetColor;
+                        element.style.color = inSheetFColor;
+                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nLocation: ' + entry.location + '\nPM Read?: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '\nJoined Slack?: ' + entry.joined + '.';
+                    }
                 } else {
                     element.style.backgroundColor = inSheetColor;
                     element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                 }
+            }
+            else if (RANK == '7') {
+                element.style.backgroundColor = isStaffBG;
+                element.style.coloe = isStaffFontl
+                element.title = username + ' is Waze Staff.';
             }
             else {
                 element.style.backgroundColor = notInSheetColor;
@@ -482,6 +495,7 @@
     const SER = '';
     const MYS = 'https://spreadsheets.google.com/feeds/list/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/1/public/values?alt=json';
     const ATR = 'https://spreadsheets.google.com/feeds/list/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/1/public/values?alt=json';
+    const PK = 'https://spreadsheets.google.com/feeds/list/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/1/public/values?alt=json';
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('ORCSS')) {
@@ -568,6 +582,11 @@
             console.log('ORC: Loading ATR Leadership Master List....');
             MgtReg = 'ATR';
         }
+        else if (localStorage.getItem('ORCSS') == PK) {
+            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/14/public/values?alt=json';
+            console.log('ORC: Loading Pakistan Leadership Master List....');
+            MgtReg = 'PK';
+        }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
             console.log('ORC: '+MgtReg+' Leadership Masterlist Loaded....');
@@ -643,6 +662,10 @@
                     return {username: obj.gsx$neweditorwazeusername.$t.trim(), joined: obj.gsx$neweditorjoineddiscordgho, responses: obj.gsx$neweditorresponded.$t, reporter: obj.gsx$reporterusername.$t, dateC: obj.gsx$outreachdate.$t
                            }
                 }
+                if (localStorage.getItem('ORCSS') == PK) {
+                    return {username: obj.gsx$neweditorsusername.$t.trim(), joined: obj.gsx$joinedslack.$t, forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmresponded.$t, reporter: obj.gsx$yourwazeusername.$t, dateC: obj.gsx$dateofcontact.$t, location: obj.gsx$editinglocation.$t
+                           }
+                }
             });
             for(let i=0; i<mapped.length; i++){
                 if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
@@ -689,6 +712,9 @@
         else if ($('#ORCRegList')[0].value == 'ATR') {
             localStorage.setItem('ORCSS', ATR);
         }
+        else if ($('#ORCRegList')[0].value == 'PK') {
+            localStorage.setItem('ORCSS', PK);
+        }
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     }
@@ -704,6 +730,7 @@
     const SERResources = '';
     const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
     const ATRResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdg7NXrvYffCI7Hukb8zfSEZ7euO0efuWim8lI9cjWkHijd7Q/viewform" target="_blank">ATR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/edit?usp=sharing" target="_blank">Published Contact Sheet</a>';
+    const PKResources = '<a href="http://bit.ly/PakTracker" target="_blank">Pakistan New Editor Contact Form</a><br><a href="http://bit.ly/PakTrackerSheet" target="_blank">Published Contact Sheet</a>';
     function showPanel() {
         $('#ORCSettingsBtn').show();
         $('#ORCResourceList').show();
@@ -908,6 +935,21 @@
                 setTimeout(loadLeadershipList, 100);
             }
         }
+        else if (W.model.countries.top.name == 'Pakistan') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+            Display.style.display = "block";
+            runORC();
+            $('#ORC-State')[0].innerHTML = '';
+            if (localStorage.getItem('ORCSS') !== PK) {
+                localStorage.setItem('ORCSS', PK);
+                $('#ORCRegList')[0].value = 'PK';
+                showPanel();
+                runORC();
+                $('#ORCResourceList')[0].innerHTML = PKResources;
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            }
+        }
         else {
             $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Country Not Supported.</div></b>';
             hidePanel();
@@ -961,7 +1003,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS">Malaysia</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
@@ -1123,6 +1165,9 @@
         else if (localStorage.getItem('ORCSS') == ATR) {
             SelectedRegion.value = 'ATR';
         }
+        else if (localStorage.getItem('ORCSS') == PK) {
+            SelectedRegion.value = 'PK';
+        }
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.top.name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
@@ -1196,6 +1241,12 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
+            else if (SelectedRegion.value == 'PK' && RegPK.includes(W.model.countries.top.name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('ORCSS', PK);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
             else {
                 $('#ORC-Warning')[0].innerHTML = '<br><div class="alert alert-danger"><strong>ERROR:</strong> The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
@@ -1240,6 +1291,9 @@
         }
         if (localStorage.getItem('ORCSS') == ATR) {
             ORCResList.innerHTML = ATRResources;
+        }
+        if (localStorage.getItem('ORCSS') == PK) {
+            ORCResList.innerHTML = PKResources;
         }
         ORCRes.after(ORCResList);
         btn.onclick = function() {
