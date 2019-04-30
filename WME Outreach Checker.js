@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Added support for Pakistan.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Switched from Google API v3 to v4.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -156,6 +156,7 @@
             setTimeout(function () {initORCcolorPicker(tries++);}, 200);
         }
     }
+    const h2K = 'QUl6YVN5QmRBYzY4ZE0t';
     const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan';
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
     const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
@@ -234,6 +235,7 @@
         } else
             return;
     }
+    const A8B = 'Q0RZVk9KcjBtUWlzSWM3MEpNanRqUWNR';
     function doHighlight(element) {
         var CurCountry = W.model.countries.top.name;
         const whitelistColor = ORCSettings.CP4;
@@ -313,6 +315,8 @@
             return;
         }
     }
+    const W4a = atob(A8B);
+    const T9f = atob(h2K);
     function runORC() {
         const LandMark1 = $('#landmark-edit-general > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
         const LandMark2 = $('#landmark-edit-general > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
@@ -482,20 +486,21 @@
             }
         }
     }
+    const u7G = T9f+W4a;
     var ORCFeedList = [];
-    const NEOR = 'https://spreadsheets.google.com/feeds/list/1sHxgBQ5rVBkYFHcJ5t4p8R2aHxM1WnFFSW-lwqPf0Tg/4/public/values?alt=json';
-    const MAR = 'https://spreadsheets.google.com/feeds/list/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/1/public/values?alt=json';
-    const SWR = 'https://spreadsheets.google.com/feeds/list/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/1/public/values?alt=json';
-    const OH = 'https://spreadsheets.google.com/feeds/list/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/1/public/values?alt=json';
-    const PLN = 'https://spreadsheets.google.com/feeds/list/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/1/public/values?alt=json';
-    const IN = 'https://spreadsheets.google.com/feeds/list/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/1/public/values?alt=json';
-    const MI = 'https://spreadsheets.google.com/feeds/list/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/4/public/values?alt=json';
-    const WI = 'https://spreadsheets.google.com/feeds/list/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/2/public/values?alt=json';
-    const NWR = 'https://spreadsheets.google.com/feeds/list/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/1/public/values?alt=json';
+    const NEOR = 'https://sheets.googleapis.com/v4/spreadsheets/1Z4JLLLhwYTwkuhEgN3LBlQ5o-VH1kmulb6rReu_kzNM/values/NEOR/?key='+u7G;
+    const MAR = 'https://sheets.googleapis.com/v4/spreadsheets/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/values/Sheet1/?key='+u7G;
+    const SWR = 'https://sheets.googleapis.com/v4/spreadsheets/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/values/Sheet1/?key='+u7G;
+    const OH = 'https://sheets.googleapis.com/v4/spreadsheets/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/values/1079258416/?key='+u7G;
+    const PLN = 'https://sheets.googleapis.com/v4/spreadsheets/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/values/984781548/?key='+u7G;
+    const IN = 'https://sheets.googleapis.com/v4/spreadsheets/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/values/1397326254/?key='+u7G;
+    const MI = 'https://sheets.googleapis.com/v4/spreadsheets/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/values/656287597/?key='+u7G;
+    const WI = 'https://sheets.googleapis.com/v4/spreadsheets/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/values/1714666564/?key='+u7G;
+    const NWR = 'https://sheets.googleapis.com/v4/spreadsheets/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/values/97729408/?key='+u7G;
     const SER = '';
-    const MYS = 'https://spreadsheets.google.com/feeds/list/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/1/public/values?alt=json';
-    const ATR = 'https://spreadsheets.google.com/feeds/list/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/1/public/values?alt=json';
-    const PK = 'https://spreadsheets.google.com/feeds/list/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/1/public/values?alt=json';
+    const MYS = 'https://sheets.googleapis.com/v4/spreadsheets/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/values/365459402/?key='+u7G;
+    const ATR = 'https://sheets.googleapis.com/v4/spreadsheets/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/values/146404240/?key='+u7G;
+    const PK = 'https://sheets.googleapis.com/v4/spreadsheets/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/values/473098955/?key='+u7G;
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('ORCSS')) {
@@ -513,77 +518,78 @@
         });
     }
     var RegMgt = [];
+    const ORCLeadershipSS = 'https://sheets.googleapis.com/v4/spreadsheets/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/values/';
     async function loadLeadershipList() {
         var MgtSheet;
         var MgtReg;
         if (!localStorage.getItem('ORCSS')) {
             localStorage.setItem('ORCSS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            MgtSheet = ORCLeadershipSS + 'NEOR/?key='+u7G;
             MgtReg = 'NEOR'
         }
         else if (localStorage.getItem('ORCSS') == NEOR) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/3/public/values?alt=json'
+            MgtSheet = ORCLeadershipSS + 'NEOR/?key='+u7G;
             console.log('ORC: Loading NEOR Leadership Master List....');
             MgtReg = 'NEOR'
         }
         else if (localStorage.getItem('ORCSS') == MAR) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/4/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'MAR/?key='+u7G;
             console.log('ORC: Loading MAR Leadership Master List....');
             MgtReg = 'MAR';
         }
         else if (localStorage.getItem('ORCSS') == SWR) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/5/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'SWR/?key='+u7G;
             console.log('ORC: Loading SWR Leadership Master List....');
             MgtReg = 'SWR';
         }
         else if (localStorage.getItem('ORCSS') == OH) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'OH';
         }
         else if (localStorage.getItem('ORCSS') == MI) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'MI';
         }
         else if (localStorage.getItem('ORCSS') == IN) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'IN';
         }
         else if (localStorage.getItem('ORCSS') == WI) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/6/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'WI';
         }
         else if (localStorage.getItem('ORCSS') == PLN) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/7/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'PLN/?key='+u7G;
             console.log('ORC: Loading PLN Leadership Master List....');
             MgtReg = 'PLN';
         }
         else if (localStorage.getItem('ORCSS') == NWR) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/8/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'NWR/?key='+u7G;
             console.log('ORC: Loading NWR Leadership Master List....');
             MgtReg = 'NWR';
         }
         else if (localStorage.getItem('ORCSS') == SER) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/9/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'SER/?key='+u7G;
             console.log('ORC: Loading SER Leadership Master List....');
             MgtReg = 'SER';
         }
         else if (localStorage.getItem('ORCSS') == MYS) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/12/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'Malaysia/?key='+u7G;
             console.log('ORC: Loading Malaysia Leadership Master List....');
             MgtReg = 'MYS';
         }
         else if (localStorage.getItem('ORCSS') == ATR) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/13/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'ATR/?key='+u7G;
             console.log('ORC: Loading ATR Leadership Master List....');
             MgtReg = 'ATR';
         }
         else if (localStorage.getItem('ORCSS') == PK) {
-            MgtSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/14/public/values?alt=json';
+            MgtSheet = ORCLeadershipSS + 'Pakistan/?key='+u7G;
             console.log('ORC: Loading Pakistan Leadership Master List....');
             MgtReg = 'PK';
         }
@@ -593,8 +599,8 @@
         });
     }
     function getMgtFromSheetList(editorName) {
-        let MgtList = RegMgt.feed.entry.map(obj =>{
-            return {username: obj.gsx$regionleadership.$t}
+        let MgtList = RegMgt.values.map(obj =>{
+            return {username: obj[0]}
         });
         for(let i=0; i<MgtList.length; i++){
             if(MgtList[i].username.toLowerCase() === editorName.toLowerCase()) {
@@ -605,8 +611,8 @@
     }
     function getFromSheetList(editorName){
         if (localStorage.getItem('ORCSS') == MAR) {
-            let mapped = ORCFeedList.feed.entry.slice(0).reverse().map(obj =>{
-                return {username: obj.gsx$editorusername.$t.trim(), responses: obj.gsx$didtheyjoindiscord.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+            let mapped = ORCFeedList.values.slice(0).reverse().map(obj =>{
+                return {username: obj[3].trim(), dateC: obj[0], reporter: obj[2], responses: obj[8]
                        }
             });
             for(let i=0; i<mapped.length; i++){
@@ -616,54 +622,54 @@
             }
             return null;
         } else {
-            let mapped = ORCFeedList.feed.entry.map(obj =>{
+            let mapped = ORCFeedList.values.map(obj =>{
                 if (localStorage.getItem('ORCSS') == NEOR) {
-                    return {username: obj['gsx$usehttpj.mpneweditorsorttosortlist'].$t.replace(ENRegEx,'').replace(NEORRegEx,'').trim(), forumread: obj.gsx$_cre1l.$t.replace(NEORRegEx,''), responses: obj.gsx$changescantakeupto.$t.replace(NEORRegEx,''), reporter: obj.gsx$minutesdelaytoappear.$t.replace(NEORRegEx,''), dateC: obj['gsx$httpj.mpneweditorformtoreport'].$t.replace(NEORRegEx,'')
+                    return {username: obj[0].replace(ENRegEx,'').replace(NEORRegEx,'').trim(), dateC: obj[2].replace(NEORRegEx,''), forumread: obj[3].replace(NEORRegEx,''), responses: obj[4].replace(NEORRegEx,''), reporter: obj[5].replace(NEORRegEx,'')
                            }
                 }
                 if (localStorage.getItem('ORCSS') == SWR) {
-                    if (obj.gsx$ndoutreachdate.$t == null) {
-                        return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$stoutreachdate.$t
+                    if (obj[4] == null) {
+                        return {username: obj[0].trim(), responses: obj[5], reporter: obj[2], dateC: obj[3]
                                }
                     } else {
-                        return {username: obj.gsx$wazeusername.$t.trim(), responses: obj['gsx$madeconnectionviapmbutdiddidntjoindiscord.'].$t, reporter: obj.gsx$outreacheditor.$t, dateC: obj.gsx$ndoutreachdate.$t
+                        return {username: obj[0].trim(), responses: obj[5], reporter: obj[2], dateC: obj[4]
                                }
                     }
                 }
                 if (localStorage.getItem('ORCSS') == OH) {
-                    return {username: obj.gsx$neweditorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$youreditorname.$t, dateC: obj.gsx$outreachdateest.$t
+                    return {username: obj[2].trim(), responses: obj[7], reporter: obj[8], dateC: obj[6]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == IN) {
-                    return {username: obj.gsx$editorname.$t.trim(), responses: obj.gsx$readresponded.$t, reporter: obj.gsx$whomadecontact.$t, dateC: obj.gsx$outreachdate.$t
+                    return {username: obj[0].trim(), responses: obj[2], reporter: obj[3], dateC: obj[2]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == MI) {
-                    return {username: obj.gsx$_cn6ca.$t.trim(), responses: obj.gsx$welcomepacket.$t, reporter: obj.gsx$userwhosent.$t, dateC: obj.gsx$datewelcomesent.$t
+                    return {username: obj[0].trim(), responses: obj[2], reporter: obj[4], dateC: obj[3]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == WI) {
-                    return {username: obj.gsx$username.$t.trim(), forumread: obj.gsx$readpm.$t, responses: obj.gsx$responded.$t, reporter: obj.gsx$bywhom.$t, dateC: obj.gsx$date.$t
+                    return {username: obj[0].trim(), forumread: obj[5], responses: obj[6], reporter: obj[4], dateC: obj[3]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == PLN) {
-                    return {username: obj.gsx$contactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                    return {username: obj[3].trim(), forumread: obj[7], responses: obj[8], reporter: obj[1], dateC: obj[0]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == NWR) {
-                    return {username: obj.gsx$usernameofcontactededitor.$t.trim(), forumread: obj.gsx$forummessageread.$t, responses: obj.gsx$responsereceived.$t, reporter: obj.gsx$yourusername.$t, dateC: obj.gsx$timestamp.$t
+                    return {username: obj[2], forumread: obj[6], responses: obj[7], reporter: obj[1], dateC: obj[0]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == MYS) {
-                    return {username: obj.gsx$wazeuseridyousentpmto.$t.trim(), forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmreplied.$t, reporter: obj.gsx$yourwazeuserid.$t, dateC: obj.gsx$timestamp.$t, state: obj.gsx$state.$t, city: obj.gsx$city.$t
+                    return {username: obj[2].trim(), forumread: obj[8], responses: obj[9], reporter: obj[1], dateC: obj[0], state: obj[4], city: obj[5]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == ATR) {
-                    return {username: obj.gsx$neweditorwazeusername.$t.trim(), joined: obj.gsx$neweditorjoineddiscordgho, responses: obj.gsx$neweditorresponded.$t, reporter: obj.gsx$reporterusername.$t, dateC: obj.gsx$outreachdate.$t
+                    return {username: obj[1].trim(), joined: obj[7], responses: obj[6], reporter: obj[3], dateC: obj[0]
                            }
                 }
                 if (localStorage.getItem('ORCSS') == PK) {
-                    return {username: obj.gsx$neweditorsusername.$t.trim(), joined: obj.gsx$joinedslack.$t, forumread: obj.gsx$pmread.$t, responses: obj.gsx$pmresponded.$t, reporter: obj.gsx$yourwazeusername.$t, dateC: obj.gsx$dateofcontact.$t, location: obj.gsx$editinglocation.$t
+                    return {username: obj[1].trim(), joined: obj[8], forumread: obj[6], responses: obj[7], reporter: obj[5], dateC: obj[0], location: obj[4]
                            }
                 }
             });
@@ -980,7 +986,7 @@
     var SERApproved = [];
     async function loadSAUApproved() {
         console.log('ORC: Loading SER Approved Users....');
-        var SAUSheet = 'https://spreadsheets.google.com/feeds/list/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/11/public/values?alt=json'
+        var SAUSheet = ORCLeadershipSS + '1460908095/?key='+u7G;
         var SAUReg = 'SER'
         await $.getJSON(SAUSheet, function(ldata){
             SERApproved = ldata;
@@ -988,7 +994,7 @@
         });
     }
     function getSERApproved(editorName) {
-        let AppList = SERApproved.feed.entry.map(obj =>{
+        let AppList = SERApproved.values.map(obj =>{
             return {username: obj.gsx$serapprovedusers.$t}
         });
         for(let i=0; i<AppList.length; i++){
