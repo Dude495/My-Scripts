@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.05.01.01
+// @version      2019.05.01.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fixes (API v4).</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug Fixes.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -279,21 +279,21 @@
                     element.style.backgroundColor = inSheetColor;
                     element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
-                    if (CurCountry == 'Malaysia') {
-                        element.style.backgroundColor = inSheetColor;
-                        element.style.color = inSheetFColor;
-                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nCity: ' + entry.city + '\nState: ' + entry.state + '\nDate(s): ' + entry.dateC + '\nPM Read?:' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
-                    }
-                    if (RegATR.includes(CurCountry)) {
-                        element.style.backgroundColor = inSheetColor;
-                        element.style.color = inSheetFColor;
-                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '\nJoined GHO/Discord: ' + entry.joined + '.';
-                    }
-                    if (CurCountry == 'Pakistan') {
-                        element.style.backgroundColor = inSheetColor;
-                        element.style.color = inSheetFColor;
-                        element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nLocation: ' + entry.location + '\nPM Read?: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '\nJoined Slack?: ' + entry.joined + '.';
-                    }
+                }
+                else if (CurCountry == 'Malaysia') {
+                    element.style.backgroundColor = inSheetColor;
+                    element.style.color = inSheetFColor;
+                    element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nCity: ' + entry.city + '\nState: ' + entry.state + '\nDate(s): ' + entry.dateC + '\nPM Read?:' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
+                }
+                else if (RegATR.includes(CurCountry)) {
+                    element.style.backgroundColor = inSheetColor;
+                    element.style.color = inSheetFColor;
+                    element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '\nJoined GHO/Discord: ' + entry.joined + '.';
+                }
+                else if (CurCountry == 'Pakistan') {
+                    element.style.backgroundColor = inSheetColor;
+                    element.style.color = inSheetFColor;
+                    element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nLocation: ' + entry.location + '\nPM Read?: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '\nJoined Slack?: ' + entry.joined + '.';
                 } else {
                     element.style.backgroundColor = inSheetColor;
                     element.style.color = inSheetFColor;
