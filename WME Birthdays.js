@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2019.04.20.01
+// @version      2019.05.01.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -14,10 +14,12 @@
     const DBG = false;
     const PAGE = window.location.pathname
     const RegEx = /(index.php)/g
-    const URL = PAGE.replace(RegEx,'')
     const SCRIPTNAME = GM_info.script.name;
-    const data = await fetch('https://spreadsheets.google.com/feeds/list/1YwBQ7KoJrAtOrq0NsQY-NGJCQfZLdVi32CMs6WSgo-w/1/public/values?alt=json').then(response => response.json());
-    const BlackList = data.feed.entry.map(entry => entry.gsx$username.$t.toLowerCase());
+    const URL = PAGE.replace(RegEx,'')
+    const i9T = atob('QUl6YVN5QzBPQjM4cXNSV0xEUndCeFh6cHZ5N05sTDR0TGFjdDRV');
+    const BlackListSS = 'https://sheets.googleapis.com/v4/spreadsheets/1YwBQ7KoJrAtOrq0NsQY-NGJCQfZLdVi32CMs6WSgo-w/values/Form%20Responses%201/?key='+i9T;
+    const data = await fetch(BlackListSS).then(response => response.json());
+    const BlackList = data.values.map(entry => entry[1].toLowerCase());
     const arrBirthdayList = [];
     $('div#page-body p').eq(3).find('strong a').each(function() { if (!BlackList.includes($(this).text().toLowerCase())) arrBirthdayList.push($(this).text())});
     const arrBirthdayListDiscord = [];
@@ -53,7 +55,7 @@
             };
         };
         if (DBG == true) {
-            console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (CST)');
+            console.log('List Length: ' + arrBirthdayList.length + '.\nThe following lists have been triggered\n\nPMList1 (CST)');
             if (arrBirthdayList.length > 20) {
                 console.log('PMList2 (CST)');
                 if (arrBirthdayList.length > 40) {
@@ -346,9 +348,6 @@
             };
         };
     };
-    /*function removeMe() {
-        $('#postingbox > div > fieldset > div.column1 > dl:nth-child(1) > dd > input').click();
-    }*/
     function addBCCList(bcc_list) {
         $('#username_list').val(bcc_list);
         $('input[name=add_bcc]').click()
