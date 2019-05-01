@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.04.30.01
+// @version      2019.05.01.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Switched from Google API v3 to v4.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug Fixes (API v4).</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -419,8 +419,13 @@
                 if (Seg1.textContent.includes('(')) {
                     if (Seg1.textContent.includes('staff'))
                         return;
+                    let Seg1HX = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                     doHighlight(Seg1);
                     addPMBttn(Seg1);
+                    for (let i = 0; i < Seg1HX.legnth; i++) {
+                        doHighlight(Seg1HX[i]);
+                        addPMBttn(Seg1HX[i]);
+                    }
                 }
             }
             if (Seg2 !== undefined) {
@@ -491,16 +496,16 @@
     const NEOR = 'https://sheets.googleapis.com/v4/spreadsheets/1Z4JLLLhwYTwkuhEgN3LBlQ5o-VH1kmulb6rReu_kzNM/values/NEOR/?key='+u7G;
     const MAR = 'https://sheets.googleapis.com/v4/spreadsheets/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/values/Sheet1/?key='+u7G;
     const SWR = 'https://sheets.googleapis.com/v4/spreadsheets/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/values/Sheet1/?key='+u7G;
-    const OH = 'https://sheets.googleapis.com/v4/spreadsheets/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/values/1079258416/?key='+u7G;
-    const PLN = 'https://sheets.googleapis.com/v4/spreadsheets/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/values/984781548/?key='+u7G;
-    const IN = 'https://sheets.googleapis.com/v4/spreadsheets/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/values/1397326254/?key='+u7G;
-    const MI = 'https://sheets.googleapis.com/v4/spreadsheets/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/values/656287597/?key='+u7G;
-    const WI = 'https://sheets.googleapis.com/v4/spreadsheets/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/values/1714666564/?key='+u7G;
-    const NWR = 'https://sheets.googleapis.com/v4/spreadsheets/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/values/97729408/?key='+u7G;
+    const OH = 'https://sheets.googleapis.com/v4/spreadsheets/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/values/Form%20Responses%201/?key='+u7G;
+    const PLN = 'https://sheets.googleapis.com/v4/spreadsheets/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/values/Plains%20Outreach/?key='+u7G;
+    const IN = 'https://sheets.googleapis.com/v4/spreadsheets/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/values/Sheet1/?key='+u7G;
+    const MI = 'https://sheets.googleapis.com/v4/spreadsheets/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/values/Outreach/?key='+u7G;
+    const WI = 'https://sheets.googleapis.com/v4/spreadsheets/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/values/New%20Editor%20Contact%20Sheet/?key='+u7G;
+    const NWR = 'https://sheets.googleapis.com/v4/spreadsheets/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/values/Form%20Responses%202/?key='+u7G;
     const SER = '';
-    const MYS = 'https://sheets.googleapis.com/v4/spreadsheets/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/values/365459402/?key='+u7G;
-    const ATR = 'https://sheets.googleapis.com/v4/spreadsheets/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/values/146404240/?key='+u7G;
-    const PK = 'https://sheets.googleapis.com/v4/spreadsheets/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/values/473098955/?key='+u7G;
+    const MYS = 'https://sheets.googleapis.com/v4/spreadsheets/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/values/Form%20Responses%201/?key='+u7G;
+    const ATR = 'https://sheets.googleapis.com/v4/spreadsheets/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/values/Form%20Responses%201/?key='+u7G;
+    const PK = 'https://sheets.googleapis.com/v4/spreadsheets/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/values/Form%20Responses%201/?key='+u7G;
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('ORCSS')) {
@@ -510,11 +515,11 @@
         }
         else {
             SS = localStorage.getItem('ORCSS');
-            console.log('ORC: Loading ' + localStorage.getItem('ORCSS') + ' Master List....');
+            console.log('ORC: Loading Master Outreach List....');
         }
         await $.getJSON(SS, function(data){
             ORCFeedList = data;
-            console.log('ORC: Master List Loaded....');
+            console.log('ORC: Master Outreach List Loaded....');
         });
     }
     var RegMgt = [];
@@ -595,7 +600,7 @@
         }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
-            console.log('ORC: '+MgtReg+' Leadership Masterlist Loaded....');
+            console.log('ORC: Leadership Masterlist Loaded....');
         });
     }
     function getMgtFromSheetList(editorName) {
