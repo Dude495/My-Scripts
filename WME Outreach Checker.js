@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.05.03.01
+// @version      2019.05.09.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Version bump for WazeWrap. No changes to ORC.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>[REQUEST] Added Flagged PUR highlighting.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -333,6 +333,7 @@
         const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
         const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0];
         const PUR = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user > a')[0];
+        const PURChange = $('#panel-container > div > div.place-update > div > div.body > div.scrollable > div.changes > div.reported-by.small > a')[0];
         const MP = $('#panel-container > div > div > div.actions > div > div > div.by > a');
         const URName = $('span.username');
         const URText = $('#panel-container > div > div > div.top-section > div.body > div > div.conversation.section > div.collapsible.content > div > div > ul > li > div > div.text');
@@ -479,6 +480,14 @@
                     return;
                 doHighlight(PUR);
                 setTimeout(addPMBttn(PUR), 1000);
+            }
+        }
+        if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div.changes > div.reported-by.small > a').is(':visible')) {
+            if (PURChange.textContent.includes('(')) {
+                if (PURChange.textContent.includes('staff'))
+                    return;
+                doHighlight(PURChange);
+                setTimeout(addPMBttn(PURChange), 1000);
             }
         } else {
             let MESSAGE;
