@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Birthdays
 // @namespace    Dude495
-// @version      2019.05.01.01
+// @version      2019.05.22.01
 // @description  Creates buttons on the top bar of the Waze Forums to access editor birthday information.
 // @author       Birthday Team
 // @include      /^https:\/\/.*\.waze\.com\/forum\/.*
@@ -41,13 +41,13 @@
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = CUSTPMLink + arrBirthdayList.slice(0, 19).join('%0A%0D')
             window.open(PMList1);
-            if(arrBirthdayList.length > 20){
+            if(arrBirthdayList.length > 19){
                 let PMList2 = CUSTPMLink + arrBirthdayList.slice(19, 38).join('%0A%0D')
                 window.open(PMList2);
-                if (arrBirthdayList.length > 40){
+                if (arrBirthdayList.length > 38){
                     let PMList3 = CUSTPMLink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
-                    if (arrBirthdayList.length > 60){
+                    if (arrBirthdayList.length > 57){
                         let PMList4 = CUSTPMLink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                         window.open(PMList4);
                     };
@@ -56,11 +56,11 @@
         };
         if (DBG == true) {
             console.log('List Length: ' + arrBirthdayList.length + '.\nThe following lists have been triggered\n\nPMList1 (CST)');
-            if (arrBirthdayList.length > 20) {
+            if (arrBirthdayList.length > 19) {
                 console.log('PMList2 (CST)');
-                if (arrBirthdayList.length > 40) {
+                if (arrBirthdayList.length > 38) {
                     console.log('PMList3 (CST)');
-                    if (arrBirthdayList.length > 60) {
+                    if (arrBirthdayList.length > 57) {
                         console.log('PMList4 (CST)')
                     };
                 };
@@ -99,13 +99,13 @@
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = PMLink + arrBirthdayList.slice(0, 19).join('%0A%0D');
             window.open(PMList1);
-            if(arrBirthdayList.length > 20){
+            if(arrBirthdayList.length > 19){
                 let PMList2 = PMLink + arrBirthdayList.slice(19, 38).join('%0A%0D');
                 window.open(PMList2);
-                if (arrBirthdayList.length > 40){
+                if (arrBirthdayList.length > 38){
                     let PMList3 = PMLink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
-                    if (arrBirthdayList.length > 60) {
+                    if (arrBirthdayList.length > 57) {
                         let PMList4 = PMLink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                     };
                 };
@@ -113,11 +113,11 @@
         };
         if (DBG == true) {
             console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (PDM)');
-            if (arrBirthdayList.length > 20) {
+            if (arrBirthdayList.length > 19) {
                 console.log('PMList2 (PDM)');
-                if (arrBirthdayList.length > 40) {
+                if (arrBirthdayList.length > 38) {
                     console.log('PMList3 (PDM)');
-                    if (arrBirthdayList.length > 60) {
+                    if (arrBirthdayList.length > 57) {
                         console.log('PMList4 (PDM)');
                     };
                 };
@@ -132,13 +132,13 @@
             console.info('Birthdays for PM: \n\n'+copyText);
             let PMList1 = BPMBlink + arrBirthdayList.slice(0, 19).join('%0A%0D');
             window.open(PMList1);
-            if(arrBirthdayList.length > 20){
+            if(arrBirthdayList.length > 19){
                 let PMList2 = BPMBlink + arrBirthdayList.slice(19, 38).join('%0A%0D');
                 window.open(PMList2);
-                if (arrBirthdayList.length > 40){
+                if (arrBirthdayList.length > 38){
                     let PMList3 = BPMBlink + arrBirthdayList.slice(38, 57).join('%0A%0D');
                     window.open(PMList3);
-                    if (arrBirthdayList.length > 60){
+                    if (arrBirthdayList.length > 57){
                         let PMList4 = BPMBlink + arrBirthdayList.slice(57, 76).join('%0A%0D');
                         window.open(PMList4);
                     };
@@ -147,11 +147,11 @@
         };
         if (DBG == true) {
             console.log('List Length: ' + arrBirthdayList.length + '.\n' + 'The following lists have been triggered' + '\n\n' + 'PMList1 (BPM)');
-            if (arrBirthdayList.length > 20) {
+            if (arrBirthdayList.length > 19) {
                 console.log('PMList2 (BPM)');
-                if (arrBirthdayList.length > 40) {
+                if (arrBirthdayList.length > 38) {
                     console.log('PMList3 (BPM)');
-                    if (arrBirthdayList.length > 60) {
+                    if (arrBirthdayList.length > 57) {
                         console.log('PMList4 (BPM)');
                     };
                 };
