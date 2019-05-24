@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.05.09.01
+// @version      2019.05.24.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>[REQUEST] Added Flagged PUR highlighting.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Minor Bug Fix.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -1000,7 +1000,7 @@
     var SERApproved = [];
     async function loadSAUApproved() {
         console.log('ORC: Loading SER Approved Users....');
-        var SAUSheet = ORCLeadershipSS + '1460908095/?key='+u7G;
+        var SAUSheet = ORCLeadershipSS + 'SERApproved/?key='+u7G;
         var SAUReg = 'SER'
         await $.getJSON(SAUSheet, function(ldata){
             SERApproved = ldata;
