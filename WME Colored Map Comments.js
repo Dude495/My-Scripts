@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2019.04.09.01
+// @version      2019.06.03.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -19,9 +19,9 @@
         let mcStyle;
         let hoverStyle;
         let selectedStyle;
-        let defaultRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.default.rules;
-        let highlightRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.highlight.rules;
-        let selectRules = W.map.getLayersByName("Map comments")[0].styleMap.styles.highlightselected.rules;
+        let defaultRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.default.rules;
+        let highlightRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlight.rules;
+        let selectRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlightselected.rules;
         for (let i=0; i< defaultRules.length; i++){
             if (defaultRules[i].id === "Waze_Rule_180") {
                 mcStyle = defaultRules[i];
@@ -74,7 +74,7 @@
     function Save() {
         localStorage.setItem('CMC', $('#CMC').val());
         ChangeColor();
-        $('#colorWheel')[0].value = localStorage.getItem('CMC');
+        $('#CMC-colorWheel')[0].value = localStorage.getItem('CMC');
         localStorage.setItem('MCP', $('#MCP').is(':checked'));
         localStorage.setItem('MCA', $('#MCA').is(':checked'));
     }
@@ -109,7 +109,7 @@
                                              .css("width", "60px")
                                              .css("height", "25px")
                                             )
-                                     .append($('<input id="colorWheel" type="color" value="'+localStorage.getItem("CMC")+'">')
+                                     .append($('<input id="CMC-colorWheel" type="color" value="'+localStorage.getItem("CMC")+'">')
                                              .css("margin-left", "5px")
                                              .css("top", "-7px")
                                              .css("position", "relative")
@@ -132,8 +132,8 @@
         } else {
             $('#MCA')[0].checked = false
         }
-        $('#colorWheel')[0].onchange = function() {
-            $('#CMC')[0].value = $('#colorWheel')[0].value;
+        $('#CMC-colorWheel')[0].onchange = function() {
+            $('#CMC')[0].value = $('#CMC-colorWheel')[0].value;
             Save();
         }
         $("#CMC").val(localStorage.getItem('CMC'));
@@ -144,7 +144,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Bug Fixes.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>MC Hover color not resetting when the option is disabled. (FIXED)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Code Changes.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Changed getLayersByName to getLayerByUniqueName.</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
