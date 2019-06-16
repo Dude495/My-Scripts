@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Minor Bug Fix.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Minor Bug Fix for Pakistan.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -683,7 +683,7 @@
                            }
                 }
                 if (localStorage.getItem('ORCSS') == PK) {
-                    return {username: obj[1].trim(), joined: obj[8], forumread: obj[6], responses: obj[7], reporter: obj[5], dateC: obj[0], location: obj[4]
+                    return {username: obj[1].trim(), joined: obj[8], forumread: obj[6], responses: obj[7], reporter: obj[5], dateC: obj[3], location: obj[4]
                            }
                 }
             });
