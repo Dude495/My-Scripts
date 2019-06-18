@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.06.16.001
+// @version      2019.06.18.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Minor Bug Fix for Pakistan.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Bug Fix.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -1009,7 +1009,7 @@
     }
     function getSERApproved(editorName) {
         let AppList = SERApproved.values.map(obj =>{
-            return {username: obj.gsx$serapprovedusers.$t}
+            return {username: obj[0]}
         });
         for(let i=0; i<AppList.length; i++){
             if(AppList[i].username.toLowerCase() === editorName.toLowerCase()) {
