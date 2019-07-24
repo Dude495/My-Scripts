@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.06.18.001
+// @version      2019.07.24.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fix.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Changed "W.model.states.top.name" and "W.model.countries.top.name" to W.model.getTopState().name and W.model.getTopCountry().name respectively.</li></ul>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -237,7 +237,7 @@
     }
     const A8B = 'Q0RZVk9KcjBtUWlzSWM3MEpNanRqUWNR';
     function doHighlight(element) {
-        var CurCountry = W.model.countries.top.name;
+        var CurCountry = W.model.getTopCountry().name;
         const whitelistColor = ORCSettings.CP4;
         const whitelistFColor = ORCSettings.FP4
         const inSheetColor = ORCSettings.CP2;
@@ -778,11 +778,11 @@
         $('#ResetWLButton').hide();
     }
     function StateCheck() {
-        var State = W.model.states.top.name
+        var State = W.model.getTopState().name
         var Display = document.getElementById('RegListDiv')
-        if (W.model.countries.top.name == 'United States') {
+        if (W.model.getTopCountry().name == 'United States') {
             if (RegNEOR.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: N(EO)R</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: N(EO)R</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== NEOR) {
                     localStorage.setItem('ORCSS', NEOR);
@@ -794,7 +794,7 @@
                 }
             }
             else if (RegMAR.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: MAR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: MAR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== MAR) {
                     localStorage.setItem('ORCSS', MAR);
@@ -806,7 +806,7 @@
                 }
             }
             else if (RegSWR.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: SWR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: SWR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== SWR) {
                     localStorage.setItem('ORCSS', SWR);
@@ -819,7 +819,7 @@
                 }
             }
             else if (RegOH.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== OH) {
                     localStorage.setItem('ORCSS', OH);
@@ -831,7 +831,7 @@
                 }
             }
             else if (RegIN.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== IN) {
                     localStorage.setItem('ORCSS', IN);
@@ -843,7 +843,7 @@
                 }
             }
             else if (RegWI.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== WI) {
                     localStorage.setItem('ORCSS', WI);
@@ -855,7 +855,7 @@
                 }
             }
             else if (RegMI.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: GLR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: GLR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== MI) {
                     localStorage.setItem('ORCSS', MI);
@@ -868,7 +868,7 @@
                 }
             }
             else if (RegPLN.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: PLN</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: PLN</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== PLN) {
                     localStorage.setItem('ORCSS', PLN);
@@ -880,7 +880,7 @@
                 }
             }
             else if (RegNWR.includes(State)) {
-                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: NWR</span>';
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: NWR</span>';
                 Display.style.display = "block";
                 if (localStorage.getItem('ORCSS') !== NWR) {
                     localStorage.setItem('ORCSS', NWR);
@@ -895,7 +895,7 @@
                 let ORCME = W.loginManager.user.userName;
                 let Approved = getSERApproved(ORCME);
                 if (Approved != null) {
-                    $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '<br>Current Region: SER</span>';
+                    $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: SER</span>';
                     Display.style.display = "block";
                     if (localStorage.getItem('ORCSS') !== SER) {
                         showPanel();
@@ -914,7 +914,7 @@
                 }
             }
             else {
-                $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Region Not Supported.</div></b>';
+                $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region Not Supported.</div></b>';
                 hidePanel();
                 Display.style.display = "none";
             }
@@ -926,8 +926,8 @@
                 $('#ORC-State')[0].style.backgroundColor = '';
             }
         }
-        else if (W.model.countries.top.name == 'Malaysia') {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+        else if (W.model.getTopCountry().name == 'Malaysia') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '.';
             Display.style.display = "block";
             runORC();
             $('#ORC-State')[0].innerHTML = '';
@@ -941,8 +941,8 @@
                 setTimeout(loadLeadershipList, 100);
             }
         }
-        else if (W.model.countries.top.name == 'Puerto Rico' || W.model.countries.top.name == 'Virgin Islands (U.S.)' || W.model.countries.top.name == 'Guam' || W.model.countries.top.name == 'American Samoa' || W.model.countries.top.name == 'Northern Mariana Islands') {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+        else if (W.model.getTopCountry().name == 'Puerto Rico' || W.model.getTopCountry().name == 'Virgin Islands (U.S.)' || W.model.getTopCountry().name == 'Guam' || W.model.getTopCountry().name == 'American Samoa' || W.model.getTopCountry().name == 'Northern Mariana Islands') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '.';
             Display.style.display = "block";
             runORC();
             if (localStorage.getItem('ORCSS') !== ATR) {
@@ -955,8 +955,8 @@
                 setTimeout(loadLeadershipList, 100);
             }
         }
-        else if (W.model.countries.top.name == 'Pakistan') {
-            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.countries.top.name + '.';
+        else if (W.model.getTopCountry().name == 'Pakistan') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '.';
             Display.style.display = "block";
             runORC();
             $('#ORC-State')[0].innerHTML = '';
@@ -971,7 +971,7 @@
             }
         }
         else {
-            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.countries.top.name + '<br>Current Country Not Supported.</div></b>';
+            $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.getTopCountry().name + '<br>Current Country Not Supported.</div></b>';
             hidePanel();
             $('#ORC-Top > label:nth-child(12)')[0].innerHTML = '';
             Display.style.display = "none";
@@ -1189,79 +1189,79 @@
             SelectedRegion.value = 'PK';
         }
         SelectedRegion.onchange = function() {
-            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.states.top.name)) {
+            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', NEOR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'MAR' && RegMAR.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', MAR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'SWR' && RegSWR.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', SWR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'SER' && RegSER.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'SER' && RegSER.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', SER);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'OH' && RegOH.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', OH);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'IN' && RegIN.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', IN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'MI' && RegMI.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', MI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'WI' && RegWI.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', WI);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'PLN' && RegPLN.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', PLN);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.states.top.name)) {
+            else if (SelectedRegion.value == 'NWR' && RegNWR.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', NWR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'MYS' && RegMYS.includes(W.model.countries.top.name)) {
+            else if (SelectedRegion.value == 'MYS' && RegMYS.includes(W.model.getTopCountry().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', MYS);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'ATR' && RegATR.includes(W.model.countries.top.name)) {
+            else if (SelectedRegion.value == 'ATR' && RegATR.includes(W.model.getTopCountry().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', ATR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
-            else if (SelectedRegion.value == 'PK' && RegPK.includes(W.model.countries.top.name)) {
+            else if (SelectedRegion.value == 'PK' && RegPK.includes(W.model.getTopCountry().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
                 localStorage.setItem('ORCSS', PK);
                 setTimeout(updateMasterList, 500);
