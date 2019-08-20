@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.07.31.001
+// @version      2019.08.20.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fixes.</li></ul>';
+    var UPDATE_NOTES = '<ul><li>Testing a bug fix.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Please keep an eye on the ORC Settings and report any issues with the color boxes showing white.</li></li></ul><br><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -1337,7 +1337,7 @@
         }
         setTimeout(StateCheck, 3000);
         LoadSettingsObj();
-        setTimeout(initORCcolorPicker, 500);
+        setTimeout(initORCcolorPicker(100), 500);
         init();
     }
     function bootstrap() {
