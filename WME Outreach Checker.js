@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.08.20.001
+// @version      2019.08.27.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -511,7 +511,7 @@
     const MI = 'https://sheets.googleapis.com/v4/spreadsheets/1Mc6nAu770hJeciFZSVPqaSSZ1g34qgForj3fAOpxcyI/values/Outreach/?key='+u7G;
     const WI = 'https://sheets.googleapis.com/v4/spreadsheets/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/values/New%20Editor%20Contact%20Sheet/?key='+u7G;
     const NWR = 'https://sheets.googleapis.com/v4/spreadsheets/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/values/Form%20Responses%202/?key='+u7G;
-    const SER = '';
+    const SER = 'https://sheets.googleapis.com/v4/spreadsheets/1Axymqxa2EcyKccOMRL0um6z4oPYQ39KKaFspggniyVI/values/ORC%20Database/?key='+u7G;
     const MYS = 'https://sheets.googleapis.com/v4/spreadsheets/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/values/Form%20Responses%201/?key='+u7G;
     const ATR = 'https://sheets.googleapis.com/v4/spreadsheets/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/values/Form%20Responses%201/?key='+u7G;
     const PK = 'https://sheets.googleapis.com/v4/spreadsheets/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/values/Form%20Responses%201/?key='+u7G;
@@ -686,6 +686,10 @@
                     return {username: obj[1].trim(), joined: obj[8], forumread: obj[6], responses: obj[7], reporter: obj[5], dateC: obj[3], location: obj[4]
                            }
                 }
+                if (localStorage.getItem('ORCSS') == SER) {
+                    return {username: obj[1].trim(), forumread: obj[4], responses: obj[5], reporter: obj[2], dateC: obj[3]
+                           }
+                }
             });
             for(let i=0; i<mapped.length; i++){
                 if(mapped[i].username.toLowerCase() === editorName.toLowerCase()) {
@@ -747,7 +751,7 @@
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/edit#gid=97729408">Update Existing Record(s)</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
-    const SERResources = '';
+    const SERResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSd1Pb1wMLrzKRaXTfQMW1t4FP976WxuPVHognsGrEX4tjis3g/viewform" target="_blank">SER New Editor Contact Form</a>';
     const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
     const ATRResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdg7NXrvYffCI7Hukb8zfSEZ7euO0efuWim8lI9cjWkHijd7Q/viewform" target="_blank">ATR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/edit?usp=sharing" target="_blank">Published Contact Sheet</a>';
     const PKResources = '<a href="http://bit.ly/PakTracker" target="_blank">Pakistan New Editor Contact Form</a><br><a href="http://bit.ly/PakTrackerSheet" target="_blank">Published Contact Sheet</a>';
@@ -906,6 +910,7 @@
                         setTimeout(loadMasterList, 100);
                         setTimeout(loadLeadershipList, 100);
                     }
+                    runORC();
                 } else {
                     console.warn('You are not authorized to use this script in this region. Please reach out to your leadership if you feel this is in error.');
                     hidePanel();
