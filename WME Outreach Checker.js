@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.08.28.001
+// @version      2019.08.30.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Bug Fix.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Fixed the issue where usernames in Map Comments were not highlighting appropriately.</li></li></ul><br><br><br>';
+    var UPDATE_NOTES = '<ul><li>Feature Request.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Added a button (togglable in settings) to take you directly to the state/region Outreach Form for new submissions.</li></li></ul><br><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -156,6 +156,7 @@
             setTimeout(function () {initORCcolorPicker(tries++);}, 200);
         }
     }
+
     const h2K = 'QUl6YVN5QmRBYzY4ZE0t';
     const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan';
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
@@ -192,6 +193,18 @@
         let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.zoom + '&' + TYPE + '=' + ID);
         PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=' + MESSAGE + '[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
         element.after(PMLink);
+    }
+    function addORCFBttn(element) {
+        if (localStorage.getItem('ORCFBttn') == 'true') {
+            if ($(element).parent().find('.ORC-FormBttn').length === 0) {
+                let URL = $('#ORCResourceList > a')[0].href;
+                let ORCFBttn = document.createElement('DIV');
+                ORCFBttn.className = 'ORC-FormBttn';
+                ORCFBttn.style.display = 'inline';
+                ORCFBttn.innerHTML = '  <a href="'+URL+'" target="_blank"><span class="fa fa-envelope-open-o" data-toggle="tooltip" title="Open the Outreach Form."></span></a>  ';
+                element.after(ORCFBttn);
+            }
+        }
     }
     function addPMBttn(element, MESSAGE) {
         if (localStorage.getItem('ORCPM') == 'true') {
@@ -346,6 +359,7 @@
                 for (let i = 0; i < HXLandMark.length; i++) {
                     doHighlight(HXLandMark[i]);
                     setTimeout(addPMBttn(HXLandMark[i]), 1000);
+                    setTimeout(addORCFBttn(HXLandMark[i]), 1500);
                 }
             }, 1500)
             if (LandMark1.textContent.includes('(')) {
@@ -353,6 +367,7 @@
                     return;
                 doHighlight(LandMark1);
                 setTimeout(addPMBttn(LandMark1), 1000);
+                setTimeout(addORCFBttn(LandMark1), 1500);
             }
             if (LandMark2 !== undefined) {
                 if (LandMark2.textContent.includes('(')) {
@@ -360,6 +375,7 @@
                         return;
                     doHighlight(LandMark2);
                     setTimeout(addPMBttn(LandMark2), 1000);
+                    setTimeout(addORCFBttn(LandMark2), 1500);
                 }
             }
         }
@@ -369,6 +385,7 @@
                 for (let i = 0; i < HXSeg.length; i++) {
                     doHighlight(HXSeg[i]);
                     setTimeout(addPMBttn(HXSeg[i]), 1000);
+                    setTimeout(addORCFBttn(HXSeg[i]), 1500);
                 }
             }, 1500)
             if ((MultiSeg1.length > '0') && MultiSeg1[0].textContent.includes('(')) {
@@ -377,12 +394,14 @@
                     for (let i = 0; i < HXMultiSeg.length; i++) {
                         doHighlight(HXMultiSeg[i]);
                         setTimeout(addPMBttn(HXMultiSeg[i]), 1000);
+                        setTimeout(addORCFBttn(HXMultiSeg[i]), 1500);
                     }
                 }, 1500)
                 if (MultiSeg1[0].textContent.includes('staff'))
                     return;
                 doHighlight(MultiSeg1[0]);
                 setTimeout(addPMBttn(MultiSeg1[0]), 1000);
+                setTimeout(addORCFBttn(MultiSeg1[0]), 1500);
             }
             if (MultiSeg2.length > '0') {
                 if (MultiSeg2[0].textContent.includes('(')) {
@@ -390,6 +409,7 @@
                         return;
                     doHighlight(MultiSeg2[0]);
                     setTimeout(addPMBttn(MultiSeg2[0]), 1000);
+                    setTimeout(addORCFBttn(MultiSeg2[0]), 1500);
                 }
             }
             if (MultiSeg3.length > '0') {
@@ -398,6 +418,7 @@
                         return;
                     doHighlight(MultiSeg3[i]);
                     setTimeout(addPMBttn(MultiSeg3[i]), 1000);
+                    setTimeout(addORCFBttn(MultiSeg3[i]), 1500);
                 }
             }
             if (MultiSeg4.length > '0') {
@@ -406,6 +427,7 @@
                         return;
                     doHighlight(MultiSeg4[i]);
                     setTimeout(addPMBttn(MultiSeg4[i]), 1000);
+                    setTimeout(addORCFBttn(MultiSeg4[i]), 1500);
                 }
             }
             if (MultiSeg5.length > '0') {
@@ -414,6 +436,7 @@
                         return;
                     doHighlight(MultiSeg5[i]);
                     setTimeout(addPMBttn(MultiSeg5[i]), 1000);
+                    setTimeout(addORCFBttn(MultiSeg5[i]), 1500);
                 }
             }
             if (Seg1 !== undefined) {
@@ -423,9 +446,11 @@
                     let Seg1HX = $('#segment-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a');
                     doHighlight(Seg1);
                     addPMBttn(Seg1);
+                    setTimeout(addORCFBttn(Seg1), 1500);
                     for (let i = 0; i < Seg1HX.legnth; i++) {
                         doHighlight(Seg1HX[i]);
-                        addPMBttn(Seg1HX[i]);
+                        setTimeout(addPMBttn(Seg1HX[i]), 1000);
+                        setTimeout(addORCFBttn(Seg1HX[i]), 1500);
                     }
                 }
             }
@@ -434,7 +459,8 @@
                     if (Seg2.textContent.includes('staff'))
                         return;
                     doHighlight(Seg2);
-                    addPMBttn(Seg2);
+                    setTimeout(addPMBttn(Seg2), 1000);
+                    setTimeout(addORCFBttn(Seg2), 1500);
                 }
             }
         }
@@ -447,12 +473,14 @@
                     doHighlight(URName[i]);
                 }
                 setTimeout(addPMBttn(MapComment1), 1000);
+                setTimeout(addORCFBttn(MapComment1), 1500);
             }
             if (MapComment2.textContent.includes('(')) {
                 if (MapComment2.textContent.includes('staff'))
                     return;
                 doHighlight(MapComment2);
                 setTimeout(addPMBttn(MapComment2), 1000);
+                setTimeout(addORCFBttn(MapComment2), 1500);
             }
         }
         if (MP.is(':visible')) {
@@ -461,6 +489,7 @@
                     return;
                 doHighlight(MP[0]);
                 setTimeout(addPMBttn(MP[0]), 1000);
+                setTimeout(addORCFBttn(MP[0]), 1500);
             }
         }
         if (W.selectionManager.getSelectedFeatures()[0] && W.selectionManager.getSelectedFeatures()[0].model.type == 'camera' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
@@ -469,12 +498,14 @@
                     return;
                 doHighlight(Camera1);
                 setTimeout(addPMBttn(Camera1), 1000);
+                setTimeout(addORCFBttn(Camer1), 1500);
             }
             if (Camera2.textContent.includes('(')) {
                 if (Camera2.textContent.includes('staff'))
                     return;
                 doHighlight(Camera2);
                 setTimeout(addPMBttn(Camera2), 1000);
+                setTimeout(addORCFBttn(Camera2), 1500);
             }
         }
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div > div.add-details > div.small.user').is(':visible')) {
@@ -483,6 +514,7 @@
                     return;
                 doHighlight(PUR);
                 setTimeout(addPMBttn(PUR), 1000);
+                setTimeout(addORCFBttn(PUR), 1500);
             }
         }
         if ($('#panel-container > div > div.place-update > div > div.body > div.scrollable > div.changes > div.reported-by.small > a').is(':visible')) {
@@ -491,6 +523,7 @@
                     return;
                 doHighlight(PURChange);
                 setTimeout(addPMBttn(PURChange), 1000);
+                setTimeout(addORCFBttn(PURChange), 1500);
             }
         } else {
             let MESSAGE;
@@ -500,6 +533,7 @@
                     if ($('#panel-container > div > div').is(':visible')) {
                         MESSAGE = encodeURIComponent('[quote="' + URName[i].textContent.replace(RRE,"") + '"]' + URText[i].textContent + '[/quote]')
                         setTimeout(addPMBttn(URName[i], MESSAGE), 1000);
+                        setTimeout(addORCFBttn(URName[i]), 1500);
                     }
                 }
             }
@@ -1034,7 +1068,7 @@
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
             '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
-            '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label>',
+            '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label><br><input type="checkbox" id="ORCF-Btn"> <label data-toggle="tooltip" title="Enable the Outreach button next to usernames">Enable ORCs Outreach Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
             '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
@@ -1154,6 +1188,25 @@
             }
             if (ORCPM.checked == false) {
                 $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-info">Disabled ORCs PM Button.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            StateCheck();
+        }
+        var ORCFBttn = document.getElementById('ORCF-Btn')
+        if (localStorage.getItem('ORCFBttn') == 'true') {
+            $('#ORCF-Btn')[0].checked = true
+        } else {
+            $('#ORCF-Btn')[0].checked = false
+        }
+        ORCFBttn.onclick = function() {
+            ORCWarning.after(WLSLabel);
+            localStorage.setItem('ORCFBttn', ORCFBttn.checked)
+            if (ORCFBttn.checked == true) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-info">Enabled ORCs Outreach Button.</div></p>'
+                setTimeout(RemoveWLSLabel, 1500);
+            }
+            if (ORCFBttn.checked == false) {
+                $('#ORC-WLSaveMsg')[0].innerHTML = '<p><div class="alert alert-info">Disabled ORCs Outreach Button.</div></p>'
                 setTimeout(RemoveWLSLabel, 1500);
             }
             StateCheck();
