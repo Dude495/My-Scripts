@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.08.30.002
+// @version      2019.12.01.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Feature Request.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Added a button (togglable in settings) to take you directly to the state/region Outreach Form for new submissions.</li></li></ul><br><img src="https://i.ibb.co/jz3pdjp/Screen-Shot-2019-08-30-at-2-18-17-PM.png"></img><br><br>';
+    var UPDATE_NOTES = '<ul><li>Code update.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Changed W.map.center to W.map.olMap.center</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -187,7 +187,7 @@
         let PMLink = document.createElement('DIV');
         PMLink.className = 'ORCPMBtn';
         PMLink.style.display = 'inline';
-        let center = W.map.center.clone().transform(W.map.projection.projCode, W.map.displayProjection.projCode);
+        let center = W.map.olMap.center.clone().transform(W.map.getProjectionObject().projCode, W.map.displayProjection.projCode);
         let LON = center.lon;
         let LAT = center.lat;
         let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.zoom + '&' + TYPE + '=' + ID);
