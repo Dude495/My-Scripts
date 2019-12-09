@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2019.12.01.001
+// @version      2019.12.09.001
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>Code update.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Changed W.map.center to W.map.olMap.center</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul><li>Code update.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Changed W.map.Zoom to W.map.olMap.getZoom</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -190,7 +190,7 @@
         let center = W.map.olMap.center.clone().transform(W.map.getProjectionObject().projCode, W.map.displayProjection.projCode);
         let LON = center.lon;
         let LAT = center.lat;
-        let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.zoom + '&' + TYPE + '=' + ID);
+        let PermaLink = encodeURIComponent('https://www.waze.com/' + I18n.currentLocale() + '/editor?env=' + W.app.getAppRegionCode() + '&lon=' + LON + '&lat=' + LAT + '&zoom=' + W.map.olMap.getZoom() + '&' + TYPE + '=' + ID);
         PMLink.innerHTML = '  <a href="https://www.waze.com/forum/ucp.php?i=pm&mode=compose&username=' + username + '&subject=' + SUBJECT + '&message=' + MESSAGE + '[url=' + PermaLink + ']PermaLink[/url] " target="_blank"><img src=' + PMImg +'></img></a></div>';
         element.after(PMLink);
     }
