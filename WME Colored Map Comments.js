@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2019.08.17.001
+// @version      2020.02.26.001
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -23,19 +23,19 @@
         let highlightRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlight.rules;
         let selectRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlightselected.rules;
         for (let i=0; i< defaultRules.length; i++){
-            if (defaultRules[i].id === "Waze_Rule_130") {
+            if (defaultRules[i].id === "Waze_Rule_149") {
                 mcStyle = defaultRules[i];
                 break;
             }
         }
         for (let i=0; i< highlightRules.length; i++){
-            if (highlightRules[i].id === "Waze_Rule_132") {
+            if (highlightRules[i].id === "Waze_Rule_151") {
                 hoverStyle = highlightRules[i];
                 break;
             }
         }
         for (let i=0; i< selectRules.length; i++){
-            if (selectRules[i].id === "Waze_Rule_125") {
+            if (selectRules[i].id === "Waze_Rule_144") {
                 selectedStyle = selectRules[i];
                 break;
             }
