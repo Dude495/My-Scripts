@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UR Editor Profile Viewer
 // @namespace    Dude495
-// @version      2019.01.14.01
+// @version      2020.03.25.01
 // @description  Changes the editor names in URs to a link direct to the editor profile.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -19,7 +19,7 @@
     var UPDATE_NOTES = [
         SCRIPT_NAME + ' has been updated to v' + VERSION,
         '',
-        '* Moved Outreach highlights to its own script.'
+        '* WazeWrap version bump.'
     ].join('\n');
 
     if (UPDATE_ALERT) {
