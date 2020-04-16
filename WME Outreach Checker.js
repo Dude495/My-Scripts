@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.03.25.01
+// @version      2020.04.15.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>WazeWrap version bump.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul><li>New Feature.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Live User Icons will now highlight in the selected color as well if Live Users layer is enabled.</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -71,6 +71,7 @@
             }
         localStorage.setItem("ORC_Settings", JSON.stringify(localsettings));
         updatePanel();
+        runORC();
     }
     function LoadSettingsObj() {
         var loadedSettings;
@@ -249,6 +250,57 @@
             return;
     }
     const A8B = 'Q0RZVk9KcjBtUWlzSWM3MEpNanRqUWNR';
+    function doHighlightUser(element, foundUser) {
+        var CurCountry = W.model.getTopCountry().name;
+        const whitelistColor = ORCSettings.CP4;
+        const whitelistFColor = ORCSettings.FP4
+        const inSheetColor = ORCSettings.CP2;
+        const inSheetFColor = ORCSettings.FP2
+        const notInSheetColor = ORCSettings.CP1;
+        const notInSheetFColor = ORCSettings.FP1
+        const managementColor = ORCSettings.CP3;
+        const managementFColor = ORCSettings.FP3;
+        const youColor = ORCSettings.CP4;
+        const youFColor = ORCSettings.FP4;
+        const isStaffBG = '#ff66b3';
+        const isStaffFont = '#000000';
+        var ORWL = localStorage.getItem('ORWL').toLowerCase();
+        let username = foundUser
+        let leadership = getMgtFromSheetList(username);
+        let entry = getFromSheetList(username);
+        if (COUNTRIES.includes(CurCountry)) {
+            if (COUNTRIES.includes(CurCountry)) {
+                if (leadership != null) {
+                    element.style.cssText += "filter: drop-shadow(0px 0px 5px "+managementColor+")!important;";
+                }
+                else if (ORWL.includes(username.toLowerCase())) {
+                    element.style.cssText += "filter: drop-shadow(0px 0px 5px "+whitelistColor+")!important;";
+                }
+                else if (entry != null) {
+                    if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    }
+                    else if (CurCountry == 'Malaysia') {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    }
+                    else if (RegATR.includes(CurCountry)) {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    }
+                    else if (CurCountry == 'Pakistan') {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    } else {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    }
+                }
+                else {
+                    element.style.cssText += "filter: drop-shadow(0px 0px 5px "+notInSheetColor+")!important;"
+                }
+            }
+            else {
+                return;
+            }
+        }
+    }
     function doHighlight(element) {
         var CurCountry = W.model.getTopCountry().name;
         const whitelistColor = ORCSettings.CP4;
@@ -352,6 +404,25 @@
         const URText = $('#panel-container > div > div > div.top-section > div.body > div > div.conversation.section > div.collapsible.content > div > div > ul > li > div > div.text');
         if (localStorage.getItem('ORWL') == null) {
             localStorage.setItem('ORWL', 'ORWList: ');
+        }
+        if ($('#layer-switcher-item_live_users')[0].checked) {
+            let liveUsers = W.map.liveUsersLayer.div.children;//Thanks Joyriding!
+            for (var i = 0, len1 = liveUsers.length; i < len1; i++) {
+                var keys = Object.keys(liveUsers[i]);
+                for (var j = 0, len2 = keys.length; j < len2; j++) {
+                    if (keys[j].startsWith('jQuery')) {
+                        let titleData = liveUsers[i][keys[j]]["bs.tooltip"];
+                        if (titleData != undefined) {
+                            let foundUser = liveUsers[i][keys[j]]["bs.tooltip"].options.title;
+                            if (foundUser) {
+                                doHighlightUser(liveUsers[i], foundUser)
+                            } else {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
         }
         if (WazeWrap.hasPlaceSelected() && PUR == undefined && WazeWrap.getSelectedFeatures()[0].model.attributes.categories[0] !== 'RESIDENCE_HOME' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             $('div.toggleHistory')[0].onclick = setTimeout(function() {
@@ -1029,14 +1100,16 @@
         $('#ORCRegList')[0].value = '0'
     }
     function init() {
+        $('#layer-switcher-item_live_users')[0].onclick = function(){StateCheck();}
         var mo = new MutationObserver(mutations => {
             mutations.forEach(m => m.addedNodes.forEach(node => {
-                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit') || $(node).hasClass('mapProblem')) StateCheck();
+                if ($(node).hasClass('conversation-view') || $(node).hasClass('map-comment-feature-editor') || $(node).hasClass('place-update-edit') || $(node).hasClass('mapProblem') || $(node).hasClass('live-user-marker')) StateCheck();
             }));
         });
         mo.observe(document.querySelector('#panel-container'), {childList: true, subtree:true, attributes: true});
         mo.observe($('#edit-panel .contents')[0], {childList:true, subtree:true, attributes: true});
         mo.observe(document.getElementById('edit-panel'), { childList: true, subtree: true, attributes: true });
+        mo.observe($("[id^=OpenLayers_Layer_Markers")[0], { childList: true, subtree: true, attributes: true });
         if (WazeWrap.hasSegmentSelected() || WazeWrap.hasPlaceSelected() || WazeWrap.hasMapCommentSelected()) {
             StateCheck();
         }
@@ -1092,6 +1165,7 @@
         RSClrBtn.onclick = function() {
             localStorage.removeItem("ORC_Settings");
             resetDefault();
+            runORC();
         }
         var P = document.createElement('P');
         var btn = document.createElement("BUTTON");
