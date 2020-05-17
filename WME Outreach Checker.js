@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.04.15.01
+// @version      2020.05.16.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li>New Feature.<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Live User Icons will now highlight in the selected color as well if Live Users layer is enabled.</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul><li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -861,7 +861,7 @@
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
     const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/edit#gid=97729408">Update Existing Record(s)</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
-    const SERResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSd1Pb1wMLrzKRaXTfQMW1t4FP976WxuPVHognsGrEX4tjis3g/viewform" target="_blank">SER New Editor Contact Form</a>';
+    const SERResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeZ41NxN-kBQmCvvmMtmqLFYPVOGMmCRgZHnLhgofSHKTPY8A/viewform" target="_blank">SER New Editor Contact Form</a>';
     const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
     const ATRResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdg7NXrvYffCI7Hukb8zfSEZ7euO0efuWim8lI9cjWkHijd7Q/viewform" target="_blank">ATR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/edit?usp=sharing" target="_blank">Published Contact Sheet</a>';
     const PKResources = '<a href="http://bit.ly/PakTracker" target="_blank">Pakistan New Editor Contact Form</a><br><a href="http://bit.ly/PakTrackerSheet" target="_blank">Published Contact Sheet</a>';
@@ -1494,7 +1494,7 @@
             }
             WazeWrap.Events.register("selectionchanged", null, StateCheck);
             WazeWrap.Events.register("moveend", W.map, StateCheck);
-            WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
+            //WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
             console.log(GM_info.script.name, 'Initialized');
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
