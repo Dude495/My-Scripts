@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.05.16.01
+// @version      2020.05.17.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul><li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Minor Update to the Subject line on the PM button<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -217,14 +217,14 @@
             if (WazeWrap.hasPlaceSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
-                    SUBJECT = 'About this Venue';
+                    SUBJECT = 'A question about this Venue';
                     TYPE = 'venues';
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
             if (WazeWrap.hasSegmentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'About this Segment';
+                    SUBJECT = 'A question about this Segment';
                     TYPE = 'segments';
                     ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -232,7 +232,7 @@
             }
             if (WazeWrap.hasMapCommentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'About this Map Comment';
+                    SUBJECT = 'A question about this  Map Comment';
                     TYPE = 'mapComments';
                     ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -240,7 +240,7 @@
             }
             if ($('div.map-problem.user-generated.selected').is(':visible') == true) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'About this Update Request';
+                    SUBJECT = 'A question about this Update Request';
                     TYPE = 'mapUpdateRequest';
                     ID = $('div.map-problem.user-generated.selected').data('id');
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -1494,7 +1494,7 @@
             }
             WazeWrap.Events.register("selectionchanged", null, StateCheck);
             WazeWrap.Events.register("moveend", W.map, StateCheck);
-            //WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
+            WazeWrap.Interface.ShowScriptUpdate(SCRIPT_NAME, VERSION, UPDATE_NOTES, "https://greasyfork.org/en/scripts/376700-wme-outreach-checker", "https://www.waze.com/forum/viewtopic.php?f=569&t=275371");
             console.log(GM_info.script.name, 'Initialized');
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
