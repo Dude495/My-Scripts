@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.05.17.01
+// @version      2020.05.31.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Minor Update to the Subject line on the PM button<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>New Country Support<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>¡Bienvenido Colombia!</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -159,9 +159,9 @@
     }
 
     const h2K = 'QUl6YVN5QmRBYzY4ZE0t';
-    const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan';
+    const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan,Colombia';
     const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
-    const RegMAR = 'Maryland,District of Columbia,West Virginia,Virginia';
+    const RegMAR = 'Maryland,District of Colombia,West Virginia,Virginia';
     const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
     const RegNWR = 'Alaska,Idaho,Montana,Oregon,Washington,Wyoming';
     const RegSER = 'Alabama,Florida,Georgia';
@@ -172,6 +172,7 @@
     const RegPLN = 'Iowa,Kansas,Minnesota,Missouri,Nebraska,North Dakota,South Dakota';
     const RegMYS = 'Malaysia';
     const RegPK = 'Pakistan';
+    const RegCOL = 'Colombia';
     const RegATR ='Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
     const SState = [
         RegNEOR,
@@ -214,17 +215,26 @@
             let TYPE;
             let ORCusername = element.textContent.match(INCRegEx);
             let username = ORCusername[1];
+            let CurCountry = W.model.getTopCountry().name;
             if (WazeWrap.hasPlaceSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
                     ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
-                    SUBJECT = 'A question about this Venue';
+                    if (CurCountry == 'Colombia') {
+                        SUBJECT = 'Una pregunta sobre este lugar';
+                    } else {
+                        SUBJECT = 'A question about this Venue';
+                    }
                     TYPE = 'venues';
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
             if (WazeWrap.hasSegmentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'A question about this Segment';
+                    if (CurCountry == 'Colombia') {
+                        SUBJECT = 'Una pregunta sobre este segmento';
+                    } else {
+                        SUBJECT = 'A question about this Segment';
+                    }
                     TYPE = 'segments';
                     ID = $('#segment-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -232,7 +242,11 @@
             }
             if (WazeWrap.hasMapCommentSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'A question about this  Map Comment';
+                    if (CurCountry == 'Colombia') {
+                        SUBJECT = 'Una pregunta sobre este comentario de mapa';
+                    } else {
+                        SUBJECT = 'A question about this Map Comment';
+                    }
                     TYPE = 'mapComments';
                     ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -240,7 +254,11 @@
             }
             if ($('div.map-problem.user-generated.selected').is(':visible') == true) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    SUBJECT = 'A question about this Update Request';
+                    if (CurCountry == 'Colombia') {
+                        SUBJECT = 'Una pregunta sobre esta solicitud de actualización';
+                    } else {
+                        SUBJECT = 'A question about this Update Request';
+                    }
                     TYPE = 'mapUpdateRequest';
                     ID = $('div.map-problem.user-generated.selected').data('id');
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
@@ -281,6 +299,9 @@
                         element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
                     }
                     else if (CurCountry == 'Malaysia') {
+                        element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
+                    }
+                    else if (CurCountry == 'Colombia') {
                         element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
                     }
                     else if (RegATR.includes(CurCountry)) {
@@ -327,41 +348,48 @@
             if (username.toLowerCase() == ORCME.toLowerCase()) {
                 element.style.backgroundColor = youColor;
                 element.style.color = youFColor;
-                element.title = 'This is you';
+                if (CurCountry == 'Colombia') {
+                    element.title = 'Este Eres tu';
+                } else {
+                    element.title = 'This is you.';
+                };
             }
             else if (leadership != null) {
                 element.style.backgroundColor = managementColor;
                 element.style.color = managementFColor;
-                element.title = username + ' is Leadership';
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' es liderazgo.';
+                } else {
+                    element.title = username + ' is Leadership.';
+                };
             }
             else if (ORWL.includes(username.toLowerCase()) || (localStorage.getItem('ORCR4WL') == "true" && RANK >= '4')) {
                 element.style.backgroundColor = whitelistColor;
                 element.style.color = whitelistFColor;
-                element.title = username + ' is listed in the WhiteList';
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' en la lista blanca';
+                } else {
+                    element.title = username + ' is listed in the WhiteList';
+                };
             }
             else if (entry != null) {
-                if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
-                    element.style.backgroundColor = inSheetColor;
-                    element.style.color = inSheetFColor;
+                element.style.backgroundColor = inSheetColor;
+                element.style.color = inSheetFColor;
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' encontrado en la hoja de trabajo. \n\nPor: ' + entry.reporter + '\nFecha: ' + entry.dateC + '\nCiudad: ' + entry.location + '.';
+                }
+                else if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
                 }
                 else if (CurCountry == 'Malaysia') {
-                    element.style.backgroundColor = inSheetColor;
-                    element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nCity: ' + entry.city + '\nState: ' + entry.state + '\nDate(s): ' + entry.dateC + '\nPM Read?:' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
                 }
                 else if (RegATR.includes(CurCountry)) {
-                    element.style.backgroundColor = inSheetColor;
-                    element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '\nJoined GHO/Discord: ' + entry.joined + '.';
                 }
                 else if (CurCountry == 'Pakistan') {
-                    element.style.backgroundColor = inSheetColor;
-                    element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nLocation: ' + entry.location + '\nPM Read?: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '\nJoined Slack?: ' + entry.joined + '.';
                 } else {
-                    element.style.backgroundColor = inSheetColor;
-                    element.style.color = inSheetFColor;
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                 }
             }
@@ -373,12 +401,42 @@
             else {
                 element.style.backgroundColor = notInSheetColor;
                 element.style.color = notInSheetFColor;
-                element.title = username + ' is not located in the outreach spreadsheet.';
-            }
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' no encontrado en la hoja de trabajo.';
+                } else {
+                    element.title = username + ' is not located in the outreach spreadsheet.';
+                };
+            };
         }
         else {
             return;
         }
+    }
+    function setSpanish() {
+        $('#ORCMenu-NotContacted > span')[0].textContent = 'Sin contacto o en la lista blanca.';
+        $('#ORCMenu-Contacted > span')[0].textContent = 'han sido contactados';
+        $('#ORCMenu-Contacted > span')[0].dataset.originalTitle = ' El usuario ha sido contactado pero no significa que haya respondido.';
+        $('#ORCMenu-Leadership > span')[0].textContent = 'Liderazgo.';
+        $('#ORCMenu-Leadership > span')[0].dataset.originalTitle = ' Liderazgo del país';
+        $('#ORCMenu-WhiteListed > span')[0].textContent = 'Contactado o en la lista blanca.';
+        $('#ORCMenu-WhiteListed > span')[0].dataset.originalTitle = ' Todos los editores R4 + se incluirán en la lista blanca si está habilitado';
+        $('#ORCSettings > label')[0].textContent = ' Lista blanca automática';
+        $('#ORCSettings > label')[0].dataset.originalTitle = 'Lista blanca automática de cualquier editor R4+';
+        $('#ORCSettings > label')[1].textContent = ' Habilitar botón de mensaje privado';
+        $('#ORCSettings > label')[1].dataset.originalTitle = 'Habilite el botón PM junto al nombre de usuario';
+        $('#ORCSettings > label')[2].textContent = ' Habilitar botón de contacto';
+        $('#ORCSettings > label')[2].dataset.originalTitle = 'Habilite el botón de contacto junto al nombre de usuario';
+        $('#ORCSettingsBtn')[0].textContent = 'Ajustes';
+        $('#ORCWLLabel > b > h6')[0].textContent = 'Nombre (s) de usuario que se incluirán en la lista blanca (separados por comas):';
+        $('#ORC-resources > p > b')[0].textContent = "Recursos:";
+        $('#ORCResetColors')[0].textContent = 'Reiniciar';
+        $('#ORCResetColors')[0].dataset.originalTitle = 'Restablecer la configuración de color predeterminada';
+        $('#ORCReloadList')[0].dataset.originalTitle = 'Recargar datos';
+        $('#ORCColorOpts > font > span')[0].dataset.originalTitle = 'Establecer color de fondo';
+        $('#ORCColorOpts > font > span')[1].dataset.originalTitle = 'Establecer color de texto';
+        $('#ORCBtn-WLAdd')[0].textContent = 'Añadir';
+        $('#SaveWLButton')[0].textContent = 'Salvar';
+        $('#ResetWLButton')[0].textContent = 'Reiniciar';
     }
     const W4a = atob(A8B);
     const T9f = atob(h2K);
@@ -625,6 +683,7 @@
     const MYS = 'https://sheets.googleapis.com/v4/spreadsheets/103oO-48KkSBe4NUBorRKrMZtWVruhsx5TbaRkrhqkgs/values/Form%20Responses%201/?key='+u7G;
     const ATR = 'https://sheets.googleapis.com/v4/spreadsheets/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/values/Form%20Responses%201/?key='+u7G;
     const PK = 'https://sheets.googleapis.com/v4/spreadsheets/1rtBXZzUK7_CnzUumdpMRdMFKovzI2GS0RlkzVzzVl-0/values/Form%20Responses%201/?key='+u7G;
+    const COL = 'https://sheets.googleapis.com/v4/spreadsheets/11HJ_8GnMvILy1D9LnAYZRLmjVGB62kJp9DZmU9n2cpg/values/Respuestas%20de%20formulario%201/?key='+u7G;
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('ORCSS')) {
@@ -717,6 +776,11 @@
             console.log('ORC: Loading Pakistan Leadership Master List....');
             MgtReg = 'PK';
         }
+        else if (localStorage.getItem('ORCSS') == COL) {
+            MgtSheet = ORCLeadershipSS + 'Colombia/?key='+u7G;
+            console.log('ORC: Loading Colombia Leadership Master List....');
+            MgtReg = 'COL';
+        }
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
             console.log('ORC: Leadership Masterlist Loaded....');
@@ -796,6 +860,10 @@
                     return {username: obj[1].trim(), joined: obj[8], forumread: obj[6], responses: obj[7], reporter: obj[5], dateC: obj[3], location: obj[4]
                            }
                 }
+                if (localStorage.getItem('ORCSS') == COL) {//<----------- Colombia
+                    return {username: obj[1].trim(), reporter: obj[7], dateC: obj[0], location: obj[3]
+                           }
+                }
                 if (localStorage.getItem('ORCSS') == SER) {
                     return {username: obj[1].trim(), forumread: obj[4], responses: obj[5], reporter: obj[2], dateC: obj[3]
                            }
@@ -849,6 +917,9 @@
         else if ($('#ORCRegList')[0].value == 'PK') {
             localStorage.setItem('ORCSS', PK);
         }
+        else if ($('#ORCRegList')[0].value == 'COL') {
+            localStorage.setItem('ORCSS', COL);
+        }
         setTimeout(loadMasterList, 500);
         setTimeout(loadLeadershipList, 500);
     }
@@ -865,6 +936,7 @@
     const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
     const ATRResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSdg7NXrvYffCI7Hukb8zfSEZ7euO0efuWim8lI9cjWkHijd7Q/viewform" target="_blank">ATR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1Qa1GAlO9lqopFZbvErzp5VDHbcaprZOJ0xbecRhVYhw/edit?usp=sharing" target="_blank">Published Contact Sheet</a>';
     const PKResources = '<a href="http://bit.ly/PakTracker" target="_blank">Pakistan New Editor Contact Form</a><br><a href="http://bit.ly/PakTrackerSheet" target="_blank">Published Contact Sheet</a>';
+    const COLResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScIXlYh8zkTKKZHwObxL2Ojbul-ZhAwXpiTuXm_F1D63fq2sw/viewform" target="_blank">Nuevo formulario de editor colombiano</a><br><a href="https://docs.google.com/spreadsheets/d/11HJ_8GnMvILy1D9LnAYZRLmjVGB62kJp9DZmU9n2cpg/" target="_blank">Hoja de cálculo publicada</a>';
     function showPanel() {
         $('#ORCSettingsBtn').show();
         $('#ORCResourceList').show();
@@ -1083,14 +1155,30 @@
                 $('#ORCResourceList')[0].innerHTML = PKResources;
                 setTimeout(loadMasterList, 100);
                 setTimeout(loadLeadershipList, 100);
-            }
+            };
         }
-        else {
+        else if (W.model.getTopCountry().name == 'Colombia') {
+            $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">País Actual: ' + W.model.getTopCountry().name + '.';
+            Display.style.display = "block";
+            runORC();
+            setSpanish();
+            setTimeout(updatePanel, 200);
+            $('#ORC-State')[0].innerHTML = '';
+            if (localStorage.getItem('ORCSS') !== COL) {
+                localStorage.setItem('ORCSS', COL);
+                $('#ORCRegList')[0].value = 'COL';
+                showPanel();
+                runORC();
+                $('#ORCResourceList')[0].innerHTML = COLResources;
+                setTimeout(loadMasterList, 100);
+                setTimeout(loadLeadershipList, 100);
+            };
+        } else {
             $('#ORC-Region')[0].innerHTML = '<b><div class="alert alert-danger">Current Country: ' + W.model.getTopCountry().name + '<br>Current Country Not Supported.</div></b>';
             hidePanel();
             $('#ORC-Top > label:nth-child(12)')[0].innerHTML = '';
             Display.style.display = "none";
-        }
+        };
     }
     function RemoveWLSLabel() {
         $('#ORC-WLSaveMsg')[0].innerHTML = ''
@@ -1140,12 +1228,12 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="COL">Colombia</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label><br><input type="checkbox" id="ORCF-Btn"> <label data-toggle="tooltip" title="Enable the Outreach button next to usernames">Enable ORCs Outreach Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
             '<br><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker1"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker1"></button><div id="ORCMenu-NotContacted"><span style="color: black; background-color: #ff0000">Not been contacted or whitelisted.</span></div>',
-            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" data-toggle="tooltip" title=" User has been contacted but does not mean they have replied or joined Discord">Has been contacted.</span></div>',
+            '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker2"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker2"></button><div id="ORCMenu-Contacted"><span style="color: black; background-color: #F7E000" data-toggle="tooltip" title=" User has been contacted but does not mean they have replied.">Has been contacted.</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker3"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker3"></button><div id="ORCMenu-Leadership"><span style="color: black; background-color: #99bbff" data-toggle="tooltip" title="Region Leadership">Regional Management (SM+).</span></div>',
             '<button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCcolorPicker4"></button><button class="jscolor {valueElement:null,hash:true,closable:true}" style="float:left;width:15px; height:15px;border:2px solid black" id="ORCfontPicker4"></button><div id="ORCMenu-WhiteListed"><span style="color: black; background-color: white" data-toggle="tooltip" title="All R4+ editors will be whitelisted if enabled.">Yourself/Whitelisted users.</span></div>',
             '</div></div></div>',
@@ -1169,7 +1257,7 @@
         }
         var P = document.createElement('P');
         var btn = document.createElement("BUTTON");
-        btn.id = 'ORCBtn';
+        btn.id = 'ORCBtn-WLAdd';
         var Button = document.getElementById('ORCBtn');
         btn.className = 'btn btn-primary';
         btn.textContent = 'Add';
@@ -1325,6 +1413,9 @@
         else if (localStorage.getItem('ORCSS') == PK) {
             SelectedRegion.value = 'PK';
         }
+        else if (localStorage.getItem('ORCSS') == COL) {
+            SelectedRegion.value = 'COL';
+        }
         SelectedRegion.onchange = function() {
             if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
@@ -1404,6 +1495,12 @@
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
+            else if (SelectedRegion.value == 'COL' && RegCOL.includes(W.model.getTopCountry().name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('ORCSS', COL);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
             else {
                 $('#ORC-Warning')[0].innerHTML = '<br><div class="alert alert-danger"><strong>ERROR:</strong> The selected region/state list does not match the current WME location.</span>'
                 console.log('ORC: Master Lists not updated.');
@@ -1451,6 +1548,9 @@
         }
         if (localStorage.getItem('ORCSS') == PK) {
             ORCResList.innerHTML = PKResources;
+        }
+        if (localStorage.getItem('ORCSS') == COL) {
+            ORCResList.innerHTML = COLResources;
         }
         ORCRes.after(ORCResList);
         btn.onclick = function() {
