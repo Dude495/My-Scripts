@@ -946,7 +946,7 @@
         $('#ORC-resources').show();
         $('#ORCWLLabel').show();
         $('#ORWLVal').show();
-        $('#ORCBtn').show();
+        $('#ORCBtn-WLAdd').show();
         $('#SaveWLButton').show();
         $('#ResetWLButton').show();
     }
@@ -959,7 +959,7 @@
         $('#ORC-resources').hide();
         $('#ORCWLLabel').hide();
         $('#ORWLVal').hide();
-        $('#ORCBtn').hide();
+        $('#ORCBtn-WLAdd').hide();
         $('#SaveWLButton').hide();
         $('#ResetWLButton').hide();
     }
