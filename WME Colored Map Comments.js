@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2020.06.01.01
+// @version      2020.06.10.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -15,7 +15,7 @@
 
 (function() {
     'use strict';
-    function ChangeColor(MCPopacity, MCAopacity) {
+    function ChangeColor() {
         let mcStyle;
         let hoverStyle;
         let selectedStyle;
@@ -93,74 +93,30 @@
         $('#CMC-colorWheelArea')[0].value = localStorage.getItem('CMC-Area');
         localStorage.setItem('MCP', $('#MCP').is(':checked'));
         localStorage.setItem('MCA', $('#MCA').is(':checked'));
+        /*console.log(['CMC Settings Saved:',
+                     'CMC-Point: '+localStorage.getItem('CMC-Point'),
+                     'CMC-Area: '+localStorage.getItem('CMC-Area'),
+                     'CMC-MCPOpacity: '+localStorage.getItem('CMC-MCPOpacity'),
+                     'CMC-MCAOpacity: '+localStorage.getItem('CMC-MCAOpacity'),
+                    ].join('\n'));*/
     }
-    function init() { //Side Panel based off code from RickZ via HardHats
-        $('#sidepanel-prefs').append($('<div>')
-                                     .css("clear", "both")
-                                     .attr("id", "CMC-Panel")
-                                     .append($("<h5>").html("Colored Map Comments v"+GM_info.script.version+",")
-                                             .css("color", "black")
-                                             .css("text-align", "left")
-                                            )
-                                     .append($('<input data-toggle="tooltip">Colored MC Points</input>')
-                                             .attr("id", "MCP")
-                                             .attr("type", "checkbox")
-                                             .attr("title", "Enable Color Highlighting for MC Points")
-                                             .css("margin-bottom", "0px")
-                                             .click(Save)
-                                            )
-                                     .append($("<br>"))
-                                     .append($('<textarea rows="1" cols="10" maxlength="7">').attr("id", "CMC-Point")
-                                             .attr("title", "Enter the HEX Color Code for the color you want Map Comments to appear. (Include the #)")
-                                             .css("resize", "none")
-                                             .css("width", "60px")
-                                             .css("height", "25px")
-                                            )
-                                     .append($('<input id="CMC-colorWheelPoint" type="color" value="'+localStorage.getItem("CMC-Point")+'">')
-                                             .css("margin-left", "5px")
-                                             .css("top", "-7px")
-                                             .css("position", "relative")
-                                             .css("width", "25px")
-                                            )
-                                     .append($('<div class="rangeslider"><input type="range" min="1" max="100" value="10" class="myslider" id="MCP-Slider"></div>')
-                                             .attr("title", "Set opacity level")
-                                             .css("resize", "none")
-                                             .css("width", "100px")
-                                            )
-                                     .append($("<br>"))
-                                     .append($('<input data-toggle="tooltip">Colored MC Areas</input>')
-                                             .attr("id", "MCA")
-                                             .attr("type", "checkbox")
-                                             //.attr("disabled", "true")
-                                             .attr("title", "Enable Color Highlighting for MC Area Polygons")
-                                             .css("margin-bottom", "0px")
-                                             .click(Save)
-                                            )
-                                     .append($("<br>"))
-                                     .append($('<textarea rows="1" cols="10" maxlength="7">').attr("id", "CMC-Area")
-                                             .attr("title", "Enter the HEX Color Code for the color you want Map Comment Areas to appear. (Include the #)")
-                                             .css("resize", "none")
-                                             .css("width", "60px")
-                                             .css("height", "25px")
-                                            )
-                                     .append($('<input id="CMC-colorWheelArea" type="color" value="'+localStorage.getItem("CMC-Area")+'">')
-                                             .css("margin-left", "5px")
-                                             .css("top", "-7px")
-                                             .css("position", "relative")
-                                             .css("width", "25px")
-                                            )
-                                     .append($('<div class="rangeslider"><input type="range" min="1" max="100" value="10" class="myslider" id="MCA-Slider"></div> ')
-                                             .attr("title", "Set opacity level")
-                                             .css("resize", "none")
-                                             .css("width", "100px")
-                                            )
-                                     .append($("<br>"))
-                                     .append($('<button class="btn btn-success" data-toggle="tooltip">Save</button>')
-                                             .click(Save)
-                                             .attr("title", "This button is only needed if you manually change the HEX Code")
-                                             .css("margin-bottom", "25px")
-                                            )
-                                    );
+    function init() {
+        var $section = $('<div id="CMC-Panel">');
+        $section.html([
+            '<h5 align="left" style="color:black">Colored Map Comments v'+GM_info.script.version+',</h5>',
+            '<input data-toggle="tooltip" type="checkbox" id="MCP" title="Enable Color Highlighting for MC Points">Colored MC Points</input>',
+            '<br>',
+            '<textarea style="resize: none; width: 65px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Point" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comments to appear. (Include the #)" maxlength="7"></textarea>',
+            '<input style="width: 25px; margin-left: 5px; top: -7px; position: relative;" id="CMC-colorWheelPoint" type="color" value="'+localStorage.getItem("CMC-Point")+'"></input>',
+            '<div class="rangeslider" title="Set opacity level" style="resize: none; width: 100px;"><input type="range" min="1" max="100" value="10" class="myslider" id="MCP-Slider"></div>',
+            '<br>',
+            '<input id="MCA" type="checkbox" title="Enable Color Highlighting for MC Area Polygons" data-toggle="tooltip">Colored MC Areas</input><br>',
+            '<textarea style="resize: none; width: 65px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Area" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comment Areas to appear. (Include the #)"></textarea>',
+            '<input style="width: 25px; margin-left: 5px; top: -7px; position: relative;" id="CMC-colorWheelArea" type="color" value="'+localStorage.getItem("CMC-Area")+'">',
+            '<div class="rangeslider" title="Set opacity level" style="resize: none; width: 100px;"><input type="range" min="1" max="100" value="10" id="MCA-Slider" class="myslider"></input></div>',
+            '<button class="btn btn-success" style="margin-bottom: 25px;" id="CMC-Save" data-toggle="tooltip" title="This button is only needed if you manually change the HEX Code">Save</button>'
+        ].join(' '));
+        $('#sidepanel-prefs').append($section);
         if (localStorage.getItem('MCP') === "true") {
             $('#MCP')[0].checked = true
         } else {
@@ -176,8 +132,8 @@
             Save();
         }
         $("#CMC-Point").val(localStorage.getItem('CMC-Point'));
-        $('#MCP-Slider').val(localStorage.getItem("CMC-MCPOpacity"));
-        $('#MCA-Slider').val(localStorage.getItem("CMC-MCAOpacity"));
+        $('#MCP-Slider').val(localStorage.getItem("CMC-MCPOpacity")*100);
+        $('#MCA-Slider').val(localStorage.getItem("CMC-MCAOpacity")*100);
         $('#CMC-colorWheelArea')[0].onchange = function() {
             $('#CMC-Area')[0].value = $('#CMC-colorWheelArea')[0].value;
             Save();
@@ -188,6 +144,15 @@
         $('#MCA-Slider')[0].onchange = function() {
             Save();
         }
+        $('#MCP')[0].onchange = function() {
+            Save();
+        }
+        $('#MCA')[0].onchange = function() {
+            Save();
+        }
+        $('#CMC-Save')[0].onclick = function() {
+            Save();
+        }
         $("#CMC-Area").val(localStorage.getItem('CMC-Area'));
         ChangeColor();
         $('[data-toggle="tooltip"]').tooltip();
@@ -196,7 +161,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Fixed WME Rules<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Latest WME update changed the MC rule numbers. (Fixed)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Internal Code Cleanup<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
