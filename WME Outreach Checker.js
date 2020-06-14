@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.06.06.01
+// @version      2020.06.14.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -32,7 +32,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Minor Bug Fix<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>White List options were displaying when country/region was not supported. (FIXED)</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Minor Bug Fix<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Landmark changed to Venue in WME Code. (FIXED)</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -218,7 +218,7 @@
             let CurCountry = W.model.getTopCountry().name;
             if (WazeWrap.hasPlaceSelected()) {
                 if($(element).parent().find('.ORCPMBtn').length === 0){
-                    ID = $('#landmark-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
+                    ID = $('#venue-edit-general > ul > li:contains("ID:")')[0].textContent.match(/\d.*/)[0];
                     if (CurCountry == 'Colombia') {
                         SUBJECT = 'Una pregunta sobre este lugar';
                     } else {
@@ -441,8 +441,8 @@
     const W4a = atob(A8B);
     const T9f = atob(h2K);
     function runORC() {
-        const LandMark1 = $('#landmark-edit-general > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
-        const LandMark2 = $('#landmark-edit-general > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
+        const LandMark1 = $('#venue-edit-general > ul > li:nth-child(1) > a')[0];
+        const LandMark2 = $('#venue-edit-general > ul > li:nth-child(2) > a')[0];
         const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0];
         const Seg2 = $('#segment-edit-general > ul > li:nth-child(3) > a')[0];
         const MultiSeg1 = $('#segment-edit-general > ul > li:nth-child(2) > span > a:nth-child(1)');
@@ -484,7 +484,7 @@
         }
         if (WazeWrap.hasPlaceSelected() && PUR == undefined && WazeWrap.getSelectedFeatures()[0].model.attributes.categories[0] !== 'RESIDENCE_HOME' && WazeWrap.getSelectedFeatures()[0].model.attributes.id > '0') {
             $('div.toggleHistory')[0].onclick = setTimeout(function() {
-                var HXLandMark = $('#landmark-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
+                var HXLandMark = $('#venue-edit-general > div.element-history-region > div > div > div.historyContent > div.transactions > ul > li > div.tx-header > div.tx-summary > div.tx-author-date > a')
                 for (let i = 0; i < HXLandMark.length; i++) {
                     doHighlight(HXLandMark[i]);
                     setTimeout(addPMBttn(HXLandMark[i]), 1000);
