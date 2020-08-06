@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2020.06.10.01
+// @version      2020.08.05.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -23,19 +23,19 @@
         let highlightRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlight.rules;
         let selectRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlightselected.rules;
         for (let i=0; i< defaultRules.length; i++){
-            if (defaultRules[i].id === "Waze_Rule_178") {
+            if (defaultRules[i].id === "Waze_Rule_173") {
                 mcStyle = defaultRules[i];
                 break;
             }
         }
         for (let i=0; i< highlightRules.length; i++){
-            if (highlightRules[i].id === "Waze_Rule_180") {
+            if (highlightRules[i].id === "Waze_Rule_175") {
                 hoverStyle = highlightRules[i];
                 break;
             }
         }
         for (let i=0; i< selectRules.length; i++){
-            if (selectRules[i].id === "Waze_Rule_173") {
+            if (selectRules[i].id === "Waze_Rule_168") {
                 selectedStyle = selectRules[i];
                 break;
             }
@@ -161,7 +161,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Internal Code Cleanup<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li></li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Waze Changed Rules. (FIXED)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
