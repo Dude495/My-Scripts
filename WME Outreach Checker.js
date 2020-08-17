@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.06.14.01
+// @version      2020.08.17.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -26,13 +26,14 @@
     }
     var currColor;
     var currFColor;
+    var RCList = [];
     const ENRegEx = /([A-Za-z ])*: /g;
     const NEORRegEx = /(Read\?:|Responded\?:|Reporter:|Editor:|Contacted:|Rank:)/g
     const INCRegEx = /(.*)\(\d\)/;
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Minor Bug Fix<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Landmark changed to Venue in WME Code. (FIXED)</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Feature Request<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Known Editor List (SWR) - Added</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -343,6 +344,7 @@
         let RUN = element.textContent.match(RRE);
         let RANK = RUN[0].replace(/\D/,'').replace(/\D/,'');
         let leadership = getMgtFromSheetList(username);
+        let knownUsers = getKUFromSheetList(username);
         let entry = getFromSheetList(username);
         if (COUNTRIES.includes(CurCountry)) {
             if (username.toLowerCase() == ORCME.toLowerCase()) {
@@ -372,6 +374,15 @@
                     element.title = username + ' is listed in the WhiteList';
                 };
             }
+            else if (knownUsers) {
+                element.style.backgroundColor = whitelistColor;
+                element.style.color = whitelistFColor;
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' es un editor conocido (SM + aprobado)';
+                } else {
+                    element.title = username + ' is a known editor (SM+ Approved).';
+                };
+            }
             else if (entry != null) {
                 element.style.backgroundColor = inSheetColor;
                 element.style.color = inSheetFColor;
@@ -393,20 +404,20 @@
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                 }
             }
-            else if (RANK == '7') {
-                element.style.backgroundColor = isStaffBG;
-                element.style.coloe = isStaffFont
-                element.title = username + ' is Waze Staff.';
-            }
-            else {
-                element.style.backgroundColor = notInSheetColor;
-                element.style.color = notInSheetFColor;
-                if (CurCountry == 'Colombia') {
-                    element.title = username + ' no encontrado en la hoja de trabajo.';
-                } else {
-                    element.title = username + ' is not located in the outreach spreadsheet.';
+                else if (RANK == '7') {
+                    element.style.backgroundColor = isStaffBG;
+                    element.style.coloe = isStaffFont
+                    element.title = username + ' is Waze Staff.';
+                }
+                else {
+                    element.style.backgroundColor = notInSheetColor;
+                    element.style.color = notInSheetFColor;
+                    if (CurCountry == 'Colombia') {
+                        element.title = username + ' no encontrado en la hoja de trabajo.';
+                    } else {
+                        element.title = username + ' is not located in the outreach spreadsheet.';
+                    };
                 };
-            };
         }
         else {
             return;
@@ -701,10 +712,12 @@
         });
     }
     var RegMgt = [];
+    var RegKU = [];
     const ORCLeadershipSS = 'https://sheets.googleapis.com/v4/spreadsheets/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/values/';
     async function loadLeadershipList() {
         var MgtSheet;
         var MgtReg;
+        var KUList;
         if (!localStorage.getItem('ORCSS')) {
             localStorage.setItem('ORCSS', NEOR)
             console.log('ORC: Loading Default List (NEOR)....');
@@ -723,6 +736,7 @@
         }
         else if (localStorage.getItem('ORCSS') == SWR) {
             MgtSheet = ORCLeadershipSS + 'SWR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'SWR_KU/?key='+u7G;
             console.log('ORC: Loading SWR Leadership Master List....');
             MgtReg = 'SWR';
         }
@@ -785,6 +799,10 @@
             RegMgt = ldata;
             console.log('ORC: Leadership Masterlist Loaded....');
         });
+        await $.getJSON(KUList, function(ldata){
+            RegKU = ldata;
+            console.log('ORC: Leadership Masterlist Loaded....');
+        });
     }
     function getMgtFromSheetList(editorName) {
         let MgtList = RegMgt.values.map(obj =>{
@@ -793,6 +811,17 @@
         for(let i=0; i<MgtList.length; i++){
             if(MgtList[i].username.toLowerCase() === editorName.toLowerCase()) {
                 return MgtList[i];
+            }
+        }
+        return null;
+    }
+    function getKUFromSheetList(editorName) {
+        let KUList = RegKU.values.map(obj =>{
+            return {username: obj[0]}
+        });
+        for(let i=0; i<KUList.length; i++){
+            if(KUList[i].username.toLowerCase() === editorName.toLowerCase()) {
+                return KUList[i];
             }
         }
         return null;
