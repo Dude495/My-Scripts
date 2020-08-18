@@ -33,7 +33,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Feature Request<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Known Editor List (SWR) - Added</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Added Features<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Known Editor List - Added.</li><li>Color Highlights for Champs</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -161,7 +161,8 @@
 
     const h2K = 'QUl6YVN5QmRBYzY4ZE0t';
     const COUNTRIES = 'United States,Malaysia,Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico,Pakistan,Colombia';
-    const RegNEOR = 'New York,New Jersey,Delaware,Pennsylvania,Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
+    const RegNER = 'Massachusetts,Vermont,New Hampshire,Rhode Island,Maine,Connecticut';
+    const RegNOR = 'New York,New Jersey,Delaware,Pennsylvania';
     const RegMAR = 'Maryland,District of Colombia,West Virginia,Virginia';
     const RegSWR = 'Arizona,California,Colorado,Hawaii,Nevada,New Mexico,Utah';
     const RegNWR = 'Alaska,Idaho,Montana,Oregon,Washington,Wyoming';
@@ -176,7 +177,8 @@
     const RegCOL = 'Colombia';
     const RegATR ='Guam,Virgin Islands (U.S.),America Samoa,Northern Mariana Islands,Peutro Rico';
     const SState = [
-        RegNEOR,
+        RegNER,
+        RegNOR,
         RegMAR,
         RegSWR,
         RegOH,
@@ -296,7 +298,7 @@
                     element.style.cssText += "filter: drop-shadow(0px 0px 5px "+whitelistColor+")!important;";
                 }
                 else if (entry != null) {
-                    if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
+                    if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNER.includes(sessionStorage.getItem('ORCState')) || RegNOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                         element.style.cssText += "filter: drop-shadow(0px 0px 5px "+inSheetColor+")!important;";
                     }
                     else if (CurCountry == 'Malaysia') {
@@ -335,6 +337,8 @@
         const managementFColor = ORCSettings.FP3;
         const youColor = ORCSettings.CP4;
         const youFColor = ORCSettings.FP4;
+        const isChampBG = '#2a282b';
+        const isChampFont = '#cac6cc';
         const isStaffBG = '#ff66b3';
         const isStaffFont = '#000000';
         let ORCusername = element.textContent.match(INCRegEx);
@@ -346,6 +350,7 @@
         let leadership = getMgtFromSheetList(username);
         let knownUsers = getKUFromSheetList(username);
         let entry = getFromSheetList(username);
+        let isChamp = getChampsFromSheetList(username);
         if (COUNTRIES.includes(CurCountry)) {
             if (username.toLowerCase() == ORCME.toLowerCase()) {
                 element.style.backgroundColor = youColor;
@@ -365,6 +370,11 @@
                     element.title = username + ' is Leadership.';
                 };
             }
+            else if (isChamp != null) {
+                element.style.backgroundColor = isChampBG;
+                element.style.color = isChampFont;
+                element.title = username + ' is a Champ. ('+W.model.getTopCountry().abbr+')';
+            }
             else if (ORWL.includes(username.toLowerCase()) || (localStorage.getItem('ORCR4WL') == "true" && RANK >= '4')) {
                 element.style.backgroundColor = whitelistColor;
                 element.style.color = whitelistFColor;
@@ -374,7 +384,7 @@
                     element.title = username + ' is listed in the WhiteList';
                 };
             }
-            else if (knownUsers) {
+            else if (knownUsers != null) {
                 element.style.backgroundColor = whitelistColor;
                 element.style.color = whitelistFColor;
                 if (CurCountry == 'Colombia') {
@@ -389,7 +399,7 @@
                 if (CurCountry == 'Colombia') {
                     element.title = username + ' encontrado en la hoja de trabajo. \n\nPor: ' + entry.reporter + '\nFecha: ' + entry.dateC + '\nCiudad: ' + entry.location + '.';
                 }
-                else if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNEOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
+                else if (RegPLN.includes(sessionStorage.getItem('ORCState')) || RegNER.includes(sessionStorage.getItem('ORCState')) || RegNOR.includes(sessionStorage.getItem('ORCState')) || RegWI.includes(sessionStorage.getItem('ORCState'))) {
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nMsg Read: ' + entry.forumread + '\nResponse(s): ' + entry.responses + '.';
                 }
                 else if (CurCountry == 'Malaysia') {
@@ -404,20 +414,20 @@
                     element.title = username + ' is located in the outreach spreadsheet. \n\nReporter(s): ' + entry.reporter + '\nDate(s): ' + entry.dateC + '\nResponse(s): ' + entry.responses + '.';
                 }
             }
-                else if (RANK == '7') {
-                    element.style.backgroundColor = isStaffBG;
-                    element.style.coloe = isStaffFont
-                    element.title = username + ' is Waze Staff.';
-                }
-                else {
-                    element.style.backgroundColor = notInSheetColor;
-                    element.style.color = notInSheetFColor;
-                    if (CurCountry == 'Colombia') {
-                        element.title = username + ' no encontrado en la hoja de trabajo.';
-                    } else {
-                        element.title = username + ' is not located in the outreach spreadsheet.';
-                    };
+            else if (RANK == '7') {
+                element.style.backgroundColor = isStaffBG;
+                element.style.coloe = isStaffFont
+                element.title = username + ' is Waze Staff.';
+            }
+            else {
+                element.style.backgroundColor = notInSheetColor;
+                element.style.color = notInSheetFColor;
+                if (CurCountry == 'Colombia') {
+                    element.title = username + ' no encontrado en la hoja de trabajo.';
+                } else {
+                    element.title = username + ' is not located in the outreach spreadsheet.';
                 };
+            };
         }
         else {
             return;
@@ -681,7 +691,8 @@
     }
     const u7G = T9f+W4a;
     var ORCFeedList = [];
-    const NEOR = 'https://sheets.googleapis.com/v4/spreadsheets/1Z4JLLLhwYTwkuhEgN3LBlQ5o-VH1kmulb6rReu_kzNM/values/NEOR/?key='+u7G;
+    const NER = 'https://sheets.googleapis.com/v4/spreadsheets/1Z4JLLLhwYTwkuhEgN3LBlQ5o-VH1kmulb6rReu_kzNM/values/NEOR/?key='+u7G;
+    const NOR = 'https://sheets.googleapis.com/v4/spreadsheets/1Z4JLLLhwYTwkuhEgN3LBlQ5o-VH1kmulb6rReu_kzNM/values/NEOR/?key='+u7G;
     const MAR = 'https://sheets.googleapis.com/v4/spreadsheets/1DHqS2fhB_6pk_ZGxLzSgnakn7HPPz_YEmzCprUhFg1o/values/Sheet1/?key='+u7G;
     const SWR = 'https://sheets.googleapis.com/v4/spreadsheets/1VN7Ry4BhDrG1aLbGjDA3RULfjjX5R1TcNojbsPp0BwI/values/Sheet1/?key='+u7G;
     const OH = 'https://sheets.googleapis.com/v4/spreadsheets/1HdXxC11jStR8-XdRBL2wmQx-o846dOzETslOsbtxoM8/values/Form%20Responses%201/?key='+u7G;
@@ -698,8 +709,8 @@
     async function loadMasterList() {
         var SS;
         if (!localStorage.getItem('ORCSS')) {
-            localStorage.setItem('ORCSS', NEOR)
-            console.log('ORC: Loading Default List (NEOR)....');
+            localStorage.setItem('ORCSS', NOR)
+            console.log('ORC: Loading Default List (N[EO]R)....');
             SS = localStorage.getItem('ORCSS');
         }
         else {
@@ -713,24 +724,35 @@
     }
     var RegMgt = [];
     var RegKU = [];
+    var ChampList = [];
     const ORCLeadershipSS = 'https://sheets.googleapis.com/v4/spreadsheets/1y2hOK3yKzSskCT_lUyuSg-QOe0b8t9Y-4sgeRMkHdF8/values/';
     async function loadLeadershipList() {
         var MgtSheet;
         var MgtReg;
         var KUList;
+        let ChampSheet = ORCLeadershipSS + 'Champs_'+W.model.topCountry.abbr+'?key='+u7G;
         if (!localStorage.getItem('ORCSS')) {
-            localStorage.setItem('ORCSS', NEOR)
-            console.log('ORC: Loading Default List (NEOR)....');
+            localStorage.setItem('ORCSS', NOR)
+            console.log('ORC: Loading Default List (N[EO]R)....');
             MgtSheet = ORCLeadershipSS + 'NEOR/?key='+u7G;
-            MgtReg = 'NEOR'
+            KUList = ORCLeadershipSS + 'NOR_KU/?key='+u7G;
+            MgtReg = 'NOR'
         }
-        else if (localStorage.getItem('ORCSS') == NEOR) {
+        else if (localStorage.getItem('ORCSS') == NOR) {
             MgtSheet = ORCLeadershipSS + 'NEOR/?key='+u7G;
-            console.log('ORC: Loading NEOR Leadership Master List....');
-            MgtReg = 'NEOR'
+            KUList = ORCLeadershipSS + 'NOR_KU/?key='+u7G;
+            console.log('ORC: Loading N[EO]R Leadership Master List....');
+            MgtReg = 'NOR'
+        }
+        else if (localStorage.getItem('ORCSS') == NER) {
+            MgtSheet = ORCLeadershipSS + 'NEOR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'NER_KU/?key='+u7G;
+            console.log('ORC: Loading N[EO]R Leadership Master List....');
+            MgtReg = 'NER'
         }
         else if (localStorage.getItem('ORCSS') == MAR) {
             MgtSheet = ORCLeadershipSS + 'MAR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'MAR_KU/?key='+u7G;
             console.log('ORC: Loading MAR Leadership Master List....');
             MgtReg = 'MAR';
         }
@@ -742,66 +764,79 @@
         }
         else if (localStorage.getItem('ORCSS') == OH) {
             MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'GLR_KU/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'OH';
         }
         else if (localStorage.getItem('ORCSS') == MI) {
             MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'GLR_KU/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'MI';
         }
         else if (localStorage.getItem('ORCSS') == IN) {
             MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'GLR_KU/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'IN';
         }
         else if (localStorage.getItem('ORCSS') == WI) {
             MgtSheet = ORCLeadershipSS + 'GLR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'GLR_KU/?key='+u7G;
             console.log('ORC: Loading GLR Leadership Master List....');
             MgtReg = 'WI';
         }
         else if (localStorage.getItem('ORCSS') == PLN) {
             MgtSheet = ORCLeadershipSS + 'PLN/?key='+u7G;
+            KUList = ORCLeadershipSS + 'PLN_KU/?key='+u7G;
             console.log('ORC: Loading PLN Leadership Master List....');
             MgtReg = 'PLN';
         }
         else if (localStorage.getItem('ORCSS') == NWR) {
             MgtSheet = ORCLeadershipSS + 'NWR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'NWR_KU/?key='+u7G;
             console.log('ORC: Loading NWR Leadership Master List....');
             MgtReg = 'NWR';
         }
         else if (localStorage.getItem('ORCSS') == SER) {
             MgtSheet = ORCLeadershipSS + 'SER/?key='+u7G;
+            KUList = ORCLeadershipSS + 'SER_KU/?key='+u7G;
             console.log('ORC: Loading SER Leadership Master List....');
             MgtReg = 'SER';
         }
         else if (localStorage.getItem('ORCSS') == MYS) {
             MgtSheet = ORCLeadershipSS + 'Malaysia/?key='+u7G;
+            KUList = ORCLeadershipSS + 'Malaysia_KU/?key='+u7G;
             console.log('ORC: Loading Malaysia Leadership Master List....');
             MgtReg = 'MYS';
         }
         else if (localStorage.getItem('ORCSS') == ATR) {
             MgtSheet = ORCLeadershipSS + 'ATR/?key='+u7G;
+            KUList = ORCLeadershipSS + 'ATR_KU/?key='+u7G;
             console.log('ORC: Loading ATR Leadership Master List....');
             MgtReg = 'ATR';
         }
         else if (localStorage.getItem('ORCSS') == PK) {
             MgtSheet = ORCLeadershipSS + 'Pakistan/?key='+u7G;
+            KUList = ORCLeadershipSS + 'Pakistan_KU/?key='+u7G;
             console.log('ORC: Loading Pakistan Leadership Master List....');
             MgtReg = 'PK';
         }
         else if (localStorage.getItem('ORCSS') == COL) {
             MgtSheet = ORCLeadershipSS + 'Colombia/?key='+u7G;
+            KUList = ORCLeadershipSS + 'Colombia_KU/?key='+u7G;
             console.log('ORC: Loading Colombia Leadership Master List....');
             MgtReg = 'COL';
         }
+        await $.getJSON(ChampSheet, function(cdata){
+            ChampList = cdata;
+        });
         await $.getJSON(MgtSheet, function(ldata){
             RegMgt = ldata;
             console.log('ORC: Leadership Masterlist Loaded....');
         });
-        await $.getJSON(KUList, function(ldata){
-            RegKU = ldata;
-            console.log('ORC: Leadership Masterlist Loaded....');
+        await $.getJSON(KUList, function(kudata){
+            RegKU = kudata;
         });
     }
     function getMgtFromSheetList(editorName) {
@@ -826,6 +861,17 @@
         }
         return null;
     }
+    function getChampsFromSheetList(editorName) {
+        let Champs = ChampList.values.map(obj =>{
+            return {username: obj[0]}
+        });
+        for(let i=0; i<Champs.length; i++){
+            if(Champs[i].username.toLowerCase() === editorName.toLowerCase()) {
+                return Champs[i];
+            }
+        }
+        return null;
+    }
     function getFromSheetList(editorName){
         if (localStorage.getItem('ORCSS') == MAR) {
             let mapped = ORCFeedList.values.slice(0).reverse().map(obj =>{
@@ -840,7 +886,11 @@
             return null;
         } else {
             let mapped = ORCFeedList.values.map(obj =>{
-                if (localStorage.getItem('ORCSS') == NEOR) {
+                if (localStorage.getItem('ORCSS') == NOR) {
+                    return {username: obj[0].replace(ENRegEx,'').replace(NEORRegEx,'').trim(), dateC: obj[2].replace(NEORRegEx,''), forumread: obj[3].replace(NEORRegEx,''), responses: obj[4].replace(NEORRegEx,''), reporter: obj[5].replace(NEORRegEx,'')
+                           }
+                }
+                if (localStorage.getItem('ORCSS') == NER) {
                     return {username: obj[0].replace(ENRegEx,'').replace(NEORRegEx,'').trim(), dateC: obj[2].replace(NEORRegEx,''), forumread: obj[3].replace(NEORRegEx,''), responses: obj[4].replace(NEORRegEx,''), reporter: obj[5].replace(NEORRegEx,'')
                            }
                 }
@@ -907,8 +957,11 @@
         }
     }
     function updateMasterList() {
-        if ($('#ORCRegList')[0].value == 'NEOR') {
-            localStorage.setItem('ORCSS', NEOR);
+        if ($('#ORCRegList')[0].value == 'NER') {
+            localStorage.setItem('ORCSS', NER);
+        }
+        else if ($('#ORCRegList')[0].value == 'NOR') {
+            localStorage.setItem('ORCSS', NOR);
         }
         else if ($('#ORCRegList')[0].value == 'MAR') {
             localStorage.setItem('ORCSS', MAR);
@@ -996,12 +1049,24 @@
         var State = W.model.getTopState().name
         var Display = document.getElementById('RegListDiv')
         if (W.model.getTopCountry().name == 'United States') {
-            if (RegNEOR.includes(State)) {
+            if (RegNER.includes(State)) {
                 $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: N(EO)R</span>';
                 Display.style.display = "block";
-                if (localStorage.getItem('ORCSS') !== NEOR) {
-                    localStorage.setItem('ORCSS', NEOR);
-                    $('#ORCRegList')[0].value = 'NEOR';
+                if (localStorage.getItem('ORCSS') !== NER) {
+                    localStorage.setItem('ORCSS', NER);
+                    $('#ORCRegList')[0].value = 'NER';
+                    $('#ORCResourceList')[0].innerHTML = NEORResources
+                    showPanel();
+                    setTimeout(loadMasterList, 100);
+                    setTimeout(loadLeadershipList, 100);
+                }
+            }
+            else if (RegNOR.includes(State)) {
+                $('#ORC-Region')[0].innerHTML = '<span style="color: black; background-color: #ededed">Current Country: ' + W.model.getTopCountry().name + '<br>Current Region: N(EO)R</span>';
+                Display.style.display = "block";
+                if (localStorage.getItem('ORCSS') !== NOR) {
+                    localStorage.setItem('ORCSS', NOR);
+                    $('#ORCRegList')[0].value = 'NOR';
                     $('#ORCResourceList')[0].innerHTML = NEORResources
                     showPanel();
                     setTimeout(loadMasterList, 100);
@@ -1257,7 +1322,7 @@
         $section.html([
             '<div id="ORC-Top"><div id="ORC-title">',
             '<h1>Outreach Checker</h2></div>',
-            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="COL">Colombia</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NEOR">N(EO)R</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
+            '<div id="RegListDiv"><select id="ORCRegList"><option value="0" selected disabled>Country</option><option value="COL">Colombia</option><option value="MYS">Malaysia</option><option value="PK">Pakistan</option><optgroup label="USA"><option value="ATR">ATR</option><option value="MAR">MAR</option><option value="NER">NER</option><option value="NOR">NOR</option><option value="NWR">NWR</option><option value="PLN">PLN</option><option value="SER">SER</option><option value="SWR">SWR</option><option value="3" disabled>GLR</option><option value="IN">Indiana</option><option value="MI">Michigan</option><option value="OH">Ohio</option><option value="WI">Wisconsin</option></optgroup></select><button type="button" id="ORCReloadList" class="btn btn-info" class="btn btn-default btn-sm" data-toggle="tooltip" title="Reload Outreach Lists"><span class="fa fa-repeat"></span></button></div>',
             '<br><button id="ORCSettingsBtn" data-toggle="collapse" data-target="#ORCSettings">Settings</button><div id="ORCSettings" class="collapse"><br><input type="checkbox" id="R4WL"> <label data-toggle="tooltip" title="Auto-Whitelist any editor Rank 4+">Auto-WL R4+</label><br><input type="checkbox" id="ORCPM-Btn"> <label data-toggle="tooltip" title="Enable PM button next to usernames">Enable ORCs PM Button</label><br><input type="checkbox" id="ORCF-Btn"> <label data-toggle="tooltip" title="Enable the Outreach button next to usernames">Enable ORCs Outreach Button</label>',
             '<div id="ORCColorOpts">',
             '<font size="1.9"><span data-toggle="tooltip" title="Set Background Color">Bg</span> | <span data-toggle="tooltip" title="Set Font Color">Txt</span>   </font><button type="button" class="btn btn-danger" data-toggle="tooltip" title="Reset to default color settings" id="ORCResetColors">Reset</button>',
@@ -1406,8 +1471,11 @@
         if (localStorage.getItem('ORCSS') == MAR) {
             SelectedRegion.value = 'MAR';
         }
-        else if (localStorage.getItem('ORCSS') == NEOR) {
-            SelectedRegion.value = 'NEOR';
+        else if (localStorage.getItem('ORCSS') == NER) {
+            SelectedRegion.value = 'NER';
+        }
+        else if (localStorage.getItem('ORCSS') == NOR) {
+            SelectedRegion.value = 'NOR';
         }
         else if (localStorage.getItem('ORCSS') == SWR) {
             SelectedRegion.value = 'SWR';
@@ -1446,9 +1514,15 @@
             SelectedRegion.value = 'COL';
         }
         SelectedRegion.onchange = function() {
-            if (SelectedRegion.value == 'NEOR' && RegNEOR.includes(W.model.getTopState().name)) {
+            if (SelectedRegion.value == 'NER' && RegNER.includes(W.model.getTopState().name)) {
                 $('#ORC-Warning')[0].innerHTML = '';
-                localStorage.setItem('ORCSS', NEOR);
+                localStorage.setItem('ORCSS', NER);
+                setTimeout(updateMasterList, 500);
+                setTimeout(resetRegList, 500);
+            }
+            else if (SelectedRegion.value == 'NOR' && RegNOR.includes(W.model.getTopState().name)) {
+                $('#ORC-Warning')[0].innerHTML = '';
+                localStorage.setItem('ORCSS', NOR);
                 setTimeout(updateMasterList, 500);
                 setTimeout(resetRegList, 500);
             }
@@ -1539,7 +1613,10 @@
         var ORCRes = document.getElementById('ORC-resources');
         var ORCResList = document.createElement('LABEL');
         ORCResList.id = 'ORCResourceList'
-        if (localStorage.getItem('ORCSS') == NEOR) {
+        if (localStorage.getItem('ORCSS') == NER) {
+            ORCResList.innerHTML = NEORResources;
+        }
+        if (localStorage.getItem('ORCSS') == NOR) {
             ORCResList.innerHTML = NEORResources;
         }
         if (localStorage.getItem('ORCSS') == MAR) {
@@ -1619,7 +1696,7 @@
                 localStorage.setItem('ORCPM', 'false');
             }
             if (!localStorage.getItem('ORCSS')) {
-                localStorage.setItem('ORCSS', NEOR);
+                localStorage.setItem('ORCSS', NOR);
             }
             WazeWrap.Events.register("selectionchanged", null, StateCheck);
             WazeWrap.Events.register("moveend", W.map, StateCheck);
