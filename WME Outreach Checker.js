@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2021.01.23.01
+// @version      2021.01.23.02
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -33,7 +33,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Fixed MC not highlighting.</li></ul><ul>Added Support<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Color Highlights for Champs</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Fixed MC not highlighting.</li></ul><ul>Added Support<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Color Highlights for Junction Box</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
