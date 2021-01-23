@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Outreach Checker
 // @namespace    Dude495
-// @version      2020.08.17.02
+// @version      2021.01.23.01
 // @description  Checks if a user has been contacted and listed in the outreach sheet.
 // @author       Dude495
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -33,7 +33,7 @@
     const RRE = /\(\d\)/g;
     var VERSION = GM_info.script.version;
     var SCRIPT_NAME = GM_info.script.name;
-    var UPDATE_NOTES = '<ul>Added Features<li><ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Known Editor List - Added.</li><li>Color Highlights for Champs</li></li></ul><br><br>';
+    var UPDATE_NOTES = '<ul>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Fixed MC not highlighting.</li></ul><ul>Added Support<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Color Highlights for Champs</li></li></ul><br><br>';
     //Color Change Box code from BeenThere with premissions of JustinS83
     function LoadSettings(){
         if ($('#ORCcolorPicker1')[0].jscolor && $('#ORCcolorPicker2')[0].jscolor && $('#ORCcolorPicker3')[0].jscolor && $('#ORCcolorPicker4')[0].jscolor){
@@ -251,7 +251,7 @@
                         SUBJECT = 'A question about this Map Comment';
                     }
                     TYPE = 'mapComments';
-                    ID = $('.map-comment-feature-editor > .tab-content > ul > li:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
+                    ID = $('.map-comment-feature-editor:contains("ID:")')[0].textContent.match('ID:.*')[0].match(/\d.*/)[0];
                     injectPMLinkButton(SUBJECT, ID, element, MESSAGE, TYPE, username);
                 }
             }
@@ -462,6 +462,8 @@
     const W4a = atob(A8B);
     const T9f = atob(h2K);
     function runORC() {
+        const JunctBox1 = $('#big-junction-edit-general > ul > li:nth-child(2) > a')[0];
+        const JunctBox2 = $('#big-junction-edit-general > ul > li:nth-child(3) > a')[0];
         const LandMark1 = $('#venue-edit-general > ul > li:nth-child(1) > a')[0];
         const LandMark2 = $('#venue-edit-general > ul > li:nth-child(2) > a')[0];
         const Seg1 = $('#segment-edit-general > ul > li:nth-child(2) > a')[0];
@@ -471,8 +473,8 @@
         const MultiSeg3 = $('#segment-edit-general > ul > li:nth-child(2) > ul > li > a');
         const MultiSeg4 = $('#segment-edit-general > ul > li:nth-child(3) > ul > li > a');
         const MultiSeg5 = $('#segment-edit-general > ul > li:nth-child(3) > span.value > a');
-        const MapComment1 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
-        const MapComment2 = $('#edit-panel > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
+        const MapComment1 = $('#edit-panel > div > div > div.tab-content > div > ul > li:nth-child(1) > a')[0];
+        const MapComment2 = $('#edit-panel > div > div > div.tab-content > div > ul > li:nth-child(2) > a')[0];
         const Camera1 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(1) > a')[0];
         const Camera2 = $('#edit-panel > div > div > div > div.tab-content > ul.additional-attributes.list-unstyled.side-panel-section > li:nth-child(2) > a')[0];
         const PURBig = $('#dialog-region > div > div > div > div.modal-body > div > div.small.user > a')[0];
@@ -631,6 +633,22 @@
                 doHighlight(MapComment2);
                 setTimeout(addPMBttn(MapComment2), 1000);
                 setTimeout(addORCFBttn(MapComment2), 1500);
+            }
+        }
+        if (W.selectionManager.getSelectedFeatures()[0] && WazeWrap.getSelectedFeatures()[0].model.type == 'bigJunction') {
+            if (JunctBox1.textContent.includes('(')) {
+                if (JunctBox1.textContent.includes('staff'))
+                    return;
+                doHighlight(JunctBox1);
+                setTimeout(addPMBttn(JunctBox1), 1000);
+                setTimeout(addORCFBttn(JunctBox1), 1500);
+            }
+            if (JunctBox2.textContent.includes('(')) {
+                if (JunctBox2.textContent.includes('staff'))
+                    return;
+                doHighlight(JunctBox2);
+                setTimeout(addPMBttn(JunctBox2), 1000);
+                setTimeout(addORCFBttn(JunctBox2), 1500);
             }
         }
         if (MP.is(':visible')) {
@@ -1012,7 +1030,7 @@
     const INResources = '<a href="#" target="_blank">Indiana New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1kmYohgu7etJ9CSwN4HOYa7wWIdtotUr0-rflvB1d--8/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const PLNResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoXXrC6he-FQqfPgVqvf9aJ5hIOR0IPmGcy63Nw2wC2xEFXQ/viewform" target="_blank">PLN New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
     const MIResources = '<a href="#" target="_blank">Michigan New Editor Contact Form</a><br><a href="https://goo.gl/XdFD9e" target="_blank">Published Contacts Sheet</a>';
-    const WIResources = '<a href="https://docs.google.com/spreadsheets/d/14g6UAznDv8eCjNStimW9RbYxiwwuYdsJkynCgDJf63c/pubhtml?gid=984781548&single=true" target="_blank">Published Contacts Sheet</a>';
+    const WIResources = '<a href="https://docs.google.com/spreadsheets/d/1wk9kDHtiSGqeehApi0twtr90gk_FUVUpf2iA28bua_4/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const NWRResources = '<a href="https://goo.gl/forms/naZYgt5oWbG5BBjm1" target="_blank">NWR New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/edit#gid=97729408">Update Existing Record(s)</a><br><a href="https://docs.google.com/spreadsheets/d/1hD-_0rd1JSug472ORDMu3Evb6iZcdo1L-Oidnvwgc0E/pubhtml" target="_blank">Published Contacts Sheet</a>';
     const SERResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSeZ41NxN-kBQmCvvmMtmqLFYPVOGMmCRgZHnLhgofSHKTPY8A/viewform" target="_blank">SER New Editor Contact Form</a>';
     const MYSResources = '<a href="https://docs.google.com/forms/d/e/1FAIpQLSf08H5mK-siIkXNS3ECu8oyKQQWthMjrm8smaD0mjiXuufVMQ/viewform" target="_blank">Malaysia New Editor Contact Form</a><br><a href="https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRqrKMcCW39c5FeYWaLFMln694TR4oNt1Wc9d_JFEugRdCZytG3fzExyIjR1cWHVaSvVWrUQ3vl33Nn/pubhtml?gid=365459402&single=true" target="_blank">Published Contacts Sheet</a>';
