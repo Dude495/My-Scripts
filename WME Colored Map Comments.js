@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2021.01.31.01
+// @version      2021.03.13.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -23,19 +23,19 @@
         let highlightRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlight.rules;
         let selectRules = W.map.getLayerByUniqueName('mapComments').styleMap.styles.highlightselected.rules;
         for (let i=0; i< defaultRules.length; i++){
-            if (defaultRules[i].id === "OpenLayers_Rule_168") {
+            if (defaultRules[i].id === "OpenLayers_Rule_175") {//[0]
                 mcStyle = defaultRules[i];
                 break;
             }
         }
         for (let i=0; i< highlightRules.length; i++){
-            if (highlightRules[i].id === "OpenLayers_Rule_170") {
+            if (highlightRules[i].id === "OpenLayers_Rule_177") {//[1]
                 hoverStyle = highlightRules[i];
                 break;
             }
         }
         for (let i=0; i< selectRules.length; i++){
-            if (selectRules[i].id === "OpenLayers_Rule_163") {
+            if (selectRules[i].id === "OpenLayers_Rule_170") {//[1]
                 selectedStyle = selectRules[i];
                 break;
             }
@@ -106,12 +106,12 @@
             '<h5 align="left" style="color:black">Colored Map Comments v'+GM_info.script.version+',</h5>',
             '<input data-toggle="tooltip" type="checkbox" id="MCP" title="Enable Color Highlighting for MC Points">Colored MC Points</input>',
             '<br>',
-            '<textarea style="resize: none; width: 65px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Point" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comments to appear. (Include the #)" maxlength="7"></textarea>',
+            '<textarea style="resize: none; width: 85px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Point" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comments to appear. (Include the #)" maxlength="7"></textarea>',
             '<input style="width: 25px; margin-left: 5px; top: -7px; position: relative;" id="CMC-colorWheelPoint" type="color" value="'+localStorage.getItem("CMC-Point")+'"></input>',
             '<div class="rangeslider" title="Set opacity level" style="resize: none; width: 100px;"><input type="range" min="1" max="100" value="10" class="myslider" id="MCP-Slider"></div>',
             '<br>',
             '<input id="MCA" type="checkbox" title="Enable Color Highlighting for MC Area Polygons" data-toggle="tooltip">Colored MC Areas</input><br>',
-            '<textarea style="resize: none; width: 65px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Area" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comment Areas to appear. (Include the #)"></textarea>',
+            '<textarea style="resize: none; width: 85px; height: 25px;" rows="1" cols="10" maxlength="7" id="CMC-Area" data-toggle="tooltip" title="Enter the HEX Color Code for the color you want Map Comment Areas to appear. (Include the #)"></textarea>',
             '<input style="width: 25px; margin-left: 5px; top: -7px; position: relative;" id="CMC-colorWheelArea" type="color" value="'+localStorage.getItem("CMC-Area")+'">',
             '<div class="rangeslider" title="Set opacity level" style="resize: none; width: 100px;"><input type="range" min="1" max="100" value="10" id="MCA-Slider" class="myslider"></input></div>',
             '<button class="btn btn-success" style="margin-bottom: 25px;" id="CMC-Save" data-toggle="tooltip" title="This button is only needed if you manually change the HEX Code">Save</button>'
