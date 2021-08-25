@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2021.03.13.01
+// @version      2021.08.25.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -48,7 +48,7 @@
                 hoverStyle.symbolizer.Point.fillOpacity = localStorage.getItem('CMC-MCPOpacity')-0.1;
                 selectedStyle.symbolizer.Point.fillColor = localStorage.getItem('CMC-Point');
                 //selectedStyle.symbolizer.Point.fillOpacity = localStorage.getItem('CMC-MCPOpacity');
-                W.map.getLayersByName("Map comments")[0].redraw();
+                W.map.getLayersByName("mapComments")[0].redraw();
             } else {
                 mcStyle.symbolizer.Point.fillColor = '#ffffff';
                 mcStyle.symbolizer.Point.fillOpacity = '0.3'
@@ -56,7 +56,7 @@
                 hoverStyle.symbolizer.Point.fillOpacity = '0.3'
                 selectedStyle.symbolizer.Point.fillColor = '#ffffff';
                 selectedStyle.symbolizer.Point.fillOpacity = '0.3'
-                W.map.getLayersByName("Map comments")[0].redraw();
+                W.map.getLayersByName("mapComments")[0].redraw();
             }
             if ($('#MCA').is(':checked')) {
                 mcStyle.symbolizer.Polygon.fillColor = localStorage.getItem('CMC-Area');
@@ -68,7 +68,7 @@
                 selectedStyle.symbolizer.Polygon.fillColor = localStorage.getItem('CMC-Area');
                 selectedStyle.symbolizer.Polygon.strokeColor = localStorage.getItem('CMC-Area');
                 //selectedStyle.symbolizer.Polygon.fillOpacity = localStorage.getItem('CMC-MCAOpacity')
-                W.map.getLayersByName("Map comments")[0].redraw();
+                W.map.getLayersByName("mapComments")[0].redraw();
             } else {
                 mcStyle.symbolizer.Polygon.fillColor = '#ffffff';
                 mcStyle.symbolizer.Polygon.strokeColor = '#ffffff';
@@ -79,7 +79,7 @@
                 selectedStyle.symbolizer.Polygon.fillColor = '#ffffff';
                 selectedStyle.symbolizer.Polygon.strokeColor = '#ffffff';
                 selectedStyle.symbolizer.Polygon.fillOpacity = '0.3'
-                W.map.getLayersByName("Map comments")[0].redraw();
+                W.map.getLayersByName("mapComments")[0].redraw();
             }
         }
     }
@@ -161,7 +161,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Waze_Rule changed to OpenLayers_Rule (FIXED)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Bug Fix<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Layer renamed from "Map comments" to "mapComments" (FIXED)</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
