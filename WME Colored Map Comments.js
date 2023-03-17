@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Colored Map Comments
 // @namespace    Dude495
-// @version      2022.02.09.01
+// @version      2023.03.17.01
 // @author       Dude495
 // @description  Change the color of Map Comment Points based on HEX Color Code.
 // @include      /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -98,7 +98,8 @@
             '<div class="rangeslider" title="Set opacity level" style="resize: none; width: 100px;"><input type="range" min="1" max="100" value="10" id="MCA-Slider" class="myslider"></input></div>',
             '<button class="btn btn-success" style="margin-bottom: 25px;" id="CMC-Save" data-toggle="tooltip" title="This button is only needed if you manually change the HEX Code">Save</button>'
         ].join(' '));
-        $('#sidepanel-prefs').append($section);
+        //$('#sidepanel-prefs').append($section);
+        WazeWrap.Interface.Tab('MC Colors', $section.html(), ChangeColor, 'MC Colors');
         if (localStorage.getItem('MCP') === "true") {
             $('#MCP')[0].checked = true
         } else {
@@ -143,7 +144,7 @@
         if (W && W.loginManager && W.loginManager.user && WazeWrap.Ready) {
             console.log(GM_info.script.name, 'Initialized');
             init();
-            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Code Change<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Changed how the script finds the rules for mapComment layers</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
+            WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, '<ul><li>Code Change<ol style="list-style-type: lower-alpha; padding-bottom: 0;"><li>Created tab in the <b>Scripts</b> section of the new WME interface instead of having the controls under WME Settings.</li></li></ul><br><br><br>', "https://greasyfork.org/en/scripts/380974-wme-colored-map-comments","https://www.waze.com/forum/viewtopic.php?f=819&t=279838");
         } else {
             console.log(GM_info.script.name, 'Bootstrap failed.  Trying again...');
             window.setTimeout(() => bootstrap(), 500);
